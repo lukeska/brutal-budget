@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Expense;
 use App\Models\Team;
+use App\Observers\ExpenseObserver;
 use App\Observers\TeamObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -29,6 +31,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $observers = [
         Team::class => [TeamObserver::class],
+        Expense::class => [ExpenseObserver::class],
     ];
 
     /**
