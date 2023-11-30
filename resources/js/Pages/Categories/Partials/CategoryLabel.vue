@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { iconComponents } from "@/Pages/Categories/Partials/CategoryIcons.js";
 import { ref } from "vue";
 

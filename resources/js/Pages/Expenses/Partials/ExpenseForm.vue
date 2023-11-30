@@ -1,15 +1,9 @@
-<script setup>
+<script lang="ts" setup>
 import { computed, watch } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import CategoryLabel from "@/Pages/Categories/Partials/CategoryLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-
-const page = usePage();
-
-const categories = computed(() => page.props.categories);
-
-const emit = defineEmits(["created", "updated", "cancel"]);
 
 let props = defineProps({
     expense: {
@@ -23,6 +17,16 @@ let props = defineProps({
         }),
     },
 });
+
+const emit = defineEmits<{
+    created: [];
+    updated: [];
+    cancel: [];
+}>();
+
+const page = usePage();
+
+const categories = computed(() => page.props.categories);
 
 let form = useForm({
     amount: props.expense.amount / 100,
@@ -155,10 +159,10 @@ const submit = (action) => {
         </div>
 
         <div class="space-x-4">
-            <PrimaryButton
-                v-text="expense.id == null ? 'Create' : 'Update'"
-                @click.prevent="submit(expense.id == null ? 'create' : 'update')"></PrimaryButton>
-            <SecondaryButton @click.prevent="emit('cancel')">Cancel </SecondaryButton>
+            <PrimaryButton @click.prevent="submit(expense.id == null ? 'create' : 'update')">
+                {{ expense.id == null ? "Create" : "Update" }}
+            </PrimaryButton>
+            <SecondaryButton @click.prevent="emit('cancel')">Cancel</SecondaryButton>
         </div>
     </form>
 </template>

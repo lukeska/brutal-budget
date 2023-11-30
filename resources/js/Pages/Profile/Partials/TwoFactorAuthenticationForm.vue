@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref, computed, watch } from "vue";
 import { router, useForm, usePage } from "@inertiajs/vue3";
 import ActionSection from "@/Components/ActionSection.vue";
@@ -102,9 +102,9 @@ const disableTwoFactorAuthentication = () => {
 
 <template>
     <ActionSection>
-        <template #title> Two Factor Authentication </template>
+        <template #title> Two Factor Authentication</template>
 
-        <template #description> Add additional security to your account using two factor authentication. </template>
+        <template #description> Add additional security to your account using two factor authentication.</template>
 
         <template #content>
             <h3
@@ -168,12 +168,12 @@ const disableTwoFactorAuthentication = () => {
                         <TextInput
                             id="code"
                             v-model="confirmationForm.code"
-                            type="text"
-                            name="code"
+                            autocomplete="one-time-code"
+                            autofocus
                             class="mt-1 block w-1/2"
                             inputmode="numeric"
-                            autofocus
-                            autocomplete="one-time-code"
+                            name="code"
+                            type="text"
                             @keyup.enter="confirmTwoFactorAuthentication" />
 
                         <InputError
@@ -204,9 +204,9 @@ const disableTwoFactorAuthentication = () => {
                 <div v-if="!twoFactorEnabled">
                     <ConfirmsPassword @confirmed="enableTwoFactorAuthentication">
                         <PrimaryButton
-                            type="button"
                             :class="{ 'opacity-25': enabling }"
-                            :disabled="enabling">
+                            :disabled="enabling"
+                            type="button">
                             Enable
                         </PrimaryButton>
                     </ConfirmsPassword>
@@ -216,10 +216,10 @@ const disableTwoFactorAuthentication = () => {
                     <ConfirmsPassword @confirmed="confirmTwoFactorAuthentication">
                         <PrimaryButton
                             v-if="confirming"
-                            type="button"
-                            class="me-3"
                             :class="{ 'opacity-25': enabling }"
-                            :disabled="enabling">
+                            :disabled="enabling"
+                            class="me-3"
+                            type="button">
                             Confirm
                         </PrimaryButton>
                     </ConfirmsPassword>

@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import ActionMessage from "@/Components/ActionMessage.vue";
@@ -39,9 +39,9 @@ const updatePassword = () => {
 
 <template>
     <FormSection @submitted="updatePassword">
-        <template #title> Update Password </template>
+        <template #title> Update Password</template>
 
-        <template #description> Ensure your account is using a long, random password to stay secure. </template>
+        <template #description> Ensure your account is using a long, random password to stay secure.</template>
 
         <template #form>
             <div class="col-span-6 sm:col-span-4">
@@ -52,9 +52,9 @@ const updatePassword = () => {
                     id="current_password"
                     ref="currentPasswordInput"
                     v-model="form.current_password"
-                    type="password"
+                    autocomplete="current-password"
                     class="mt-1 block w-full"
-                    autocomplete="current-password" />
+                    type="password" />
                 <InputError
                     :message="form.errors.current_password"
                     class="mt-2" />
@@ -68,9 +68,9 @@ const updatePassword = () => {
                     id="password"
                     ref="passwordInput"
                     v-model="form.password"
-                    type="password"
+                    autocomplete="new-password"
                     class="mt-1 block w-full"
-                    autocomplete="new-password" />
+                    type="password" />
                 <InputError
                     :message="form.errors.password"
                     class="mt-2" />
@@ -83,9 +83,9 @@ const updatePassword = () => {
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
-                    type="password"
+                    autocomplete="new-password"
                     class="mt-1 block w-full"
-                    autocomplete="new-password" />
+                    type="password" />
                 <InputError
                     :message="form.errors.password_confirmation"
                     class="mt-2" />

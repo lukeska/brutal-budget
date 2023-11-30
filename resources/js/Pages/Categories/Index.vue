@@ -15,8 +15,8 @@
                     </div>
 
                     <ul
-                        role="list"
-                        class="divide-y divide-gray-100">
+                        class="divide-y divide-gray-100"
+                        role="list">
                         <li
                             v-for="category in categories"
                             :key="category.id">
@@ -29,7 +29,7 @@
     </AppLayout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";

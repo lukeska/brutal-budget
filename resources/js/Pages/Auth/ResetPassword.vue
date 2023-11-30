@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { Head, useForm } from "@inertiajs/vue3";
 import AuthenticationCard from "@/Components/AuthenticationCard.vue";
 import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
@@ -42,14 +42,14 @@ const submit = () => {
                 <TextInput
                     id="email"
                     v-model="form.email"
-                    type="email"
+                    autocomplete="username"
+                    autofocus
                     class="mt-1 block w-full"
                     required
-                    autofocus
-                    autocomplete="username" />
+                    type="email" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.email" />
+                    :message="form.errors.email"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4">
@@ -59,13 +59,13 @@ const submit = () => {
                 <TextInput
                     id="password"
                     v-model="form.password"
-                    type="password"
+                    autocomplete="new-password"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="new-password" />
+                    type="password" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.password" />
+                    :message="form.errors.password"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4">
@@ -75,13 +75,13 @@ const submit = () => {
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
-                    type="password"
+                    autocomplete="new-password"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="new-password" />
+                    type="password" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation" />
+                    :message="form.errors.password_confirmation"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">

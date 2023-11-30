@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { iconComponents } from "@/Pages/Categories/Partials/CategoryIcons.js";
 import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { ref } from "vue";

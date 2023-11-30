@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { computed } from "vue";
 import { Link } from "@inertiajs/vue3";
 
@@ -26,8 +26,8 @@ const classes = computed(() => {
 
         <Link
             v-else
-            :href="href"
-            :class="classes">
+            :class="classes"
+            :href="href">
             <slot />
         </Link>
     </div>

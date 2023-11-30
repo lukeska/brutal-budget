@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import ActionMessage from "@/Components/ActionMessage.vue";
@@ -77,9 +77,9 @@ const clearPhotoFileInput = () => {
 
 <template>
     <FormSection @submitted="updateProfileInformation">
-        <template #title> Profile Information </template>
+        <template #title> Profile Information</template>
 
-        <template #description> Update your account's profile information and email address. </template>
+        <template #description> Update your account's profile information and email address.</template>
 
         <template #form>
             <!-- Profile Photo -->
@@ -90,8 +90,8 @@ const clearPhotoFileInput = () => {
                 <input
                     id="photo"
                     ref="photoInput"
-                    type="file"
                     class="hidden"
+                    type="file"
                     @change="updatePhotoPreview" />
 
                 <InputLabel
@@ -103,8 +103,8 @@ const clearPhotoFileInput = () => {
                     v-show="!photoPreview"
                     class="mt-2">
                     <img
-                        :src="user.profile_photo_url"
                         :alt="user.name"
+                        :src="user.profile_photo_url"
                         class="h-20 w-20 rounded-full object-cover" />
                 </div>
 
@@ -113,8 +113,8 @@ const clearPhotoFileInput = () => {
                     v-show="photoPreview"
                     class="mt-2">
                     <span
-                        class="block h-20 w-20 rounded-full bg-cover bg-center bg-no-repeat"
-                        :style="'background-image: url(\'' + photoPreview + '\');'" />
+                        :style="'background-image: url(\'' + photoPreview + '\');'"
+                        class="block h-20 w-20 rounded-full bg-cover bg-center bg-no-repeat" />
                 </div>
 
                 <SecondaryButton
@@ -126,8 +126,8 @@ const clearPhotoFileInput = () => {
 
                 <SecondaryButton
                     v-if="user.profile_photo_path"
-                    type="button"
                     class="mt-2"
+                    type="button"
                     @click.prevent="deletePhoto">
                     Remove Photo
                 </SecondaryButton>
@@ -145,10 +145,10 @@ const clearPhotoFileInput = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    type="text"
+                    autocomplete="name"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="name" />
+                    type="text" />
                 <InputError
                     :message="form.errors.name"
                     class="mt-2" />
@@ -162,10 +162,10 @@ const clearPhotoFileInput = () => {
                 <TextInput
                     id="email"
                     v-model="form.email"
-                    type="email"
+                    autocomplete="username"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="username" />
+                    type="email" />
                 <InputError
                     :message="form.errors.email"
                     class="mt-2" />
@@ -176,9 +176,9 @@ const clearPhotoFileInput = () => {
 
                         <Link
                             :href="route('verification.send')"
-                            method="post"
                             as="button"
                             class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            method="post"
                             @click.prevent="sendEmailVerification">
                             Click here to re-send the verification email.
                         </Link>

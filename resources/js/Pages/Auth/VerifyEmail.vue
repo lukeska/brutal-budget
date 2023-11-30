@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { computed } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import AuthenticationCard from "@/Components/AuthenticationCard.vue";
@@ -49,14 +49,14 @@ const verificationLinkSent = computed(() => props.status === "verification-link-
                     <Link
                         :href="route('profile.show')"
                         class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Edit Profile</Link
-                    >
+                        Edit Profile
+                    </Link>
 
                     <Link
                         :href="route('logout')"
-                        method="post"
                         as="button"
-                        class="ms-2 rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        class="ms-2 rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        method="post">
                         Log Out
                     </Link>
                 </div>

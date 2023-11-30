@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import CategoryLabel from "@/Pages/Categories/Partials/CategoryLabel.vue";
 import ExpenseForm from "@/Pages/Expenses/Partials/ExpenseForm.vue";

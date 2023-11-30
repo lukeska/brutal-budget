@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import AuthenticationCard from "@/Components/AuthenticationCard.vue";
@@ -46,21 +46,21 @@ const submit = () => {
                     id="password"
                     ref="passwordInput"
                     v-model="form.password"
-                    type="password"
+                    autocomplete="current-password"
+                    autofocus
                     class="mt-1 block w-full"
                     required
-                    autocomplete="current-password"
-                    autofocus />
+                    type="password" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.password" />
+                    :message="form.errors.password"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4 flex justify-end">
                 <PrimaryButton
-                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing">
+                    :disabled="form.processing"
+                    class="ms-4">
                     Confirm
                 </PrimaryButton>
             </div>

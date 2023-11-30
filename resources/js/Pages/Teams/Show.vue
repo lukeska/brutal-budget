@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import DeleteTeamForm from "@/Pages/Teams/Partials/DeleteTeamForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
@@ -21,21 +21,21 @@ defineProps({
         <div>
             <div class="mx-auto max-w-7xl py-10 sm:px-6 lg:px-8">
                 <UpdateTeamNameForm
-                    :team="team"
-                    :permissions="permissions" />
+                    :permissions="permissions"
+                    :team="team" />
 
                 <TeamMemberManager
-                    class="mt-10 sm:mt-0"
-                    :team="team"
                     :available-roles="availableRoles"
-                    :user-permissions="permissions" />
+                    :team="team"
+                    :user-permissions="permissions"
+                    class="mt-10 sm:mt-0" />
 
                 <template v-if="permissions.canDeleteTeam && !team.personal_team">
                     <SectionBorder />
 
                     <DeleteTeamForm
-                        class="mt-10 sm:mt-0"
-                        :team="team" />
+                        :team="team"
+                        class="mt-10 sm:mt-0" />
                 </template>
             </div>
         </div>

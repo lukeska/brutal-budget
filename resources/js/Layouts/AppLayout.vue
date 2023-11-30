@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
@@ -201,7 +201,7 @@ const logout = () => {
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">Manage Account</div>
 
-                                        <DropdownLink :href="route('profile.show')"> Profile </DropdownLink>
+                                        <DropdownLink :href="route('profile.show')"> Profile</DropdownLink>
 
                                         <DropdownLink
                                             v-if="$page.props.jetstream.hasApiFeatures"
@@ -213,7 +213,7 @@ const logout = () => {
 
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
-                                            <DropdownLink as="button"> Log Out </DropdownLink>
+                                            <DropdownLink as="button"> Log Out</DropdownLink>
                                         </form>
                                     </template>
                                 </Dropdown>
@@ -309,7 +309,7 @@ const logout = () => {
                             <form
                                 method="POST"
                                 @submit.prevent="logout">
-                                <ResponsiveNavLink as="button"> Log Out </ResponsiveNavLink>
+                                <ResponsiveNavLink as="button"> Log Out</ResponsiveNavLink>
                             </form>
 
                             <!-- Team Management -->

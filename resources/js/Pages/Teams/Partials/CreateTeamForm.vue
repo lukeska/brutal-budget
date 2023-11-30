@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { useForm } from "@inertiajs/vue3";
 import FormSection from "@/Components/FormSection.vue";
 import InputError from "@/Components/InputError.vue";
@@ -20,9 +20,9 @@ const createTeam = () => {
 
 <template>
     <FormSection @submitted="createTeam">
-        <template #title> Team Details </template>
+        <template #title> Team Details</template>
 
-        <template #description> Create a new team to collaborate with others on projects. </template>
+        <template #description> Create a new team to collaborate with others on projects.</template>
 
         <template #form>
             <div class="col-span-6">
@@ -30,9 +30,9 @@ const createTeam = () => {
 
                 <div class="mt-2 flex items-center">
                     <img
-                        class="h-12 w-12 rounded-full object-cover"
+                        :alt="$page.props.auth.user.name"
                         :src="$page.props.auth.user.profile_photo_url"
-                        :alt="$page.props.auth.user.name" />
+                        class="h-12 w-12 rounded-full object-cover" />
 
                     <div class="ms-4 leading-tight">
                         <div class="text-gray-900">
@@ -52,9 +52,9 @@ const createTeam = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    type="text"
+                    autofocus
                     class="mt-1 block w-full"
-                    autofocus />
+                    type="text" />
                 <InputError
                     :message="form.errors.name"
                     class="mt-2" />

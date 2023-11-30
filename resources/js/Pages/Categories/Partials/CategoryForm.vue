@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { ref, nextTick } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import CategoryColorForm from "@/Pages/Categories/Partials/CategoryColorForm.vue";

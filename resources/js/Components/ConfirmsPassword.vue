@@ -1,12 +1,10 @@
-<script setup>
+<script lang="ts" setup>
 import { ref, reactive, nextTick } from "vue";
 import DialogModal from "./DialogModal.vue";
 import InputError from "./InputError.vue";
 import PrimaryButton from "./PrimaryButton.vue";
 import SecondaryButton from "./SecondaryButton.vue";
 import TextInput from "./TextInput.vue";
-
-const emit = defineEmits(["confirmed"]);
 
 defineProps({
     title: {
@@ -22,6 +20,8 @@ defineProps({
         default: "Confirm",
     },
 });
+
+const emit = defineEmits(["confirmed"]);
 
 const confirmingPassword = ref(false);
 
@@ -92,10 +92,10 @@ const closeModal = () => {
                     <TextInput
                         ref="passwordInput"
                         v-model="form.password"
-                        type="password"
+                        autocomplete="current-password"
                         class="mt-1 block w-3/4"
                         placeholder="Password"
-                        autocomplete="current-password"
+                        type="password"
                         @keyup.enter="confirmPassword" />
 
                     <InputError
@@ -108,9 +108,9 @@ const closeModal = () => {
                 <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
 
                 <PrimaryButton
-                    class="ms-3"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
+                    class="ms-3"
                     @click="confirmPassword">
                     {{ button }}
                 </PrimaryButton>

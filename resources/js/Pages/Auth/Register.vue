@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { Head, Link, useForm } from "@inertiajs/vue3";
 import AuthenticationCard from "@/Components/AuthenticationCard.vue";
 import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
@@ -39,14 +39,14 @@ const submit = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    type="text"
+                    autocomplete="name"
+                    autofocus
                     class="mt-1 block w-full"
                     required
-                    autofocus
-                    autocomplete="name" />
+                    type="text" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.name" />
+                    :message="form.errors.name"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4">
@@ -56,13 +56,13 @@ const submit = () => {
                 <TextInput
                     id="email"
                     v-model="form.email"
-                    type="email"
+                    autocomplete="username"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="username" />
+                    type="email" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.email" />
+                    :message="form.errors.email"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4">
@@ -72,13 +72,13 @@ const submit = () => {
                 <TextInput
                     id="password"
                     v-model="form.password"
-                    type="password"
+                    autocomplete="new-password"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="new-password" />
+                    type="password" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.password" />
+                    :message="form.errors.password"
+                    class="mt-2" />
             </div>
 
             <div class="mt-4">
@@ -88,13 +88,13 @@ const submit = () => {
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
-                    type="password"
+                    autocomplete="new-password"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="new-password" />
+                    type="password" />
                 <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation" />
+                    :message="form.errors.password_confirmation"
+                    class="mt-2" />
             </div>
 
             <div
@@ -111,23 +111,23 @@ const submit = () => {
                         <div class="ms-2">
                             I agree to the
                             <a
-                                target="_blank"
                                 :href="route('terms.show')"
                                 class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                target="_blank"
                                 >Terms of Service</a
                             >
                             and
                             <a
-                                target="_blank"
                                 :href="route('policy.show')"
                                 class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                target="_blank"
                                 >Privacy Policy</a
                             >
                         </div>
                     </div>
                     <InputError
-                        class="mt-2"
-                        :message="form.errors.terms" />
+                        :message="form.errors.terms"
+                        class="mt-2" />
                 </InputLabel>
             </div>
 
@@ -139,9 +139,9 @@ const submit = () => {
                 </Link>
 
                 <PrimaryButton
-                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing">
+                    :disabled="form.processing"
+                    class="ms-4">
                     Register
                 </PrimaryButton>
             </div>

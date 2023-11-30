@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { useForm } from "@inertiajs/vue3";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import FormSection from "@/Components/FormSection.vue";
@@ -26,9 +26,9 @@ const updateTeamName = () => {
 
 <template>
     <FormSection @submitted="updateTeamName">
-        <template #title> Team Name </template>
+        <template #title> Team Name</template>
 
-        <template #description> The team's name and owner information. </template>
+        <template #description> The team's name and owner information.</template>
 
         <template #form>
             <!-- Team Owner Information -->
@@ -37,9 +37,9 @@ const updateTeamName = () => {
 
                 <div class="mt-2 flex items-center">
                     <img
-                        class="h-12 w-12 rounded-full object-cover"
+                        :alt="team.owner.name"
                         :src="team.owner.profile_photo_url"
-                        :alt="team.owner.name" />
+                        class="h-12 w-12 rounded-full object-cover" />
 
                     <div class="ms-4 leading-tight">
                         <div class="text-gray-900">{{ team.owner.name }}</div>
@@ -59,9 +59,9 @@ const updateTeamName = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    type="text"
+                    :disabled="!permissions.canUpdateTeam"
                     class="mt-1 block w-full"
-                    :disabled="!permissions.canUpdateTeam" />
+                    type="text" />
 
                 <InputError
                     :message="form.errors.name"

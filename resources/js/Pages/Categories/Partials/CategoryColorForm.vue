@@ -1,16 +1,16 @@
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../../tailwind.config.js";
-
-const fullConfig = resolveConfig(tailwindConfig);
 
 let props = defineProps({
     hex: String,
 });
 
 const emit = defineEmits(["updated"]);
+
+const fullConfig = resolveConfig(tailwindConfig);
 
 const colors = [
     { hex: fullConfig.theme.colors.red["300"] },
@@ -75,8 +75,8 @@ const selectedColor = ref(colors.find(({ hex }) => hex === props.hex));
                 <ListboxButton
                     class="relative z-10 w-full cursor-pointer rounded-md bg-white p-1 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                     <span
-                        class="block h-8 w-8 rounded-md"
-                        :style="'background-color:' + selectedColor.hex"></span>
+                        :style="'background-color:' + selectedColor.hex"
+                        class="block h-8 w-8 rounded-md"></span>
                 </ListboxButton>
 
                 <transition
@@ -86,9 +86,9 @@ const selectedColor = ref(colors.find(({ hex }) => hex === props.hex));
                     <ListboxOptions
                         class="absolute right-full top-0 z-20 mr-2 grid w-52 grid-cols-6 gap-1 rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                         <ListboxOption
-                            v-slot="{ active, selected }"
                             v-for="color in colors"
                             :key="color.hex"
+                            v-slot="{ active, selected }"
                             :value="color"
                             as="template"
                             @click="
