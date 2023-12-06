@@ -35,9 +35,9 @@ import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ref } from "vue";
 
-let props = defineProps({
-    categories: Object,
-});
+let props = defineProps<{
+    categories: App.Data.CategoryData[];
+}>();
 
 let showCreateForm = ref(false);
 </script>

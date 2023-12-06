@@ -5,17 +5,19 @@ import CategoryColorForm from "@/Pages/Categories/Partials/CategoryColorForm.vue
 import CategoryIconForm from "@/Pages/Categories/Partials/CategoryIconForm.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 
-let props = defineProps({
-    category: {
-        type: Object,
-        default: {
+let props = withDefaults(
+    defineProps<{
+        category?: App.Data.CategoryData;
+    }>(),
+    {
+        category: {
             id: null,
             name: "",
             icon: "IconReceipt2",
             hex: "#fca5a5",
         },
     },
-});
+);
 
 const emit = defineEmits(["created", "cancel"]);
 
@@ -29,7 +31,7 @@ const nameField = ref();
 let showForm = ref(props.category.id == null);
 let showCreateSuccessMessage = ref(false);
 
-const submit = (action) => {
+const submit = (action: String) => {
     if (action === "update") {
         if (form.name === props.category.name) {
             showForm.value = false;
@@ -82,11 +84,11 @@ const cancelEdit = () => {
 };
 
 const updateAttribute = (params) => {
+    form[params.name] = params.value;
+
     if (props.category.id === null) {
         return;
     }
-
-    form[params.name] = params.value;
 
     form.post(route("categories.update-" + params.name, props.category.id), {
         preserveScroll: true,
@@ -165,9 +167,12 @@ const updateAttribute = (params) => {
                 @updated="updateAttribute" />
         </div>
 
-        <!-- TODO: disable if category has expenses and cannot be deleted -->
         <div v-if="props.category.id !== null">
-            <DangerButton @click="submit('delete')">Delete</DangerButton>
+            <DangerButton
+                @click="submit('delete')"
+                :disabled="!category.permissions.delete"
+                >Delete
+            </DangerButton>
         </div>
     </div>
 </template>

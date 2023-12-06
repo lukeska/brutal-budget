@@ -2,11 +2,9 @@
 import { iconComponents } from "@/Pages/Categories/Partials/CategoryIcons.js";
 import { ref } from "vue";
 
-let props = defineProps({
-    category: {
-        type: Object,
-    },
-});
+let props = defineProps<{
+    category: App.Data.CategoryData;
+}>();
 
 const selectedIcon = ref(iconComponents().find(({ name }) => name === props.category.icon));
 </script>

@@ -23,13 +23,14 @@ class BrutalBudgetServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Validator::extend('comma_decimal', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('comma_decimal_positive', function ($attribute, $value, $parameters, $validator) {
             // Check if the value is numeric after replacing commas with dots
-            return is_numeric(str_replace(',', '.', $value));
+            $newValue = str_replace(',', '.', $value);
+            return is_numeric($newValue) && $newValue > 0;
         });
 
-        Validator::replacer('comma_decimal', function ($message, $attribute, $rule, $parameters) {
-            return str_replace(':attribute', $attribute, 'The :attribute must be a valid number with a comma as the decimal separator.');
+        Validator::replacer('comma_decimal_positive', function ($message, $attribute, $rule, $parameters) {
+            return str_replace(':attribute', $attribute, 'The :attribute must be a valid positive number with a comma as the decimal separator.');
         });
     }
 }

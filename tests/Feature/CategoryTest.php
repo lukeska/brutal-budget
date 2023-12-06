@@ -42,7 +42,7 @@ class CategoryTest extends TestCase
         $category = $user2->currentTeam->categories()->first();
 
         $this->followingRedirects()
-            ->patch(route('categories.update', ['category' => $category->id]), ['name' => 'My test category'])
+            ->patch(route('categories.update', ['category' => $category->id]), ['name' => 'My test category', 'icon' => $category->icon, 'hex' => $category->hex])
             ->assertStatus(403);
     }
 
@@ -105,7 +105,7 @@ class CategoryTest extends TestCase
 
         // update a duplicate category name in a different team should succeed
         $this->followingRedirects()
-            ->patch(route('categories.update', ['category' => $category3->id]), ['name' => 'My test category 2'])
+            ->patch(route('categories.update', ['category' => $category3->id]), ['name' => 'My test category 2', 'icon' => $category3->icon, 'hex' => $category3->hex])
             ->assertOk()
             ->assertInertia(function (AssertableInertia $page) {
                 return $page->has('errors', 0);

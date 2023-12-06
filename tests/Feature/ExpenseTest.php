@@ -204,12 +204,6 @@ class ExpenseTest extends TestCase
     }
 
     /** @test */
-    function the_main_expenses_page_shows_totals_by_category()
-    {
-        $this->markTestSkipped('To be implemented');
-    }
-
-    /** @test */
     function the_main_expenses_page_shows_monthly_total()
     {
         $user = $this->signIn();

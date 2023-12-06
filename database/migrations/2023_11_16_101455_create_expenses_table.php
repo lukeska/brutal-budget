@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('team_id')->index()->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->index()->constrained();
             $table->foreignId('user_id')->index()->constrained();
-            $table->date('date');
+            $table->dateTime('date');
             $table->integer('amount');
-            $table->text('notes')->nullable();
+            $table->string('notes')->nullable();
             $table->boolean('is_personal')->default(true);
             $table->timestamps();
         });

@@ -2,77 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\CategoryMonthlyTotalData;
+use App\Data\ExpenseData;
+use App\Data\ExpenseRequest;
+use App\Data\ExpensesIndexPage;
 use App\Models\CategoryMonthlyTotal;
 use App\Models\Expense;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
 {
     public function index()
     {
-        $categoryMonthlyTotals = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
+        $rawTotals = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
             ->where('year_month', Carbon::now()->format('Ym'))
             ->whereNull('user_id')
             ->with('category')
             ->orderByDesc('amount')
             ->get();
 
-        $expenses = Auth::user()
+        $totalExpenses = $rawTotals->sum('amount');
+
+        $categoryMonthlyTotals = CategoryMonthlyTotalData::collection($rawTotals);
+
+        $expenses = ExpenseData::collection(Auth::user()
             ->currentTeam
             ->expenses()
             ->currentMonth()
             ->with('category')
             ->orderByDesc('created_at')
-            ->get();
+            ->get());
 
-        $totalExpenses = $categoryMonthlyTotals->sum('amount');
-
-        return Inertia::render('Expenses/Index', [
-            'expenses' => $expenses,
-            'categoryMonthlyTotals' => $categoryMonthlyTotals,
-            'totalExpenses' => $totalExpenses
-        ]);
+        return Inertia::render('Expenses/Index', new ExpensesIndexPage(
+            expenses: $expenses,
+            categoryMonthlyTotals: $categoryMonthlyTotals,
+            totalExpenses: $totalExpenses
+        ));
     }
 
     public function create()
     {
-        $attributes = Request::validate([
-            'amount' => ['required',
-                'min:0.01','comma_decimal'
-            ],
-            'date' => ['required', 'date'],
-            'notes' => ['nullable'],
-            'category_id' => ['required','exists:App\Models\Category,id'] // TODO: scope to categories for the current group
-        ]);
+        $expense = ExpenseRequest::validate(Request::all());
 
-        $attributes['date'] = Carbon::parse($attributes['date']);
-        $attributes['amount'] = str_replace(',', '.', $attributes['amount']) * 100;
+        $expense['amount'] = str_replace(',', '.', $expense['amount']) * 100;
 
-        Auth::user()->currentTeam->expenses()->create([...$attributes, 'user_id' => Auth::user()->getAuthIdentifier()]);
+        Auth::user()->currentTeam->expenses()->create([...$expense, 'user_id' => Auth::user()->getAuthIdentifier()]);
 
         Request::session()->flash('message', 'Expense created correctly');
 
         return redirect('/expenses');
     }
 
-    public function update(Expense $expense)
+    public function update(Expense $expense, ExpenseRequest $data)
     {
-        $attributes = Request::validate([
-            'amount' => ['required',
-                'min:0.01','comma_decimal'
-            ],
-            'date' => ['required', 'date'],
-            'notes' => ['nullable'],
-            'category_id' => ['required','exists:App\Models\Category,id'] // TODO: scope to categories for the current group
-        ]);
+        // TODO: add policy here?
 
-        $attributes['date'] = Carbon::parse($attributes['date']);
-        $attributes['amount'] = str_replace(',', '.', $attributes['amount']) * 100;
+        $expenseData = [
+            ...$data->all(),
+            'user_id' => Auth::user()->getAuthIdentifier()
+        ];
+        $expenseData['amount'] = str_replace(',', '.', $expenseData['amount']) * 100;
 
-        $expense->update($attributes);
+        $expense->update($expenseData);
 
         Request::session()->flash('message', 'Expense updated correctly');
 

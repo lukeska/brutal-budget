@@ -6,11 +6,11 @@ import { ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { useForm } from "@inertiajs/vue3";
 
-let props = defineProps({
-    expenses: Object,
-    categoryMonthlyTotals: Object,
-    totalExpenses: String,
-});
+let props = defineProps<{
+    expenses: App.Data.ExpenseData[];
+    categoryMonthlyTotals: App.Data.CategoryMonthlyTotalData[];
+    totalExpenses: number;
+}>();
 
 let form = useForm({});
 
@@ -26,7 +26,7 @@ const showCreateExpense = () => {
     currentExpense.value = null;
 };
 
-const showEditExpense = (expense) => {
+const showEditExpense = (expense: App.Data.ExpenseData) => {
     showExpenseForm.value = true;
     currentExpense.value = expense;
 };
@@ -47,7 +47,7 @@ const flashUpdateSuccessMessage = () => {
     }, 3000);
 };
 
-const deleteExpense = (expense) => {
+const deleteExpense = (expense: App.Data.ExpenseData) => {
     form.delete(route("expenses.delete", expense.id), {
         preserveScroll: true,
     });
@@ -187,14 +187,10 @@ const currencyFormatter = new Intl.NumberFormat("it-IT", {
 
                         <div class="py-6">
                             <ExpenseForm
-                                v-if="showExpenseForm && currentExpense != null"
+                                v-if="showExpenseForm"
                                 :expense="currentExpense"
                                 @cancel="showExpenseForm = false"
                                 @updated="flashUpdateSuccessMessage" />
-                            <ExpenseForm
-                                v-else-if="showExpenseForm"
-                                @cancel="showExpenseForm = false"
-                                @created="flashCreateSuccessMessage" />
                         </div>
                     </div>
                 </div>

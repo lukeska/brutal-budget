@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\CategoryData;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -12,86 +13,61 @@ class CategoryController extends Controller
 {
     public function index()
     {
+        $categories = Auth::user()
+            ->currentTeam
+            ->categories()
+            ->orderByDesc('created_at')
+            ->get();
+
         return Inertia::render('Categories/Index', [
-            'categories' => Auth::user()
-                ->currentTeam
-                ->categories()
-                ->orderByDesc('created_at')
-                ->get(),
+            'categories' => CategoryData::collection($categories),
         ]);
     }
 
     public function create()
     {
-        $attributes = Request::validate([
-            'name' => ['required',
-                'max:50',
-                Rule::unique('categories', 'name')
-                    ->where('team_id', Auth::user()
-                    ->currentTeam->id)
-            ],
-            'icon' => ['required'],
-            'hex' => ['required', 'size:7'],
-        ]);
+        $category = CategoryData::validate(Request::all());
 
-        Auth::user()->currentTeam->categories()->create($attributes);
+        Auth::user()->currentTeam->categories()->create($category);
 
         Request::session()->flash('message', 'Category created correctly');
 
         return redirect('/categories');
     }
 
-    public function updateHex(Category $category)
+    public function updateHex(Category $category, CategoryData $data)
     {
         if (Auth::user()->cannot('update', $category)) {
             abort(403);
         }
 
-        $attributes = Request::validate([
-            'hex' => ['required', 'size:7'],
-        ]);
-
-        $category->update($attributes);
+        $category->update($data->include('hex')->toArray());
 
         Request::session()->flash('message', 'Category updated correctly');
 
         return redirect('/categories');
     }
 
-    public function update(Category $category)
+    public function update(Category $category, CategoryData $data)
     {
         if (Auth::user()->cannot('update', $category)) {
             abort(403);
         }
 
-        $attributes = Request::validate([
-            'name' => [
-                'required',
-                'max:50',
-                Rule::unique('categories', 'name')
-                    ->ignore($category->id)
-                    ->where('team_id', Auth::user()->currentTeam->id)
-            ],
-        ]);
-
-        $category->update($attributes);
+        $category->update($data->all());
 
         Request::session()->flash('message', 'Category updated correctly');
 
         return redirect('/categories');
     }
 
-    public function updateIcon(Category $category)
+    public function updateIcon(Category $category, CategoryData $data)
     {
         if (Auth::user()->cannot('update', $category)) {
             abort(403);
         }
 
-        $attributes = Request::validate([
-            'icon' => ['required'],
-        ]);
-
-        $category->update($attributes);
+        $category->update($data->include('icon')->toArray());
 
         Request::session()->flash('message', 'Category updated correctly');
 

@@ -13,7 +13,7 @@ class ExpenseObserver
      */
     public function created(Expense $expense): void
     {
-        Totals::generateByCategory($expense->category->id, $expense->team->id, $expense->date->format('Ym'));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int)((new Carbon($expense->date))->format('Ym')));
     }
 
     /**
@@ -39,7 +39,7 @@ class ExpenseObserver
      */
     public function deleted(Expense $expense): void
     {
-        //
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int)((new Carbon($expense->date))->format('Ym')));
     }
 
     /**

@@ -4,19 +4,11 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import CategoryLabel from "@/Pages/Categories/Partials/CategoryLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import { route, current } from "momentum-trail";
 
-let props = defineProps({
-    expense: {
-        type: Object,
-        default: () => ({
-            id: null,
-            amount: 0,
-            date: new Date().toISOString().split("T")[0],
-            notes: null,
-            category_id: null,
-        }),
-    },
-});
+let props = defineProps<{
+    expense?: App.Data.ExpenseData;
+}>();
 
 const emit = defineEmits<{
     created: [];
@@ -29,23 +21,24 @@ const page = usePage();
 const categories = computed(() => page.props.categories);
 
 let form = useForm({
-    amount: props.expense.amount / 100,
-    date: props.expense.date,
-    notes: props.expense.notes,
-    category_id: props.expense.category_id,
+    amount: props.expense ? props.expense.amount / 100 : 0,
+    date: props.expense ? props.expense.date : new Date().toISOString().split("T")[0],
+    notes: props.expense ? props.expense.notes : null,
+    category_id: props.expense ? props.expense.category?.id : null,
 });
 
 watch(
     () => props.expense,
     (newExpense) => {
-        form.amount = newExpense.amount / 100;
-        form.date = newExpense.date;
-        form.notes = newExpense.notes;
-        form.category_id = newExpense.category_id;
+        form.clearErrors();
+        form.amount = newExpense ? newExpense.amount / 100 : 0;
+        form.date = newExpense ? newExpense.date : new Date().toISOString().split("T")[0];
+        form.notes = newExpense ? newExpense.notes : null;
+        form.category_id = newExpense ? newExpense.category?.id : null;
     },
 );
 
-const submit = (action) => {
+const submit = (action: String) => {
     if (action === "update") {
         form.patch(route("expenses.update", props.expense.id), {
             preserveScroll: true,
@@ -159,8 +152,8 @@ const submit = (action) => {
         </div>
 
         <div class="space-x-4">
-            <PrimaryButton @click.prevent="submit(expense.id == null ? 'create' : 'update')">
-                {{ expense.id == null ? "Create" : "Update" }}
+            <PrimaryButton @click.prevent="submit(expense == null ? 'create' : 'update')">
+                {{ expense == null ? "Create" : "Update" }}
             </PrimaryButton>
             <SecondaryButton @click.prevent="emit('cancel')">Cancel</SecondaryButton>
         </div>
