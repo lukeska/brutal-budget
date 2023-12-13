@@ -1,3 +1,16 @@
+<script lang="ts" setup>
+import AppLayout from "@/Layouts/AppLayout.vue";
+import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { ref } from "vue";
+
+let props = defineProps<{
+    categories: App.Data.CategoryData[];
+}>();
+
+let showCreateForm = ref(false);
+</script>
+
 <template>
     <AppLayout title="Dashboard">
         <template #header>
@@ -28,16 +41,3 @@
         </div>
     </AppLayout>
 </template>
-
-<script lang="ts" setup>
-import AppLayout from "@/Layouts/AppLayout.vue";
-import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { ref } from "vue";
-
-let props = defineProps<{
-    categories: App.Data.CategoryData[];
-}>();
-
-let showCreateForm = ref(false);
-</script>

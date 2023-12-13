@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,8 @@ Route::middleware([
     Route::delete('/categories/{category}', [CategoryController::class, 'delete'])->name('categories.delete');
     Route::put('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories/{category}/icon', [CategoryController::class, 'updateIcon'])->name('categories.update-icon');
+
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 
     Route::get('/expenses/{year?}/{month?}', [ExpenseController::class, 'index'])
         ->where([

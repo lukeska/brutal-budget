@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('hex', 7);
             $table->foreignId('team_id')->index()->constrained()->cascadeOnDelete();
-            $table->foreignId('category_id')->index()->constrained();
-            $table->foreignId('user_id')->index()->constrained();
-            $table->foreignId('project_id')->index()->nullable()->constrained();
-            $table->dateTime('date');
-            $table->integer('amount');
-            $table->string('notes')->nullable();
-            $table->boolean('is_personal')->default(true);
             $table->timestamps();
         });
     }
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('projects');
     }
 };
