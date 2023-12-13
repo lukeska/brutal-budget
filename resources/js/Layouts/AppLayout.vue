@@ -7,12 +7,18 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import ExpenseFormSidebar from "@/Pages/Expenses/Partials/ExpenseFormSidebar.vue";
+import { useExpenseStore } from "@/Stores/ExpenseStore";
 
-defineProps({
-    title: String,
-});
+const expenseStore = useExpenseStore();
+
+defineProps<{
+    title: String;
+}>();
 
 const showingNavigationDropdown = ref(false);
+let sidebarOpen = ref(false);
 
 const switchToTeam = (team) => {
     router.put(
@@ -36,6 +42,10 @@ const logout = () => {
         <Head :title="title" />
 
         <Banner />
+
+        <ExpenseFormSidebar
+            :sidebarOpen="sidebarOpen"
+            @close="sidebarOpen = false" />
 
         <div class="min-h-screen bg-gray-100">
             <nav class="border-b border-gray-100 bg-white">
@@ -217,6 +227,10 @@ const logout = () => {
                                         </form>
                                     </template>
                                 </Dropdown>
+                            </div>
+
+                            <div class="ms-3">
+                                <PrimaryButton @click.prevent="expenseStore.showSidebar()">+ Expense </PrimaryButton>
                             </div>
                         </div>
 

@@ -21,11 +21,7 @@ class ExpenseSeeder extends Seeder
                 'user_id' => $luca->id,
                 'team_id' => $luca->currentTeam->id,
                 'category_id' => rand(1,10),
-                'date' => Carbon::create(
-                    Carbon::now()->year,
-                    Carbon::now()->month,
-                    rand(1,28)
-                )
+                'date' => Carbon::now()->setDay(rand(1,28)),
             ]);
         }
 
@@ -34,11 +30,16 @@ class ExpenseSeeder extends Seeder
                 'user_id' => $luca->id,
                 'team_id' => $luca->currentTeam->id,
                 'category_id' => rand(1,10),
-                'date' => Carbon::create(
-                    Carbon::now()->year,
-                    Carbon::now()->addMonth(-1)->month,
-                    rand(1,28)
-                )
+                'date' => Carbon::now()->addMonth(-1)->setDay(rand(1,28)),
+            ]);
+        }
+
+        foreach (range(1,20) as $i) {
+            Expense::factory()->create([
+                'user_id' => $luca->id,
+                'team_id' => $luca->currentTeam->id,
+                'category_id' => rand(1,10),
+                'date' => Carbon::now()->addMonth(1)->setDay(rand(1,28)),
             ]);
         }
     }

@@ -46,8 +46,9 @@ class Expense extends Model
     /*
      * Scopes
      */
-    public function scopeCurrentMonth($query)
+    public function scopeMonth($query, Carbon $date = null)
     {
-        return $query->whereBetween('date', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()]);
+        $date = $date ?: Carbon::now();
+        return $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);
     }
 }

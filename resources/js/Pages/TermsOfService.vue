@@ -2,9 +2,9 @@
 import { Head } from "@inertiajs/vue3";
 import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
 
-defineProps({
-    terms: String,
-});
+defineProps<{
+    terms: String;
+}>();
 </script>
 
 <template>

@@ -37,6 +37,8 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "@heroicons/vue": "^2.0.18",
-    "@tabler/icons-vue": "^2.40.0"
+    "@tabler/icons-vue": "^2.40.0",
+    "moment": "^2.29.4",
+    "pinia": "^2.1.7"
   }
 }

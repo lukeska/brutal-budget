@@ -14,7 +14,7 @@ class ExpenseData extends Data
 {
     public function __construct(
         public int|Optional $id,
-        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d')]
+        #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'd-m-Y')]
         public Carbon $date,
         public int $amount,
         public ?string $notes,

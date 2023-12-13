@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-defineProps({
+defineProps<{
     type: {
-        type: String,
-        default: "submit",
-    },
-});
+        type: String;
+        default: "submit";
+    };
+}>();
 </script>
 
 <template>

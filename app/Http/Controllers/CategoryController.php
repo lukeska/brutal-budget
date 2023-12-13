@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\CategoryData;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -35,19 +36,6 @@ class CategoryController extends Controller
         return redirect('/categories');
     }
 
-    public function updateHex(Category $category, CategoryData $data)
-    {
-        if (Auth::user()->cannot('update', $category)) {
-            abort(403);
-        }
-
-        $category->update($data->include('hex')->toArray());
-
-        Request::session()->flash('message', 'Category updated correctly');
-
-        return redirect('/categories');
-    }
-
     public function update(Category $category, CategoryData $data)
     {
         if (Auth::user()->cannot('update', $category)) {
@@ -67,7 +55,7 @@ class CategoryController extends Controller
             abort(403);
         }
 
-        $category->update($data->include('icon')->toArray());
+        $category->update($data->include('icon', 'hex')->toArray());
 
         Request::session()->flash('message', 'Category updated correctly');
 

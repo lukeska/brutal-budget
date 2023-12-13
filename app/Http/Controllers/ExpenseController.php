@@ -16,10 +16,24 @@ use Inertia\Inertia;
 
 class ExpenseController extends Controller
 {
-    public function index()
+    public function index($year = null, $month = null)
     {
+        $currentDate = Carbon::now();
+
+        if($year && $month) {
+            $currentDate = Carbon::create($year, $month, 1);
+        }
+
+        $expenses = ExpenseData::collection(Auth::user()
+            ->currentTeam
+            ->expenses()
+            ->month($currentDate)
+            ->with('category')
+            ->orderByDesc('date')
+            ->get());
+
         $rawTotals = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
-            ->where('year_month', Carbon::now()->format('Ym'))
+            ->where('year_month', $currentDate->format('Ym'))
             ->whereNull('user_id')
             ->with('category')
             ->orderByDesc('amount')
@@ -29,18 +43,40 @@ class ExpenseController extends Controller
 
         $categoryMonthlyTotals = CategoryMonthlyTotalData::collection($rawTotals);
 
-        $expenses = ExpenseData::collection(Auth::user()
-            ->currentTeam
-            ->expenses()
-            ->currentMonth()
+        $rawTotalsPreviousMonth = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
+            ->where('year_month', $currentDate->copy()->subMonth()->format('Ym'))
+            ->whereNull('user_id')
             ->with('category')
-            ->orderByDesc('created_at')
-            ->get());
+            ->orderByDesc('amount')
+            ->get();
+
+        $totalExpensesPreviousMonth = $rawTotalsPreviousMonth->sum('amount');
+
+        $categoryMonthlyTotalsPreviousMonth = CategoryMonthlyTotalData::collection($rawTotalsPreviousMonth);
+
+        $rawTotalsFollowingMonth = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
+            ->where('year_month', $currentDate->copy()->addMonth()->format('Ym'))
+            ->whereNull('user_id')
+            ->with('category')
+            ->orderByDesc('amount')
+            ->get();
+
+        $totalExpensesFollowingMonth = $rawTotalsFollowingMonth->sum('amount');
+
+        $categoryMonthlyTotalsFollowingMonth = CategoryMonthlyTotalData::collection($rawTotalsFollowingMonth);
+
+
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
             categoryMonthlyTotals: $categoryMonthlyTotals,
-            totalExpenses: $totalExpenses
+            categoryMonthlyTotalsPreviousMonth: $categoryMonthlyTotalsPreviousMonth,
+            categoryMonthlyTotalsFollowingMonth: $categoryMonthlyTotalsFollowingMonth,
+            totalExpenses: $totalExpenses,
+            totalExpensesPreviousMonth: $totalExpensesPreviousMonth,
+            totalExpensesFollowingMonth: $totalExpensesFollowingMonth,
+            year: $currentDate->year,
+            month: $currentDate->month
         ));
     }
 
@@ -54,7 +90,7 @@ class ExpenseController extends Controller
 
         Request::session()->flash('message', 'Expense created correctly');
 
-        return redirect('/expenses');
+        return back();
     }
 
     public function update(Expense $expense, ExpenseRequest $data)
@@ -71,7 +107,7 @@ class ExpenseController extends Controller
 
         Request::session()->flash('message', 'Expense updated correctly');
 
-        return redirect('/expenses');
+        return back();
     }
 
     public function delete(Expense $expense)
@@ -84,6 +120,6 @@ class ExpenseController extends Controller
 
         Request::session()->flash('message', 'Expense deleted correctly');
 
-        return redirect('/expenses');
+        return back();
     }
 }

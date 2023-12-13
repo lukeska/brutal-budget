@@ -83,14 +83,15 @@ const cancelEdit = () => {
     emit("cancel");
 };
 
-const updateAttribute = (params) => {
-    form[params.name] = params.value;
+const updateIcon = (params) => {
+    form.icon = params.icon;
+    form.hex = params.hex;
 
     if (props.category.id === null) {
         return;
     }
 
-    form.post(route("categories.update-" + params.name, props.category.id), {
+    form.post(route("categories.update-icon", props.category.id), {
         preserveScroll: true,
     });
 };
@@ -158,13 +159,7 @@ const updateAttribute = (params) => {
         <div>
             <CategoryIconForm
                 :icon="category.icon"
-                @updated="updateAttribute" />
-        </div>
-
-        <div class="flex flex-none items-center gap-x-4">
-            <CategoryColorForm
-                :hex="category.hex"
-                @updated="updateAttribute" />
+                @updated="updateIcon" />
         </div>
 
         <div v-if="props.category.id !== null">

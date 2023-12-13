@@ -28,6 +28,12 @@ category_id: number;
 export type ExpensesIndexPage = {
 expenses: Array<App.Data.ExpenseData>;
 categoryMonthlyTotals: Array<App.Data.CategoryMonthlyTotalData>;
+categoryMonthlyTotalsPreviousMonth: Array<App.Data.CategoryMonthlyTotalData>;
+categoryMonthlyTotalsFollowingMonth: Array<App.Data.CategoryMonthlyTotalData>;
 totalExpenses: number;
+totalExpensesPreviousMonth: number;
+totalExpensesFollowingMonth: number;
+year: number;
+month: number;
 };
 }

@@ -20,6 +20,7 @@ const selectedIcon = ref(iconComponents().find(({ name }) => name === props.icon
                     class="relative z-10 w-full cursor-pointer rounded-md bg-white p-1 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                     <component
                         :is="selectedIcon.component"
+                        :style="'color:' + selectedIcon.hex"
                         :size="32" />
                 </ListboxButton>
 
@@ -32,13 +33,13 @@ const selectedIcon = ref(iconComponents().find(({ name }) => name === props.icon
                         <ListboxOption
                             v-for="icon in iconComponents()"
                             :key="icon.name"
-                            v-slot="{ active, selected }"
+                            v-slot="{ active }"
                             :value="icon"
                             as="template"
                             @click="
                                 emit('updated', {
-                                    name: 'icon',
-                                    value: icon.name,
+                                    icon: icon.name,
+                                    hex: icon.hex,
                                 })
                             ">
                             <li>
@@ -49,6 +50,7 @@ const selectedIcon = ref(iconComponents().find(({ name }) => name === props.icon
                                     ]">
                                     <component
                                         :is="icon.component"
+                                        :style="'color:' + icon.hex"
                                         :size="32" />
                                 </div>
                             </li>

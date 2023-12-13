@@ -1,46 +1,47 @@
 <script lang="ts" setup>
-import { computed, watch } from "vue";
+import { computed, ref } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import CategoryLabel from "@/Pages/Categories/Partials/CategoryLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import { route, current } from "momentum-trail";
+import { useExpenseStore } from "@/Stores/ExpenseStore";
+import moment from "moment";
+import DangerButton from "@/Components/DangerButton.vue";
+import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
+import { Switch } from "@headlessui/vue";
+import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
-let props = defineProps<{
-    expense?: App.Data.ExpenseData;
-}>();
+const enabled = ref(false);
+const expenseStore = useExpenseStore();
 
 const emit = defineEmits<{
     created: [];
     updated: [];
     cancel: [];
+    deleted: [];
 }>();
 
 const page = usePage();
 
 const categories = computed(() => page.props.categories);
 
-let form = useForm({
-    amount: props.expense ? props.expense.amount / 100 : 0,
-    date: props.expense ? props.expense.date : new Date().toISOString().split("T")[0],
-    notes: props.expense ? props.expense.notes : null,
-    category_id: props.expense ? props.expense.category?.id : null,
-});
+const showCategoryList = ref(false);
 
-watch(
-    () => props.expense,
-    (newExpense) => {
-        form.clearErrors();
-        form.amount = newExpense ? newExpense.amount / 100 : 0;
-        form.date = newExpense ? newExpense.date : new Date().toISOString().split("T")[0];
-        form.notes = newExpense ? newExpense.notes : null;
-        form.category_id = newExpense ? newExpense.category?.id : null;
-    },
-);
+const formatDate = (date: string): string => {
+    return moment(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+};
+
+let form = useForm({
+    amount: expenseStore.expense.amount / 100,
+    date: formatDate(expenseStore.expense.date), //: new Date().toISOString().split("T")[0],
+    notes: expenseStore.expense.notes,
+    category_id: expenseStore.expense.category?.id,
+});
 
 const submit = (action: String) => {
     if (action === "update") {
-        form.patch(route("expenses.update", props.expense.id), {
+        form.patch(route("expenses.update", expenseStore.expense.id), {
             preserveScroll: true,
             onSuccess: () => {
                 emit("updated");
@@ -53,21 +54,58 @@ const submit = (action: String) => {
                 emit("created");
             },
         });
+    } else if (action === "delete") {
+        form.delete(route("expenses.delete", expenseStore.expense.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                emit("deleted");
+            },
+        });
     }
 };
+
+const categoryById = computed(() => {
+    if (form.category_id == null) {
+        return categories.value[0];
+    }
+
+    return categories.value.find((item) => item.id === form.category_id);
+});
+
+const selectCategory = (categoryId: number) => {
+    form.category_id = categoryId;
+    showCategoryList.value = false;
+};
+
+const people = [{ name: "Summer vacation 2024" }, { name: "Kitchen renewal" }, { name: "Kids sports" }];
+const selectedPerson = ref(people[0]);
 </script>
 
 <template>
-    <form
-        action=""
-        class="space-y-6">
+    <form class="space-y-6">
         <div>
-            <label
-                class="block text-sm font-medium leading-6 text-gray-900"
-                for="amount"
-                >Amount</label
-            >
-            <div class="relative mt-2 rounded-md shadow-sm">
+            <div class="mx-auto w-36">
+                <input
+                    id="date"
+                    v-model="form.date"
+                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-inset ring-gray-300 placeholder:text-gray-400 hover:shadow-sm hover:ring-1 focus:shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    name="date"
+                    type="date" />
+            </div>
+            <div
+                v-if="form.errors.date"
+                class="mt-1 text-xs text-red-500"
+                v-text="form.errors.date"></div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button
+                @click.prevent="showCategoryList = !showCategoryList"
+                class="flex h-10 w-10 items-center justify-center rounded p-1.5 text-white"
+                :style="'background-color:' + categoryById.hex">
+                <CategoryIcon :category="categoryById" />
+            </button>
+            <div class="relative flex-1 rounded-md shadow-sm">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                     <span class="text-gray-500 sm:text-sm">€</span>
                 </div>
@@ -75,7 +113,7 @@ const submit = (action: String) => {
                     id="amount"
                     v-model="form.amount"
                     aria-describedby="amount-currency"
-                    class="block w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     name="amount"
                     placeholder="0.00"
                     type="text" />
@@ -94,24 +132,24 @@ const submit = (action: String) => {
                 v-text="form.errors.amount"></div>
         </div>
 
-        <div>
-            <label
-                class="block text-sm font-medium leading-6 text-gray-900"
-                for="date"
-                >Date</label
-            >
-            <div class="mt-2">
-                <input
-                    id="date"
-                    v-model="form.date"
-                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    name="date"
-                    type="date" />
-            </div>
+        <div
+            class="-mx-6 bg-neutral-100 p-3"
+            v-if="showCategoryList">
             <div
-                v-if="form.errors.date"
-                class="mt-1 text-xs text-red-500"
-                v-text="form.errors.date"></div>
+                v-if="form.errors.category_id"
+                class="mb-1 text-xs text-red-500"
+                v-text="form.errors.category_id"></div>
+            <div class="grid grid-cols-3 gap-3">
+                <template
+                    v-for="category in categories"
+                    :key="category.id">
+                    <button
+                        class="inline-block rounded"
+                        @click.prevent="selectCategory(category.id)">
+                        <CategoryLabel :category="category" />
+                    </button>
+                </template>
+            </div>
         </div>
 
         <div>
@@ -131,31 +169,89 @@ const submit = (action: String) => {
         </div>
 
         <div>
-            <div
-                v-if="form.errors.category_id"
-                class="mb-1 text-xs text-red-500"
-                v-text="form.errors.category_id"></div>
-            <div class="flex flex-wrap gap-2">
-                <template
-                    v-for="category in categories"
-                    :key="category.id">
-                    <button
-                        :class="[
-                            form.category_id === category.id ? 'ring-2 ring-black ring-offset-2' : '',
-                            'inline-block rounded',
-                        ]"
-                        @click.prevent="form.category_id = category.id">
-                        <CategoryLabel :category="category" />
-                    </button>
-                </template>
+            <div class="w-72">
+                <div class="mb-2 text-sm font-medium leading-6 text-gray-900">Is this part of a project?</div>
+                <Listbox v-model="selectedPerson">
+                    <div class="relative mt-1">
+                        <ListboxButton
+                            class="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                            <span class="block truncate">{{ selectedPerson.name }}</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                <ChevronUpDownIcon
+                                    class="h-5 w-5 text-gray-400"
+                                    aria-hidden="true" />
+                            </span>
+                        </ListboxButton>
+
+                        <transition
+                            leave-active-class="transition duration-100 ease-in"
+                            leave-from-class="opacity-100"
+                            leave-to-class="opacity-0">
+                            <ListboxOptions
+                                class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                <ListboxOption
+                                    v-slot="{ active, selected }"
+                                    v-for="person in people"
+                                    :key="person.name"
+                                    :value="person"
+                                    as="template">
+                                    <li
+                                        :class="[
+                                            active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
+                                            'relative cursor-default select-none py-2 pl-10 pr-4',
+                                        ]">
+                                        <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">{{
+                                            person.name
+                                        }}</span>
+                                        <span
+                                            v-if="selected"
+                                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                            <CheckIcon
+                                                class="h-5 w-5"
+                                                aria-hidden="true" />
+                                        </span>
+                                    </li>
+                                </ListboxOption>
+                            </ListboxOptions>
+                        </transition>
+                    </div>
+                </Listbox>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center space-x-2">
+                <Switch
+                    v-model="enabled"
+                    :class="enabled ? 'bg-green-500' : 'bg-gray-400'"
+                    class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+                    <span class="sr-only">Use setting</span>
+                    <span
+                        aria-hidden="true"
+                        :class="enabled ? 'translate-x-9' : 'translate-x-0'"
+                        class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
+                </Switch>
+                <div>It's an extraordinary expense</div>
             </div>
         </div>
 
         <div class="space-x-4">
-            <PrimaryButton @click.prevent="submit(expense == null ? 'create' : 'update')">
-                {{ expense == null ? "Create" : "Update" }}
+            <PrimaryButton
+                type="button"
+                @click.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')">
+                {{ expenseStore.isNewExpense ? "Create" : "Update" }}
             </PrimaryButton>
-            <SecondaryButton @click.prevent="emit('cancel')">Cancel</SecondaryButton>
+            <SecondaryButton
+                type="button"
+                @click.prevent="emit('cancel')"
+                >Cancel</SecondaryButton
+            >
+
+            <DangerButton
+                type="button"
+                @click.prevent="submit('delete')"
+                >Delete</DangerButton
+            >
         </div>
     </form>
 </template>
