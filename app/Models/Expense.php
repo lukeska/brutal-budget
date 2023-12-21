@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
+use Illuminate\Database\Eloquent\Builder;
 
 class Expense extends Model
 {
@@ -14,9 +16,9 @@ class Expense extends Model
 
     protected $guarded = [];
 
-    protected $dates = [
-        'date',
-    ];
+    /*protected $casts = [
+        'date' => 'datetime',
+    ];*/
 
     public function user(): BelongsTo
     {
@@ -26,6 +28,11 @@ class Expense extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 
     public function team(): BelongsTo
@@ -46,9 +53,20 @@ class Expense extends Model
     /*
      * Scopes
      */
-    public function scopeMonth($query, Carbon $date = null)
+    public function scopeMonth(Builder $query, Carbon $date = null): void
     {
         $date = $date ?: Carbon::now();
-        return $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);
+
+        $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);
+    }
+
+    public function scopeMonthFromInt(Builder $query, int $year_month = null): void
+    {
+        $date = $year_month ? Carbon::create(
+            Str::of($year_month)->substr(0, 4)->toInteger(),
+            Str::of($year_month)->substr(4, 2)->toInteger(),
+        ) : Carbon::now();
+
+        $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);
     }
 }

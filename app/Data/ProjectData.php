@@ -36,7 +36,7 @@ class ProjectData extends DataResource
         if (Route::current()->parameter('project')) {
             // If the 'category' route parameter is present, add the ignore rule
             $rules['name'][] = Rule::unique('projects', 'name')
-                ->ignore(Route::current()->parameter('projects'))
+                ->ignore(Route::current()->parameter('project'))
                 ->where('team_id', Auth::user()->currentTeam->id);
         } else {
             // If creating a new record, add the unique rule with the additional condition

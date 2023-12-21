@@ -18,7 +18,10 @@ class ExpenseData extends Data
         public Carbon $date,
         public int $amount,
         public ?string $notes,
+        #[MapName('is_regular')]
+        public bool $isRegular,
         public CategoryData $category,
+        public ?ProjectData $project,
     ) {
     }
 }

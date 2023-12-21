@@ -10,31 +10,46 @@ use App\Models\CategoryMonthlyTotal;
 use App\Models\Expense;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
 {
     public function index($year = null, $month = null)
     {
+        $regularExpenses = null;
+        if (Request::has('type')) {
+            $regularExpenses = Request::get('type') == 'regular'
+                                ? true
+                                : ((Request::get('type') == 'non-regular')
+                                    ? false
+                                    : null);
+        }
+
         $currentDate = Carbon::now();
 
-        if($year && $month) {
+        if ($year && $month) {
             $currentDate = Carbon::create($year, $month, 1);
         }
 
         $expenses = ExpenseData::collection(Auth::user()
             ->currentTeam
             ->expenses()
+            ->when($regularExpenses !== null, function ($query) use ($regularExpenses) {
+                return $query->where('is_regular', $regularExpenses);
+            })
             ->month($currentDate)
             ->with('category')
+            ->with('project')
             ->orderByDesc('date')
             ->get());
 
-        $rawTotals = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
+        $rawTotals = CategoryMonthlyTotal::query()
+            ->where('team_id', Auth::user()->currentTeam->id)
             ->where('year_month', $currentDate->format('Ym'))
             ->whereNull('user_id')
+            ->where('is_regular', $regularExpenses)
             ->with('category')
             ->orderByDesc('amount')
             ->get();
@@ -46,6 +61,7 @@ class ExpenseController extends Controller
         $rawTotalsPreviousMonth = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
             ->where('year_month', $currentDate->copy()->subMonth()->format('Ym'))
             ->whereNull('user_id')
+            ->where('is_regular', $regularExpenses)
             ->with('category')
             ->orderByDesc('amount')
             ->get();
@@ -57,6 +73,7 @@ class ExpenseController extends Controller
         $rawTotalsFollowingMonth = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
             ->where('year_month', $currentDate->copy()->addMonth()->format('Ym'))
             ->whereNull('user_id')
+            ->where('is_regular', $regularExpenses)
             ->with('category')
             ->orderByDesc('amount')
             ->get();
@@ -64,8 +81,6 @@ class ExpenseController extends Controller
         $totalExpensesFollowingMonth = $rawTotalsFollowingMonth->sum('amount');
 
         $categoryMonthlyTotalsFollowingMonth = CategoryMonthlyTotalData::collection($rawTotalsFollowingMonth);
-
-
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
@@ -99,7 +114,7 @@ class ExpenseController extends Controller
 
         $expenseData = [
             ...$data->all(),
-            'user_id' => Auth::user()->getAuthIdentifier()
+            'user_id' => Auth::user()->getAuthIdentifier(),
         ];
         $expenseData['amount'] = str_replace(',', '.', $expenseData['amount']) * 100;
 

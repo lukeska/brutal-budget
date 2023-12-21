@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('date');
             $table->integer('amount');
             $table->string('notes')->nullable();
-            $table->boolean('is_personal')->default(true);
+            $table->boolean('is_regular')->default(true);
             $table->timestamps();
         });
     }

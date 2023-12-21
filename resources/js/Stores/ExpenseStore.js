@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 function getCurrentDateFormatted() {
     const currentDate = new Date();
@@ -27,7 +30,8 @@ export const useExpenseStore = defineStore("ExpenseStore", {
                     amount: 0,
                     date: getCurrentDateFormatted(),
                     notes: null,
-                    category: category,
+                    category: category ? category : page.props.categories[0],
+                    is_regular: true,
                 };
             } else {
                 this.expense = expense;

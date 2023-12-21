@@ -4,43 +4,56 @@ namespace App\Helpers;
 
 use App\Models\CategoryMonthlyTotal;
 use App\Models\Expense;
-use Illuminate\Support\Str;
 
 class Totals
 {
-    public function generateByCategory(int $category_id, int $team_id, int $year_month): void
+    public function generateByCategory(int $categoryId, int $teamId, int $yearMonth): void
     {
-        $expenses = Expense::where('category_id', $category_id)
-            ->where('team_id', $team_id)
-            ->whereMonth('date', Str::of($year_month)->substr(4,2)->toInteger())
-            ->whereYear('date', Str::of($year_month)->substr(0,4)->toInteger())
+        $this->generate($categoryId, $teamId, $yearMonth, isRegular: null);
+        $this->generate($categoryId, $teamId, $yearMonth, isRegular: true);
+        $this->generate($categoryId, $teamId, $yearMonth, isRegular: false);
+    }
+
+    protected function generate(int $categoryId, int $teamId, int $yearMonth, bool $isRegular = null): void
+    {
+        $expenses = Expense::query()
+            ->monthFromInt($yearMonth)
+            ->where('category_id', $categoryId)
+            ->where('team_id', $teamId)
+            ->when($isRegular !== null, function ($query) use ($isRegular) {
+                return $query->where('is_regular', $isRegular);
+            })
             ->get();
 
         $expensesTotalAmount = $expenses->sum('amount');
 
-        $teamTotal = CategoryMonthlyTotal::where('year_month', $year_month)
-            ->where('category_id', $category_id)
-            ->where('team_id', $team_id)
+        $teamTotal = CategoryMonthlyTotal::where('year_month', $yearMonth)
+            ->where('category_id', $categoryId)
+            ->where('team_id', $teamId)
             ->whereNull('user_id')
+            ->when($isRegular !== null, function ($query) use ($isRegular) {
+                return $query->where('is_regular', $isRegular);
+            })
             ->first();
 
-        if($expensesTotalAmount == 0 && $teamTotal) {
+        if ($expensesTotalAmount == 0 && $teamTotal) {
 
             $teamTotal->delete();
 
-        } else if($teamTotal) {
+        } elseif ($teamTotal) {
 
             $teamTotal->update([
                 'amount' => $expensesTotalAmount,
             ]);
 
-        } else {
+        } elseif ($expensesTotalAmount > 0) {
 
             CategoryMonthlyTotal::create([
-                'category_id' => $category_id,
-                'team_id' => $team_id,
-                'year_month' => $year_month,
+                'category_id' => $categoryId,
+                'team_id' => $teamId,
+                'year_month' => $yearMonth,
                 'amount' => $expensesTotalAmount,
+                'is_regular' => $isRegular,
             ]);
 
         }

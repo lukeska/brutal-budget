@@ -16,14 +16,18 @@ id?: number;
 date: string;
 amount: number;
 notes: string | null;
+is_regular: boolean;
 category: App.Data.CategoryData;
+project: App.Data.ProjectData | null;
 };
 export type ExpenseRequest = {
 id?: number;
 date: string;
 amount: number;
 notes: string | null;
+is_regular: boolean;
 category_id: number;
+project_id: number | null;
 };
 export type ExpensesIndexPage = {
 expenses: Array<App.Data.ExpenseData>;

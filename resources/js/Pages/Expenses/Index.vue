@@ -5,6 +5,9 @@ import { useForm } from "@inertiajs/vue3";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 import CategoryMonthlyTotalItem from "@/Pages/Expenses/Partials/CategoryMonthlyTotalItem.vue";
 import ExpensesTotals from "@/Pages/Expenses/Partials/ExpensesTotals.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import ExpenseTypeDropdown from "@/Pages/Expenses/Partials/ExpenseTypeDropdown.vue";
 
 const expenseStore = useExpenseStore();
 
@@ -20,15 +23,6 @@ let props = defineProps<{
     month: number;
 }>();
 
-let form = useForm({});
-
-const currencyFormatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
-
 const findTotalByCategoryId = (categoryId: number, collection: App.Data.CategoryMonthlyTotalData[]) => {
     return collection.find((item) => item.category.id === categoryId);
 };
@@ -41,7 +35,14 @@ const findExpensesByCategoryId = (categoryId: number, collection: App.Data.Expen
 <template>
     <AppLayout title="Expenses">
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Expenses</h2>
+            <div class="flex w-full justify-between">
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">Expenses</h2>
+
+                <div>
+                    <!-- Expense Type Dropdown -->
+                    <ExpenseTypeDropdown />
+                </div>
+            </div>
         </template>
 
         <div class="container mx-auto py-12">

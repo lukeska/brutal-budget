@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserSettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,6 +44,11 @@ Route::middleware([
     Route::post('/categories/{category}/icon', [CategoryController::class, 'updateIcon'])->name('categories.update-icon');
 
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+    Route::patch('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
+    Route::delete('/projects/{project}', [ProjectController::class, 'delete'])->name('projects.delete');
+    Route::put('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects/{project}/hex', [ProjectController::class, 'updateHex'])->name('projects.update-hex');
 
     Route::get('/expenses/{year?}/{month?}', [ExpenseController::class, 'index'])
         ->where([
@@ -53,4 +59,6 @@ Route::middleware([
     Route::put('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
     Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'delete'])->name('expenses.delete');
+
+    Route::get('/user/settings', [UserSettingsController::class, 'show'])->name('settings.show');
 });

@@ -78,7 +78,7 @@ const logout = () => {
                                     Categories
                                 </NavLink>
                                 <NavLink
-                                    :active="route().current('projects.index')"
+                                    :active="route().current('projects.*')"
                                     :href="route('projects.index')">
                                     Projects
                                 </NavLink>
@@ -218,6 +218,8 @@ const logout = () => {
 
                                         <DropdownLink :href="route('profile.show')"> Profile</DropdownLink>
 
+                                        <DropdownLink :href="route('settings.show')"> Settings </DropdownLink>
+
                                         <DropdownLink
                                             v-if="$page.props.jetstream.hasApiFeatures"
                                             :href="route('api-tokens.index')">
@@ -315,6 +317,12 @@ const logout = () => {
                                 :active="route().current('profile.show')"
                                 :href="route('profile.show')">
                                 Profile
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink
+                                :active="route().current('settings.show')"
+                                :href="route('settings.show')">
+                                Settings
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink
