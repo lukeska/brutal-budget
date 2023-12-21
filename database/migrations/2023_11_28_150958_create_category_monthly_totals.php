@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->index()->constrained();
             $table->integer('amount');
             $table->mediumInteger(column: 'year_month', unsigned: true)->index();
+            $table->boolean('is_regular')->nullable();
             $table->timestamps();
         });
     }

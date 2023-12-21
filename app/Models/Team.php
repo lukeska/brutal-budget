@@ -48,6 +48,11 @@ class Team extends JetstreamTeam
         return $this->hasMany(Category::class);
     }
 
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
     public function expenses(): HasMany
     {
         return $this->hasMany(Expense::class);

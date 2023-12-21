@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import CategoryLabel from "@/Pages/Categories/Partials/CategoryLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -25,6 +25,12 @@ const emit = defineEmits<{
 const page = usePage();
 
 const categories = computed(() => page.props.categories);
+const projects = computed(() => {
+    const originalProjects = page.props.projects || [];
+    const defaultProject = { id: null, name: "No" };
+
+    return [defaultProject, ...originalProjects];
+});
 
 const showCategoryList = ref(false);
 
@@ -37,6 +43,8 @@ let form = useForm({
     date: formatDate(expenseStore.expense.date), //: new Date().toISOString().split("T")[0],
     notes: expenseStore.expense.notes,
     category_id: expenseStore.expense.category?.id,
+    project_id: expenseStore.expense.project?.id,
+    is_regular: expenseStore.expense.is_regular,
 });
 
 const submit = (action: String) => {
@@ -77,8 +85,11 @@ const selectCategory = (categoryId: number) => {
     showCategoryList.value = false;
 };
 
-const people = [{ name: "Summer vacation 2024" }, { name: "Kitchen renewal" }, { name: "Kids sports" }];
-const selectedPerson = ref(people[0]);
+const selectedProject = ref(projects.value.find((item) => item.id === form.project_id));
+
+watchEffect(() => {
+    form.project_id = selectedProject.value?.id || null;
+});
 </script>
 
 <template>
@@ -171,11 +182,13 @@ const selectedPerson = ref(people[0]);
         <div>
             <div class="w-72">
                 <div class="mb-2 text-sm font-medium leading-6 text-gray-900">Is this part of a project?</div>
-                <Listbox v-model="selectedPerson">
+                <Listbox v-model="selectedProject">
                     <div class="relative mt-1">
                         <ListboxButton
                             class="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                            <span class="block truncate">{{ selectedPerson.name }}</span>
+                            <span class="block truncate">{{
+                                selectedProject ? selectedProject.name : "Pick a project"
+                            }}</span>
                             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                 <ChevronUpDownIcon
                                     class="h-5 w-5 text-gray-400"
@@ -191,9 +204,9 @@ const selectedPerson = ref(people[0]);
                                 class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                                 <ListboxOption
                                     v-slot="{ active, selected }"
-                                    v-for="person in people"
-                                    :key="person.name"
-                                    :value="person"
+                                    v-for="project in projects"
+                                    :key="project.name"
+                                    :value="project"
                                     as="template">
                                     <li
                                         :class="[
@@ -201,7 +214,7 @@ const selectedPerson = ref(people[0]);
                                             'relative cursor-default select-none py-2 pl-10 pr-4',
                                         ]">
                                         <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">{{
-                                            person.name
+                                            project.name
                                         }}</span>
                                         <span
                                             v-if="selected"
@@ -222,16 +235,16 @@ const selectedPerson = ref(people[0]);
         <div>
             <div class="flex items-center space-x-2">
                 <Switch
-                    v-model="enabled"
-                    :class="enabled ? 'bg-green-500' : 'bg-gray-400'"
+                    v-model="form.is_regular"
+                    :class="form.is_regular ? 'bg-green-500' : 'bg-gray-400'"
                     class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-                    <span class="sr-only">Use setting</span>
+                    <span class="sr-only">Is regular</span>
                     <span
                         aria-hidden="true"
-                        :class="enabled ? 'translate-x-9' : 'translate-x-0'"
+                        :class="form.is_regular ? 'translate-x-9' : 'translate-x-0'"
                         class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
                 </Switch>
-                <div>It's an extraordinary expense</div>
+                <div>This is a regular expense</div>
             </div>
         </div>
 

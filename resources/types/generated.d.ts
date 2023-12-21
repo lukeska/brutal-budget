@@ -16,14 +16,18 @@ id?: number;
 date: string;
 amount: number;
 notes: string | null;
+is_regular: boolean;
 category: App.Data.CategoryData;
+project: App.Data.ProjectData | null;
 };
 export type ExpenseRequest = {
 id?: number;
 date: string;
 amount: number;
 notes: string | null;
+is_regular: boolean;
 category_id: number;
+project_id: number | null;
 };
 export type ExpensesIndexPage = {
 expenses: Array<App.Data.ExpenseData>;
@@ -36,4 +40,9 @@ totalExpensesFollowingMonth: number;
 year: number;
 month: number;
 };
+export type ProjectData = {
+id?: number;
+name: string;
+hex: string;
+permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
 }

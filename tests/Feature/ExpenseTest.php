@@ -2,13 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Actions\Jetstream\AddTeamMember;
 use App\Models\Expense;
-use App\Models\Team;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -18,7 +15,7 @@ class ExpenseTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    function a_user_can_create_an_expense()
+    public function a_user_can_create_an_expense()
     {
         $this->signIn();
 
@@ -39,12 +36,12 @@ class ExpenseTest extends TestCase
                     ->component('Expenses/Index')
                     ->where('expenses.0.notes', 'My notes')
                     ->where('expenses.0.amount', 2050);
-                }
+            }
             );
     }
 
     /** @test */
-    function a_user_can_edit_an_expense()
+    public function a_user_can_edit_an_expense()
     {
         $user = $this->signIn();
         $team = $user->currentTeam;
@@ -63,7 +60,7 @@ class ExpenseTest extends TestCase
                 return $page
                     ->component('Expenses/Index')
                     ->where('expenses.0.amount', 1000);
-                }
+            }
             );
 
         $expense->amount = 20.00;
@@ -75,7 +72,7 @@ class ExpenseTest extends TestCase
                 return $page
                     ->component('Expenses/Index')
                     ->where('expenses.0.amount', 2000);
-                }
+            }
             );
     }
 
@@ -100,11 +97,11 @@ class ExpenseTest extends TestCase
         $this->get(route('expenses.index'))
             ->assertOk()
             ->assertInertia(function (AssertableInertia $page) {
-                    return $page
-                        ->component('Expenses/Index')
-                        ->has('expenses', 1)
-                        ->where('expenses.0.amount', 1111);
-                }
+                return $page
+                    ->component('Expenses/Index')
+                    ->has('expenses', 1)
+                    ->where('expenses.0.amount', 1111);
+            }
             );
 
         $user->switchTeam($team2);
@@ -112,12 +109,11 @@ class ExpenseTest extends TestCase
         $this->get(route('expenses.index'))
             ->assertOk()
             ->assertInertia(function (AssertableInertia $page) {
-                    return $page
-                        ->component('Expenses/Index')
-                        ->has('expenses', 0)
-                        //->where('expenses.0.amount', '1111.00')
-                    ;
-                }
+                return $page
+                    ->component('Expenses/Index')
+                    ->has('expenses', 0);
+                //->where('expenses.0.amount', '1111.00')
+            }
             );
 
         $expenseGroup2 = Expense::factory()->create([
@@ -157,8 +153,8 @@ class ExpenseTest extends TestCase
         $this->get(route('expenses.index'))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                    ->component('Expenses/Index')
-                    ->has('expenses', 0)
+                ->component('Expenses/Index')
+                ->has('expenses', 0)
             );
 
         $team->users()->attach($luca, ['role' => 'admin']);
@@ -204,7 +200,7 @@ class ExpenseTest extends TestCase
     }
 
     /** @test */
-    function the_main_expenses_page_shows_monthly_total()
+    public function the_main_expenses_page_shows_monthly_total()
     {
         $user = $this->signIn();
 

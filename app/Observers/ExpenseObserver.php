@@ -13,7 +13,7 @@ class ExpenseObserver
      */
     public function created(Expense $expense): void
     {
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int)((new Carbon($expense->date))->format('Ym')));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
     }
 
     /**
@@ -22,7 +22,7 @@ class ExpenseObserver
     public function updated(Expense $expense): void
     {
         // date was changed, must update total relate to past date
-        if($expense->wasChanged('date')) {
+        if ($expense->wasChanged('date')) {
 
             $originalDate = new Carbon($expense->getOriginal('date'));
 
@@ -39,7 +39,7 @@ class ExpenseObserver
      */
     public function deleted(Expense $expense): void
     {
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int)((new Carbon($expense->date))->format('Ym')));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
     }
 
     /**

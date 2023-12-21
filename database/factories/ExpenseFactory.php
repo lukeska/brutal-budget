@@ -26,6 +26,25 @@ class ExpenseFactory extends Factory
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
             'category_id' => $user->currentTeam->categories->first()->id,
+            'is_regular' => $this->faker->boolean(80),
         ];
+    }
+
+    public function isRegular(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_regular' => true,
+            ];
+        });
+    }
+
+    public function isNotRegular(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_regular' => false,
+            ];
+        });
     }
 }
