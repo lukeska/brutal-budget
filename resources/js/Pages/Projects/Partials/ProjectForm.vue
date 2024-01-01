@@ -19,7 +19,7 @@ let props = withDefaults(
     },
 );
 
-const emit = defineEmits<[created: [], cancel: []]>();
+const emit = defineEmits(["created", "cancel"]);
 
 let form = useForm({
     name: props.project.name,

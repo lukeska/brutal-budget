@@ -8,7 +8,7 @@ let props = defineProps<{
     hex: String;
 }>();
 
-const emit = defineEmits<[updated: []]>();
+const emit = defineEmits(["updated"]);
 
 const fullConfig = resolveConfig(tailwindConfig);
 
