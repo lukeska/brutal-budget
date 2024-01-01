@@ -5,11 +5,11 @@ import SectionBorder from "@/Components/SectionBorder.vue";
 import TeamMemberManager from "@/Pages/Teams/Partials/TeamMemberManager.vue";
 import UpdateTeamNameForm from "@/Pages/Teams/Partials/UpdateTeamNameForm.vue";
 
-defineProps({
-    team: Object,
-    availableRoles: Array,
-    permissions: Object,
-});
+defineProps<{
+    team: Object;
+    availableRoles: Array;
+    permissions: Object;
+}>();
 </script>
 
 <template>

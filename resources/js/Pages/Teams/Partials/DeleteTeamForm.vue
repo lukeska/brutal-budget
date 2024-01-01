@@ -6,9 +6,9 @@ import ConfirmationModal from "@/Components/ConfirmationModal.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
-const props = defineProps({
-    team: Object,
-});
+const props = defineProps<{
+    team: Object;
+}>();
 
 const confirmingTeamDeletion = ref(false);
 const form = useForm({});

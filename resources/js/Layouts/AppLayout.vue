@@ -11,11 +11,11 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ExpenseFormSidebar from "@/Pages/Expenses/Partials/ExpenseFormSidebar.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 
-const expenseStore = useExpenseStore();
-
 defineProps<{
     title: String;
 }>();
+
+const expenseStore = useExpenseStore();
 
 const showingNavigationDropdown = ref(false);
 let sidebarOpen = ref(false);
@@ -218,7 +218,7 @@ const logout = () => {
 
                                         <DropdownLink :href="route('profile.show')"> Profile</DropdownLink>
 
-                                        <DropdownLink :href="route('settings.show')"> Settings </DropdownLink>
+                                        <DropdownLink :href="route('user-settings.show')"> Settings </DropdownLink>
 
                                         <DropdownLink
                                             v-if="$page.props.jetstream.hasApiFeatures"
@@ -320,8 +320,8 @@ const logout = () => {
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink
-                                :active="route().current('settings.show')"
-                                :href="route('settings.show')">
+                                :active="route().current('user-settings.show')"
+                                :href="route('user-settings.show')">
                                 Settings
                             </ResponsiveNavLink>
 

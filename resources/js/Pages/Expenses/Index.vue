@@ -9,8 +9,6 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import ExpenseTypeDropdown from "@/Pages/Expenses/Partials/ExpenseTypeDropdown.vue";
 
-const expenseStore = useExpenseStore();
-
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
     categoryMonthlyTotals: App.Data.CategoryMonthlyTotalData[];
@@ -22,6 +20,8 @@ let props = defineProps<{
     year: number;
     month: number;
 }>();
+
+const expenseStore = useExpenseStore();
 
 const findTotalByCategoryId = (categoryId: number, collection: App.Data.CategoryMonthlyTotalData[]) => {
     return collection.find((item) => item.category.id === categoryId);

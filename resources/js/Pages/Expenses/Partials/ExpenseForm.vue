@@ -11,9 +11,8 @@ import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 import { Switch } from "@headlessui/vue";
 import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-
-const enabled = ref(false);
-const expenseStore = useExpenseStore();
+import { getCurrencySymbol } from "@/Helpers/CurrencyFormatter";
+import CurrencyInput from "@/Helpers/CurrencyInput.vue";
 
 const emit = defineEmits<{
     created: [];
@@ -21,6 +20,8 @@ const emit = defineEmits<{
     cancel: [];
     deleted: [];
 }>();
+
+const expenseStore = useExpenseStore();
 
 const page = usePage();
 
@@ -48,6 +49,8 @@ let form = useForm({
 });
 
 const submit = (action: String) => {
+    form.amount = form.amount * 100;
+
     if (action === "update") {
         form.patch(route("expenses.update", expenseStore.expense.id), {
             preserveScroll: true,
@@ -118,21 +121,22 @@ watchEffect(() => {
             </button>
             <div class="relative flex-1 rounded-md shadow-sm">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <span class="text-gray-500 sm:text-sm">€</span>
+                    <span class="text-gray-500 sm:text-sm">
+                        {{ getCurrencySymbol(page.props.auth.user.currency) }}
+                    </span>
                 </div>
-                <input
+                <CurrencyInput
                     id="amount"
-                    v-model="form.amount"
-                    aria-describedby="amount-currency"
                     class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     name="amount"
+                    v-model="form.amount"
                     placeholder="0.00"
-                    type="text" />
+                    :options="{ currency: page.props.auth.user.currency, currencyDisplay: 'hidden' }" />
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <span
                         id="amount-currency"
                         class="text-gray-500 sm:text-sm"
-                        >EUR</span
+                        >{{ page.props.auth.user.currency }}</span
                     >
                 </div>
             </div>

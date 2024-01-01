@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import ProjectForm from "@/Pages/Projects/Partials/ProjectForm.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import ExpensesByDate from "@/Pages/Expenses/Partials/ExpensesByDate.vue";
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
 
 let props = defineProps<{
     project: App.Data.ProjectData;
@@ -10,12 +10,9 @@ let props = defineProps<{
     total: number;
 }>();
 
-const currencyFormatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
+const page = usePage();
+
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 </script>
 
 <template>

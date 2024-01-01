@@ -14,11 +14,11 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 import TextInput from "@/Components/TextInput.vue";
 
-const props = defineProps({
-    team: Object,
-    availableRoles: Array,
-    userPermissions: Object,
-});
+const props = defineProps<{
+    team: Object;
+    availableRoles: Array;
+    userPermissions: Object;
+}>();
 
 const page = usePage();
 

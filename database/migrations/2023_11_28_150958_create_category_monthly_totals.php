@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->index()->constrained();
             $table->foreignId('team_id')->index()->constrained();
+            // TODO: use foreignIdFor
             $table->foreignId('user_id')->nullable()->index()->constrained();
             $table->integer('amount');
             $table->mediumInteger(column: 'year_month', unsigned: true)->index();

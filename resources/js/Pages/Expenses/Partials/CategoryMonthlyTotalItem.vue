@@ -4,8 +4,8 @@ import { computed, ref } from "vue";
 import { IconCirclePlus, IconChevronDown } from "@tabler/icons-vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 import ExpenseItem from "@/Pages/Expenses/Partials/ExpenseItem.vue";
-
-const expenseStore = useExpenseStore();
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
 
 let props = defineProps<{
     categoryTotal: App.Data.CategoryMonthlyTotalData;
@@ -15,14 +15,11 @@ let props = defineProps<{
     expenses: App.Data.ExpenseData[];
 }>();
 
-let showExpenses = ref(false);
+const expenseStore = useExpenseStore();
 
-const currencyFormatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
+const page = usePage();
+
+let showExpenses = ref(false);
 
 const percentage = computed(() => {
     return Math.round((props.categoryTotal.amount / props.totalExpenses) * 100);
@@ -35,6 +32,8 @@ const previousMonthDelta = computed(() => {
 const followingMonthDelta = computed(() => {
     return props.categoryTotalFollowingMonth.amount - props.categoryTotal.amount;
 });
+
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 </script>
 
 <template>

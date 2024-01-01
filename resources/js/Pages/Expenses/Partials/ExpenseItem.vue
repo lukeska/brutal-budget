@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
 
 let props = defineProps<{
     expense: App.Data.ExpenseData;
 }>();
 
-const currencyFormatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
+const page = usePage();
+
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 </script>
 
 <template>

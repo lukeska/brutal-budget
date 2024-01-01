@@ -19,6 +19,7 @@ class ExpenseSeeder extends Seeder
 
         // current month expenses
         foreach (range(1, 40) as $i) {
+            // TODO: use recycle for user and categories
             Expense::factory()->create([
                 'user_id' => $luca->id,
                 'team_id' => $luca->currentTeam->id,

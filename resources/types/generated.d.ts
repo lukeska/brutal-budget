@@ -45,4 +45,7 @@ id?: number;
 name: string;
 hex: string;
 permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
+export type UserSettingsRequest = {
+currency: string;
+};
 }

@@ -99,8 +99,6 @@ class ExpenseController extends Controller
     {
         $expense = ExpenseRequest::validate(Request::all());
 
-        $expense['amount'] = str_replace(',', '.', $expense['amount']) * 100;
-
         Auth::user()->currentTeam->expenses()->create([...$expense, 'user_id' => Auth::user()->getAuthIdentifier()]);
 
         Request::session()->flash('message', 'Expense created correctly');
@@ -116,7 +114,6 @@ class ExpenseController extends Controller
             ...$data->all(),
             'user_id' => Auth::user()->getAuthIdentifier(),
         ];
-        $expenseData['amount'] = str_replace(',', '.', $expenseData['amount']) * 100;
 
         $expense->update($expenseData);
 

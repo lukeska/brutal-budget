@@ -3,12 +3,16 @@ import { computed } from "vue";
 import moment from "moment/moment";
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
-
-const expenseStore = useExpenseStore();
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
 
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
 }>();
+
+const page = usePage();
+
+const expenseStore = useExpenseStore();
 
 const expensesByDate = computed(() => {
     const itemsByDate = {};
@@ -35,12 +39,7 @@ const expensesByDate = computed(() => {
     return sortedItemsByDate;
 });
 
-const currencyFormatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 </script>
 
 <template>

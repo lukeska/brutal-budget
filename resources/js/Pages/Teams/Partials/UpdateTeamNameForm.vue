@@ -7,10 +7,10 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 
-const props = defineProps({
-    team: Object,
-    permissions: Object,
-});
+const props = defineProps<{
+    team: Object;
+    permissions: Object;
+}>();
 
 const form = useForm({
     name: props.team.name,

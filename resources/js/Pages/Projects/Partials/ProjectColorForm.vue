@@ -4,11 +4,11 @@ import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } f
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../../tailwind.config.js";
 
-let props = defineProps({
-    hex: String,
-});
+let props = defineProps<{
+    hex: String;
+}>();
 
-const emit = defineEmits(["updated"]);
+const emit = defineEmits<[updated: []]>();
 
 const fullConfig = resolveConfig(tailwindConfig);
 
@@ -88,7 +88,7 @@ const selectedColor = ref(colors.find(({ hex }) => hex === props.hex));
                         <ListboxOption
                             v-for="color in colors"
                             :key="color.hex"
-                            v-slot="{ active, selected }"
+                            v-slot="{ active }"
                             :value="color"
                             as="template"
                             @click="

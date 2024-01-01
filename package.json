@@ -39,6 +39,7 @@
     "@heroicons/vue": "^2.0.18",
     "@tabler/icons-vue": "^2.40.0",
     "moment": "^2.29.4",
-    "pinia": "^2.1.7"
+    "pinia": "^2.1.7",
+    "vue-currency-input": "^3.0.5"
   }
 }

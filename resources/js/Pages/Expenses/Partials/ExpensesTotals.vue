@@ -2,6 +2,8 @@
 import moment from "moment/moment";
 import { computed } from "vue";
 import { IconChevronRight, IconChevronLeft } from "@tabler/icons-vue";
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
 
 let props = defineProps<{
     totalExpenses: number;
@@ -10,6 +12,8 @@ let props = defineProps<{
     year: number;
     month: number;
 }>();
+
+const page = usePage();
 
 const previousMonth = computed(() => {
     return moment({ year: props.year, month: props.month - 1 })
@@ -23,12 +27,7 @@ const followingMonth = computed(() => {
         .add(1, "months");
 });
 
-const currencyFormatter = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-});
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 </script>
 
 <template>

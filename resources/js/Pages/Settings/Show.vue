@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import AppLayout from "@/Layouts/AppLayout.vue";
+import SectionBorder from "@/Components/SectionBorder.vue";
+import UpdateProfileInformationForm from "@/Pages/Profile/Partials/UpdateProfileInformationForm.vue";
+import UpdateSettingsForm from "@/Pages/Settings/Partials/UpdateSettingsForm.vue";
 </script>
 
 <template>
@@ -8,9 +11,12 @@ import AppLayout from "@/Layouts/AppLayout.vue";
             <h2 class="text-xl font-semibold leading-tight text-gray-800">Settings</h2>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-5xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg lg:p-8">settings go here</div>
+        <div>
+            <div class="mx-auto max-w-7xl py-10 sm:px-6 lg:px-8">
+                <div>
+                    <UpdateSettingsForm :user="$page.props.auth.user" />
+                    <SectionBorder />
+                </div>
             </div>
         </div>
     </AppLayout>

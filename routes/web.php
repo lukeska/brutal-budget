@@ -60,5 +60,6 @@ Route::middleware([
     Route::patch('/expenses/{expense}', [ExpenseController::class, 'update'])->name('expenses.update');
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'delete'])->name('expenses.delete');
 
-    Route::get('/user/settings', [UserSettingsController::class, 'show'])->name('settings.show');
+    Route::get('/user/settings', [UserSettingsController::class, 'show'])->name('user-settings.show');
+    Route::patch('/user/settings', [UserSettingsController::class, 'update'])->name('user-settings.update');
 });
