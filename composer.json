@@ -16,6 +16,7 @@
     "laravel/jetstream": "^4.0",
     "laravel/sanctum": "^3.3",
     "laravel/tinker": "^2.8",
+    "mailersend/laravel-driver": "^2.3",
     "spatie/laravel-data": "^3.9",
     "spatie/laravel-typescript-transformer": "^2.3",
     "tightenco/ziggy": "^1.0"
