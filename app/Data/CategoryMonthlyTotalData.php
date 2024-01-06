@@ -11,6 +11,7 @@ class CategoryMonthlyTotalData extends Data
         public int $amount,
         public int $year_month,
         public CategoryData $category,
+       public ?int $previous_month_delta_amount,
     ) {
 
     }

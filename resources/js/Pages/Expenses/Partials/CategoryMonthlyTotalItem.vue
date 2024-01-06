@@ -6,13 +6,11 @@ import { useExpenseStore } from "@/Stores/ExpenseStore";
 import ExpenseItem from "@/Pages/Expenses/Partials/ExpenseItem.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { usePage } from "@inertiajs/vue3";
+import { getDate } from "@/Helpers/DatesHelper";
 
 let props = defineProps<{
-    categoryTotal: App.Data.CategoryMonthlyTotalData;
-    categoryTotalPreviousMonth: App.Data.CategoryMonthlyTotalData;
-    categoryTotalFollowingMonth: App.Data.CategoryMonthlyTotalData;
-    totalExpenses: number;
     expenses: App.Data.ExpenseData[];
+    monthlyTotals: App.Data.MonthlyTotalData[];
 }>();
 
 const expenseStore = useExpenseStore();
@@ -22,15 +20,23 @@ const page = usePage();
 let showExpenses = ref(false);
 
 const percentage = computed(() => {
-    return Math.round((props.categoryTotal.amount / props.totalExpenses) * 100);
+    return Math.round((currentCategoryMonthlyTotal.value.amount / currentMonthlyTotal.value.total) * 100);
 });
 
-const previousMonthDelta = computed(() => {
-    return props.categoryTotal.amount - props.categoryTotalPreviousMonth.amount;
+const currentMonthlyTotal = computed(() => {
+    return props.monthlyTotals.find((item) => {
+        return item.isCurrent === true;
+    });
 });
 
-const followingMonthDelta = computed(() => {
-    return props.categoryTotalFollowingMonth.amount - props.categoryTotal.amount;
+const currentCategoryMonthlyTotal = computed(() => {
+    let monthlyTotal = currentMonthlyTotal.value;
+
+    return monthlyTotal.categoryMonthlyTotals[0];
+});
+
+const category = computed(() => {
+    return currentCategoryMonthlyTotal.value.category;
 });
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
@@ -41,73 +47,83 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
         <div class="relative flex justify-between py-1 pl-3 pr-1">
             <div
                 class="flex items-center space-x-2"
-                :style="'color:' + categoryTotal.category.hex">
-                <CategoryIcon :category="categoryTotal.category" />
-                <span class="font-semibold">{{ categoryTotal.category.name }}</span>
+                :style="'color:' + category.hex">
+                <CategoryIcon :category="category" />
+                <span class="block w-20 overflow-hidden text-ellipsis font-semibold sm:w-full">{{
+                    category.name
+                }}</span>
             </div>
 
             <div class="flex space-x-6">
                 <div class="text-right font-mono">
-                    <div class="mb-1 text-xl">{{ currencyFormatter.format(categoryTotal.amount / 100) }}</div>
+                    <div class="mb-1 text-xl">
+                        {{ currencyFormatter.format(currentCategoryMonthlyTotal.amount / 100) }}
+                    </div>
                     <div class="flex items-center space-x-2">
-                        <div class="relative h-1 w-20 bg-gray-200">
+                        <div class="relative h-1 w-16 bg-gray-200">
                             <div
                                 class="h-full"
-                                :style="
-                                    'width:' + percentage + '%;background-color:' + categoryTotal.category.hex
-                                "></div>
+                                :style="'width:' + percentage + '%;background-color:' + category.hex"></div>
                         </div>
                         <div class="w-6 text-sm text-gray-400">{{ percentage }}%</div>
                     </div>
                 </div>
                 <div class="space-x-1">
                     <button
-                        class="h-full w-12 rounded-lg bg-neutral-50"
+                        class="h-full w-8 rounded-lg bg-neutral-50 sm:w-12"
                         @click.prevent="showExpenses = !showExpenses">
                         <IconChevronDown
                             :class="[showExpenses ? 'rotate-180' : '', 'mx-auto transition duration-500']" />
                     </button>
                     <button
-                        class="h-full w-12 rounded-lg bg-neutral-50"
-                        @click.prevent="expenseStore.showSidebar(null, categoryTotal.category)">
+                        class="h-full w-8 rounded-lg bg-neutral-50 sm:w-12"
+                        @click.prevent="expenseStore.showSidebar(null, category)">
                         <IconCirclePlus class="mx-auto" />
                     </button>
                 </div>
             </div>
         </div>
         <div class="flex divide-x">
-            <div class="flex-1">
-                <div
-                    v-if="categoryTotalPreviousMonth"
-                    class="flex justify-between space-x-2 divide-x text-sm text-gray-400">
-                    <div class="px-3 py-2">
-                        Previous month
-                        <span class="font-mono text-black">{{
-                            currencyFormatter.format(categoryTotalPreviousMonth.amount / 100)
-                        }}</span>
+            <template
+                v-for="monthlyTotal in monthlyTotals"
+                :key="monthlyTotal.yearMonth">
+                <div class="flex-1 p-2 first:hidden last:hidden md:first:block md:last:block">
+                    <div class="mb-2 flex justify-between text-xs text-gray-400">
+                        <div>{{ getDate(monthlyTotal.yearMonth).format("MMM YY") }}</div>
+                        <template v-if="monthlyTotal.categoryMonthlyTotals[0]">
+                            <div
+                                :class="[
+                                    monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount > 0 ||
+                                    monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount == null
+                                        ? 'text-red-500'
+                                        : 'text-green-500',
+                                ]">
+                                <span
+                                    v-if="
+                                        monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount > 0 ||
+                                        monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount == null
+                                    "
+                                    >+</span
+                                >
+
+                                {{
+                                    currencyFormatter.format(
+                                        (monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
+                                            ? monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
+                                            : monthlyTotal.categoryMonthlyTotals[0].amount) / 100,
+                                    )
+                                }}
+                            </div>
+                        </template>
                     </div>
-                    <div :class="[previousMonthDelta > 0 ? 'text-red-500' : 'text-green-500', 'px-3 py-2 font-mono ']">
-                        <span v-if="previousMonthDelta > 0">+</span
-                        >{{ currencyFormatter.format(previousMonthDelta / 100) }}
+                    <div class="font-mono">
+                        <span v-if="monthlyTotal.categoryMonthlyTotals.length > 0">
+                            {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].amount / 100) }}
+                        </span>
+                        <span v-else>-</span>
                     </div>
                 </div>
-            </div>
-            <div class="flex-1">
-                <div
-                    v-if="categoryTotalFollowingMonth"
-                    class="flex justify-between space-x-2 divide-x text-sm text-gray-400">
-                    <div class="px-3 py-2">
-                        Following month
-                        <span class="font-mono text-black">{{
-                            currencyFormatter.format(categoryTotalFollowingMonth.amount / 100)
-                        }}</span>
-                    </div>
-                    <div :class="[followingMonthDelta < 0 ? 'text-red-500' : 'text-green-500', 'px-3 py-2 font-mono ']">
-                        <span v-if="followingMonthDelta > 0">+</span
-                        >{{ currencyFormatter.format(followingMonthDelta / 100) }}
-                    </div>
-                </div>
-            </div>
+            </template>
         </div>
 
         <div v-if="showExpenses">

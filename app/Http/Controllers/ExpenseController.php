@@ -2,22 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\CategoryMonthlyTotalData;
 use App\Data\ExpenseData;
 use App\Data\ExpenseRequest;
 use App\Data\ExpensesIndexPage;
-use App\Models\CategoryMonthlyTotal;
 use App\Models\Expense;
+use App\Repositories\MonthlyTotalsRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
 {
+    public function __construct(
+        protected MonthlyTotalsRepository $monthlyTotalsRepository
+    ) {
+    }
+
     public function index($year = null, $month = null)
     {
+        $expensesView = Request::get('view') == 'daily' ? 'daily' : 'categories';
+
         $regularExpenses = null;
         if (Request::has('type')) {
             $regularExpenses = Request::get('type') == 'regular'
@@ -45,53 +50,10 @@ class ExpenseController extends Controller
             ->orderByDesc('date')
             ->get());
 
-        $rawTotals = CategoryMonthlyTotal::query()
-            ->where('team_id', Auth::user()->currentTeam->id)
-            ->where('year_month', $currentDate->format('Ym'))
-            ->whereNull('user_id')
-            ->where('is_regular', $regularExpenses)
-            ->with('category')
-            ->orderByDesc('amount')
-            ->get();
-
-        $totalExpenses = $rawTotals->sum('amount');
-
-        $categoryMonthlyTotals = CategoryMonthlyTotalData::collection($rawTotals);
-
-        $rawTotalsPreviousMonth = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
-            ->where('year_month', $currentDate->copy()->subMonth()->format('Ym'))
-            ->whereNull('user_id')
-            ->where('is_regular', $regularExpenses)
-            ->with('category')
-            ->orderByDesc('amount')
-            ->get();
-
-        $totalExpensesPreviousMonth = $rawTotalsPreviousMonth->sum('amount');
-
-        $categoryMonthlyTotalsPreviousMonth = CategoryMonthlyTotalData::collection($rawTotalsPreviousMonth);
-
-        $rawTotalsFollowingMonth = CategoryMonthlyTotal::where('team_id', Auth::user()->currentTeam->id)
-            ->where('year_month', $currentDate->copy()->addMonth()->format('Ym'))
-            ->whereNull('user_id')
-            ->where('is_regular', $regularExpenses)
-            ->with('category')
-            ->orderByDesc('amount')
-            ->get();
-
-        $totalExpensesFollowingMonth = $rawTotalsFollowingMonth->sum('amount');
-
-        $categoryMonthlyTotalsFollowingMonth = CategoryMonthlyTotalData::collection($rawTotalsFollowingMonth);
-
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
-            categoryMonthlyTotals: $categoryMonthlyTotals,
-            categoryMonthlyTotalsPreviousMonth: $categoryMonthlyTotalsPreviousMonth,
-            categoryMonthlyTotalsFollowingMonth: $categoryMonthlyTotalsFollowingMonth,
-            totalExpenses: $totalExpenses,
-            totalExpensesPreviousMonth: $totalExpensesPreviousMonth,
-            totalExpensesFollowingMonth: $totalExpensesFollowingMonth,
-            year: $currentDate->year,
-            month: $currentDate->month
+            monthlyTotals: $this->monthlyTotalsRepository->getMonthlyTotals($year, $month, $regularExpenses),
+            expensesView: $expensesView,
         ));
     }
 
