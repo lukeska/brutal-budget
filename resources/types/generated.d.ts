@@ -10,6 +10,7 @@ id: number;
 amount: number;
 year_month: number;
 category: App.Data.CategoryData;
+previous_month_delta_amount: number | null;
 };
 export type ExpenseData = {
 id?: number;
@@ -31,14 +32,14 @@ project_id: number | null;
 };
 export type ExpensesIndexPage = {
 expenses: Array<App.Data.ExpenseData>;
+monthlyTotals: Array<App.Data.MonthlyTotalData>;
+expensesView: string;
+};
+export type MonthlyTotalData = {
+total: number;
+yearMonth: number;
 categoryMonthlyTotals: Array<App.Data.CategoryMonthlyTotalData>;
-categoryMonthlyTotalsPreviousMonth: Array<App.Data.CategoryMonthlyTotalData>;
-categoryMonthlyTotalsFollowingMonth: Array<App.Data.CategoryMonthlyTotalData>;
-totalExpenses: number;
-totalExpensesPreviousMonth: number;
-totalExpensesFollowingMonth: number;
-year: number;
-month: number;
+isCurrent: boolean;
 };
 export type ProjectData = {
 id?: number;

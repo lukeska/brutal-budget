@@ -10,7 +10,7 @@ import DropdownLink from "@/Components/DropdownLink.vue";
         <template #trigger>
             <span class="inline-flex rounded-md">
                 <button
-                    class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:bg-gray-50 focus:outline-none active:bg-gray-50"
+                    class="inline-flex items-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:bg-gray-50 focus:outline-none active:bg-gray-50"
                     type="button">
                     <span v-if="route().current('expenses.index', { type: 'regular' })">Only regular expenses</span>
                     <span v-else-if="route().current('expenses.index', { type: 'non-regular' })"

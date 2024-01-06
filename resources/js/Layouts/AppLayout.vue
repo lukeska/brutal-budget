@@ -242,7 +242,12 @@ const logout = () => {
                         </div>
 
                         <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
+                        <div class="-me-2 flex items-center space-x-2 sm:hidden">
+                            <PrimaryButton
+                                type="button"
+                                @click.prevent="expenseStore.showSidebar()"
+                                >+ Expense</PrimaryButton
+                            >
                             <button
                                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                                 @click="showingNavigationDropdown = !showingNavigationDropdown">
@@ -287,6 +292,21 @@ const logout = () => {
                             :active="route().current('dashboard')"
                             :href="route('dashboard')">
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :active="route().current('expenses.index')"
+                            :href="route('expenses.index')">
+                            Expenses
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :active="route().current('categories.index')"
+                            :href="route('categories.index')">
+                            Categories
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :active="route().current('projects.*')"
+                            :href="route('projects.index')">
+                            Projects
                         </ResponsiveNavLink>
                     </div>
 
