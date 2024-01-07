@@ -11,7 +11,7 @@ import * as Sentry from "@sentry/vue";
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 const pinia = createPinia();
 
-createInertiaApp({
+const app = createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob("./Pages/**/*.vue")),
     setup({ el, App, props, plugin }) {
@@ -27,6 +27,7 @@ createInertiaApp({
 });
 
 Sentry.init({
+    app,
     dsn: import.meta.env.VITE_SENTRY_DSN_PUBLIC,
     integrations: [
         new Sentry.BrowserTracing({
