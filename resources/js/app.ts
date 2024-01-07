@@ -11,23 +11,7 @@ import * as Sentry from "@sentry/vue";
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 const pinia = createPinia();
 
-const app = createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob("./Pages/**/*.vue")),
-    setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(pinia)
-            .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
-    },
-    progress: {
-        color: "#4B5563",
-    },
-});
-
 Sentry.init({
-    app,
     dsn: import.meta.env.VITE_SENTRY_DSN_PUBLIC,
     integrations: [
         new Sentry.BrowserTracing({
@@ -44,4 +28,29 @@ Sentry.init({
     // Session Replay
     replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+});
+
+createInertiaApp({
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob("./Pages/**/*.vue")),
+    setup({ el, App, props, plugin }) {
+        const vueApp = createApp({ render: () => h(App, props) })
+            .use(pinia)
+            .use(plugin)
+            .use(ZiggyVue)
+            .mount(el);
+
+        vueApp.config.errorHandler = (error, vm, info) => {
+            // Log the error to Sentry
+            Sentry.captureException(error);
+
+            // Continue with default error handling
+            console.error(error, vm, info);
+        };
+
+        return vueApp;
+    },
+    progress: {
+        color: "#4B5563",
+    },
 });
