@@ -25,7 +25,7 @@ class ExpenseTest extends TestCase
             'user_id' => null,
             'team_id' => null,
             'notes' => 'My notes',
-            'amount' => 20.50,
+            'amount' => 2050,
         ]);
 
         $this->followingRedirects()
@@ -63,7 +63,7 @@ class ExpenseTest extends TestCase
             }
             );
 
-        $expense->amount = 20.00;
+        $expense->amount = 2000;
 
         $this->followingRedirects()
             ->patch(route('expenses.update', $expense), $expense->toArray())
@@ -216,7 +216,8 @@ class ExpenseTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Expenses/Index')
                 ->has('expenses', 10)
-                ->where('totalExpenses', 100)
+                ->has('monthlyTotals', 5)
+                ->where('monthlyTotals.2.total', 100)
             );
     }
 }
