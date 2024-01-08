@@ -55,30 +55,24 @@ const currentMonthlyTotal = computed(() => {
             </div>
         </template>
 
-        <div class="container mx-auto max-w-4xl py-12">
-            <div class="mx-auto sm:px-6 lg:px-8">
-                <div class="flex overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                    <div class="w-full p-6">
-                        <div class="mb-6">
-                            <ExpensesTotals :monthly-totals="monthlyTotals" />
-                        </div>
+        <div class="container mx-auto max-w-4xl px-2 py-12">
+            <div class="mb-6">
+                <ExpensesTotals :monthly-totals="monthlyTotals" />
+            </div>
 
-                        <div class="space-y-3">
-                            <template v-if="expensesView == 'categories'">
-                                <div
-                                    v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
-                                    :key="total.id">
-                                    <CategoryMonthlyTotalItem
-                                        :monthly-totals="findTotalsByCategoryId(total.category.id)"
-                                        :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
-                                </div>
-                            </template>
-                            <template v-if="expensesView == 'daily'">
-                                <ExpensesByDate :expenses="expenses" />
-                            </template>
-                        </div>
+            <div class="space-y-3">
+                <template v-if="expensesView == 'categories'">
+                    <div
+                        v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
+                        :key="total.id">
+                        <CategoryMonthlyTotalItem
+                            :monthly-totals="findTotalsByCategoryId(total.category.id)"
+                            :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
                     </div>
-                </div>
+                </template>
+                <template v-if="expensesView == 'daily'">
+                    <ExpensesByDate :expenses="expenses" />
+                </template>
             </div>
         </div>
     </AppLayout>

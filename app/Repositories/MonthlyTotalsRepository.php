@@ -12,7 +12,7 @@ use Spatie\LaravelData\DataCollection;
 
 class MonthlyTotalsRepository
 {
-    public function getMonthlyTotals($year = null, $month = null, $regularExpenses = null, $previousMonthsOffset = 3, $followingMonthsOffset = 1): DataCollection
+    public function getMonthlyTotals($year = null, $month = null, $regularExpenses = null, $previousMonthsOffset = 2, $followingMonthsOffset = 2): DataCollection
     {
         $currentDate = Carbon::now()->firstOfMonth();
 
