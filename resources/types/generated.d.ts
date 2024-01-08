@@ -4,7 +4,7 @@ id?: number;
 name: string;
 icon: string;
 hex: string;
-permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
+};
 export type CategoryMonthlyTotalData = {
 id: number;
 amount: number;
@@ -12,6 +12,12 @@ year_month: number;
 category: App.Data.CategoryData;
 previous_month_delta_amount: number | null;
 };
+export type CategoryRequest = {
+id?: number;
+name: string;
+icon: string;
+hex: string;
+permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
 export type ExpenseData = {
 id?: number;
 date: string;

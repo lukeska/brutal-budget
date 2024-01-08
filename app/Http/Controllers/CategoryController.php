@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\CategoryData;
+use App\Data\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -21,13 +21,13 @@ class CategoryController extends Controller
             ->get();
 
         return Inertia::render('Categories/Index', [
-            'categories' => CategoryData::collection($categories),
+            'categories' => CategoryRequest::collection($categories),
         ]);
     }
 
     public function create()
     {
-        $category = CategoryData::validate(Request::all());
+        $category = CategoryRequest::validate(Request::all());
 
         Auth::user()->currentTeam->categories()->create($category);
 
@@ -36,7 +36,7 @@ class CategoryController extends Controller
         return redirect('/categories');
     }
 
-    public function update(Category $category, CategoryData $data)
+    public function update(Category $category, CategoryRequest $data)
     {
         if (Auth::user()->cannot('update', $category)) {
             abort(403);
@@ -49,7 +49,7 @@ class CategoryController extends Controller
         return redirect('/categories');
     }
 
-    public function updateIcon(Category $category, CategoryData $data)
+    public function updateIcon(Category $category, CategoryRequest $data)
     {
         if (Auth::user()->cannot('update', $category)) {
             abort(403);
