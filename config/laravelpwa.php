@@ -6,7 +6,7 @@ return [
         'name' => env('APP_NAME', 'Brutal Budget'),
         'short_name' => 'Brutal',
         'start_url' => '/',
-        'background_color' => '#ffffff',
+        'background_color' => '#818cf8',
         'theme_color' => '#000000',
         'display' => 'standalone',
         'orientation' => 'any',
