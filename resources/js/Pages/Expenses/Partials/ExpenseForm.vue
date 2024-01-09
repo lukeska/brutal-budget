@@ -97,7 +97,9 @@ watchEffect(() => {
 </script>
 
 <template>
-    <form class="relative flex h-full flex-col">
+    <form
+        class="relative flex h-full flex-col"
+        @keydown.enter="submit(expenseStore.isNewExpense ? 'create' : 'update')">
         <div class="flex-1 overflow-x-hidden overflow-y-scroll px-6 py-4">
             <div class="flex flex-col gap-y-6">
                 <!-- Amount -->
@@ -126,6 +128,7 @@ watchEffect(() => {
                         </div>
 
                         <button
+                            type="button"
                             @click.prevent="showCategoryList = !showCategoryList"
                             class="flex h-10 w-10 items-center justify-center rounded p-1.5 text-white"
                             :style="'background-color:' + categoryById.hex">
@@ -287,14 +290,14 @@ watchEffect(() => {
 
         <div class="flex w-full space-x-3 bg-gray-100 px-6 py-4">
             <PrimaryButton
-                type="button"
+                type="submit"
                 @click.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')"
                 class="h-10 flex-1 bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500">
                 <span class="mx-auto">{{ expenseStore.isNewExpense ? "Create" : "Update" }}</span>
             </PrimaryButton>
 
             <button
-                type="button"
+                type="submit"
                 class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow"
                 @click.prevent="expenseStore.isNewExpense ? emit('cancel') : submit('delete')">
                 <IconTrash />
