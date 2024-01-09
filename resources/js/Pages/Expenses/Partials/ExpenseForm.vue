@@ -99,7 +99,7 @@ watchEffect(() => {
 <template>
     <form
         class="relative flex h-full flex-col"
-        @keydown.enter="submit(expenseStore.isNewExpense ? 'create' : 'update')">
+        @keydown.enter.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')">
         <div class="flex-1 overflow-x-hidden overflow-y-scroll px-6 py-4">
             <div class="flex flex-col gap-y-6">
                 <!-- Amount -->
