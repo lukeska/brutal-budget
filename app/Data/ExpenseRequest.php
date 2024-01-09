@@ -31,7 +31,8 @@ class ExpenseRequest extends Data
         return [
             'amount' => [
                 'required',
-                'comma_decimal_positive',
+                'integer',
+                'gt:0',
             ],
             'date' => ['required', 'date'],
             'notes' => ['nullable'],

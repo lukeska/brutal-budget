@@ -27,7 +27,7 @@ export const useExpenseStore = defineStore("ExpenseStore", {
             if (expense == null) {
                 this.expense = {
                     id: null,
-                    amount: 0,
+                    amount: null,
                     date: getCurrentDateFormatted(),
                     notes: null,
                     category: category ? category : page.props.categories[0],

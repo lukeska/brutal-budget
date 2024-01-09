@@ -37,7 +37,7 @@ const expenseStore = useExpenseStore();
                     leave-to="translate-x-full">
                     <DialogPanel class="relative ml-16 flex w-full max-w-md flex-1">
                         <!-- Sidebar component, swap this element with another sidebar if you like -->
-                        <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 py-4">
+                        <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white">
                             <ExpenseForm
                                 @cancel="expenseStore.hideSidebar()"
                                 @created="expenseStore.hideSidebar()"

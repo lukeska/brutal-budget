@@ -7,6 +7,7 @@ import ExpenseItem from "@/Pages/Expenses/Partials/ExpenseItem.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { usePage } from "@inertiajs/vue3";
 import { getDate } from "@/Helpers/DatesHelper";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
@@ -80,7 +81,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                     </div>
 
                     <button
-                        class="relative z-10 h-full w-8 rounded-lg bg-indigo-400 text-white sm:w-10"
+                        class="relative z-10 h-full w-8 rounded-lg bg-indigo-400 text-white transition duration-150 ease-in-out hover:bg-indigo-500 focus:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-indigo-500 sm:w-10"
                         @click.prevent="expenseStore.showSidebar(null, category)">
                         <IconCirclePlus class="mx-auto" />
                     </button>
