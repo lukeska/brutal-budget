@@ -6,6 +6,7 @@ use App\Data\ExpenseData;
 use App\Data\ExpenseRequest;
 use App\Data\ExpensesIndexPage;
 use App\Models\Expense;
+use App\Repositories\ExpensesRepository;
 use App\Repositories\MonthlyTotalsRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,8 @@ use Inertia\Inertia;
 class ExpenseController extends Controller
 {
     public function __construct(
-        protected MonthlyTotalsRepository $monthlyTotalsRepository
+        protected MonthlyTotalsRepository $monthlyTotalsRepository,
+        protected ExpensesRepository $expensesRepository,
     ) {
     }
 
@@ -59,9 +61,9 @@ class ExpenseController extends Controller
 
     public function create()
     {
-        $expense = ExpenseRequest::validate(Request::all());
+        $expense = ExpenseRequest::from(Request::all());
 
-        Auth::user()->currentTeam->expenses()->create([...$expense, 'user_id' => Auth::user()->getAuthIdentifier()]);
+        $this->expensesRepository->createMonthlyExpenses($expense, Auth::user());
 
         Request::session()->flash('message', 'Expense created correctly');
 
@@ -70,10 +72,8 @@ class ExpenseController extends Controller
 
     public function update(Expense $expense, ExpenseRequest $data)
     {
-        // TODO: add policy here?
-
         $expenseData = [
-            ...$data->all(),
+            ...($data->except('months')->toArray()),
             'user_id' => Auth::user()->getAuthIdentifier(),
         ];
 

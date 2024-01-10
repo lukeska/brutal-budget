@@ -25,13 +25,14 @@ class ExpenseObserver
         if ($expense->wasChanged('date')) {
 
             $originalDate = new Carbon($expense->getOriginal('date'));
+            $newDate = new Carbon($expense->date);
 
-            if ($originalDate->format('Ym') != $expense->date->format('Yd')) {
+            if ($originalDate->format('Ym') != $newDate->format('Yd')) {
                 Totals::generateByCategory($expense->category->id, $expense->team->id, $originalDate->format('Ym'));
             }
         }
 
-        Totals::generateByCategory($expense->category->id, $expense->team->id, $expense->date->format('Ym'));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, $newDate->format('Ym'));
     }
 
     /**

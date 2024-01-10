@@ -35,6 +35,7 @@ notes: string | null;
 is_regular: boolean;
 category_id: number;
 project_id: number | null;
+months: number;
 };
 export type ExpensesIndexPage = {
 expenses: Array<App.Data.ExpenseData>;

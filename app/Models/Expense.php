@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
-use Illuminate\Database\Eloquent\Builder;
 
 class Expense extends Model
 {
@@ -53,14 +53,14 @@ class Expense extends Model
     /*
      * Scopes
      */
-    public function scopeMonth(Builder $query, Carbon $date = null): void
+    public function scopeMonth(Builder $query, ?Carbon $date = null): void
     {
         $date = $date ?: Carbon::now();
 
         $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);
     }
 
-    public function scopeMonthFromInt(Builder $query, int $year_month = null): void
+    public function scopeMonthFromInt(Builder $query, ?int $year_month = null): void
     {
         $date = $year_month ? Carbon::create(
             Str::of($year_month)->substr(0, 4)->toInteger(),

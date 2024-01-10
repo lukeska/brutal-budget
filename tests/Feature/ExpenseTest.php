@@ -6,6 +6,7 @@ use App\Models\Expense;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -38,6 +39,42 @@ class ExpenseTest extends TestCase
                     ->where('expenses.0.amount', 2050);
             }
             );
+    }
+
+    /** @test */
+    public function a_user_can_create_monthly_expenses_from_a_single_amount()
+    {
+        $this->signIn();
+
+        $this->get('/expenses')->assertStatus(200);
+
+        $attributes = Expense::factory()->raw([
+            'user_id' => null,
+            'team_id' => null,
+            'notes' => 'My notes',
+            'amount' => 10000,
+            'months' => 12,
+            'date' => Carbon::create(2024, 1, 31),
+        ]);
+
+        $this->followingRedirects()
+            ->put(route('expenses.create'), $attributes)
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) {
+                return $page
+                    ->component('Expenses/Index')
+                    ->where('expenses', function (Collection $expenses) {
+                        $expenses->each(function ($expense, $index) {
+                            $this->assertEquals(
+                                Carbon::create(2024, 1, 31)->addMonthsWithoutOverflow($index)->format('d-m-Y'),
+                                $expense['date']);
+                        });
+                        return true;
+                    });
+            }
+            );
+
+        $this->assertEquals(10000, Expense::all()->sum('amount'));
     }
 
     /** @test */

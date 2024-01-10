@@ -23,6 +23,7 @@ class ExpenseRequest extends Data
         public int $categoryId,
         #[MapName('project_id')]
         public ?int $projectId,
+        public int $months = 1,
     ) {
     }
 
@@ -39,6 +40,7 @@ class ExpenseRequest extends Data
             'category_id' => ['required', 'exists:App\Models\Category,id'], // TODO: scope to categories for the current group
             'project_id' => ['sometimes', 'nullable', 'exists:App\Models\Project,id'], // TODO: scope to projects for the current group
             'is_regular' => ['sometimes', 'bool'],
+            'months' => ['sometimes', 'integer', 'gt:0'],
         ];
     }
 }

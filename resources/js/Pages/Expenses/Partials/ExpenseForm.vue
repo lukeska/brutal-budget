@@ -11,7 +11,7 @@ import { Listbox, ListboxLabel, ListboxButton, ListboxOptions, ListboxOption } f
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { getCurrencySymbol } from "@/Helpers/CurrencyFormatter";
 import CurrencyInput from "@/Helpers/CurrencyInput.vue";
-import { IconTrash, IconChevronRight } from "@tabler/icons-vue";
+import { IconTrash, IconChevronRight, IconCircleCheck, IconDotsVertical } from "@tabler/icons-vue";
 
 const emit = defineEmits<{
     created: [];
@@ -25,6 +25,7 @@ const expenseStore = useExpenseStore();
 const page = usePage();
 
 const showAdvancedOptions = ref(false);
+const showMultipleExpensesOptions = ref(false);
 
 const categories = computed(() => page.props.categories);
 const projects = computed(() => {
@@ -47,6 +48,7 @@ let form = useForm({
     category_id: expenseStore.expense.category?.id,
     project_id: expenseStore.expense.project?.id,
     is_regular: expenseStore.expense.is_regular,
+    months: 1,
 });
 
 const submit = (action: String) => {
@@ -74,6 +76,11 @@ const submit = (action: String) => {
             },
         });
     }
+};
+
+const selectNumberOfMonths = (quantity: number) => {
+    form.months = quantity;
+    showMultipleExpensesOptions.value = false;
 };
 
 const categoryById = computed(() => {
@@ -289,12 +296,59 @@ watchEffect(() => {
         </div>
 
         <div class="flex w-full space-x-3 bg-gray-100 px-6 py-4">
-            <PrimaryButton
-                type="submit"
-                @click.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')"
-                class="h-10 flex-1 bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500">
-                <span class="mx-auto">{{ expenseStore.isNewExpense ? "Create" : "Update" }}</span>
-            </PrimaryButton>
+            <div class="relative flex flex-1 items-center space-x-px">
+                <PrimaryButton
+                    type="submit"
+                    @click.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')"
+                    :class="[
+                        expenseStore.isNewExpense ? 'rounded-l-md rounded-r-none' : 'rounded-md',
+                        'h-10 flex-1  bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500',
+                    ]">
+                    <span class="mx-auto">
+                        {{
+                            !expenseStore.isNewExpense ? "Update" : form.months == 12 ? "Create 12 expenses" : "Create"
+                        }}
+                    </span>
+                </PrimaryButton>
+                <PrimaryButton
+                    v-if="expenseStore.isNewExpense"
+                    @click.prevent="showMultipleExpensesOptions = !showMultipleExpensesOptions"
+                    type="button"
+                    class="h-10 rounded-l-none rounded-r-md bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500">
+                    <IconDotsVertical :size="20" />
+                </PrimaryButton>
+                <div
+                    v-if="showMultipleExpensesOptions"
+                    class="absolute bottom-12 w-full divide-y rounded-md border bg-white shadow-md">
+                    <button
+                        @click.prevent="selectNumberOfMonths(1)"
+                        :class="[form.months == 1 ? '' : 'opacity-50', 'w-full px-4 py-2 text-left']">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-semibold text-gray-600">Create single expense</span>
+                            <IconCircleCheck
+                                v-if="form.months == 1"
+                                :size="20"
+                                class="text-green-500" />
+                        </div>
+                        <span class="mt-2 text-start text-xs text-gray-600">Your standard single expense.</span>
+                    </button>
+                    <button
+                        @click.prevent="selectNumberOfMonths(12)"
+                        :class="[form.months == 12 ? '' : 'opacity-50', 'w-full px-4 py-2 text-left']">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm font-semibold text-gray-600">Create yearly expenses</span>
+                            <IconCircleCheck
+                                v-if="form.months == 12"
+                                :size="20"
+                                class="text-green-500" />
+                        </div>
+                        <span class="mt-2 text-start text-xs text-gray-600"
+                            >The amount you set will be split in 12 expenses. One for each month following your set
+                            date.</span
+                        >
+                    </button>
+                </div>
+            </div>
 
             <button
                 type="submit"
