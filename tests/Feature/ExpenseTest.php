@@ -18,13 +18,12 @@ class ExpenseTest extends TestCase
     /** @test */
     public function a_user_can_create_an_expense()
     {
-        $this->signIn();
+        $user = $this->signIn();
 
         $this->get('/expenses')->assertStatus(200);
 
         $attributes = Expense::factory()->raw([
-            'user_id' => null,
-            'team_id' => null,
+            'user_id' => $user->id,
             'notes' => 'My notes',
             'amount' => 2050,
         ]);
@@ -44,13 +43,12 @@ class ExpenseTest extends TestCase
     /** @test */
     public function a_user_can_create_monthly_expenses_from_a_single_amount()
     {
-        $this->signIn();
+        $user = $this->signIn();
 
         $this->get('/expenses')->assertStatus(200);
 
         $attributes = Expense::factory()->raw([
-            'user_id' => null,
-            'team_id' => null,
+            'user_id' => $user->id,
             'notes' => 'My notes',
             'amount' => 10000,
             'months' => 12,

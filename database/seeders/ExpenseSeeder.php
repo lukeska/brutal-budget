@@ -19,11 +19,8 @@ class ExpenseSeeder extends Seeder
 
         // current month expenses
         foreach (range(1, 40) as $i) {
-            // TODO: use recycle for user and categories
             Expense::factory()->create([
                 'user_id' => $luca->id,
-                'team_id' => $luca->currentTeam->id,
-                'category_id' => rand(1, 20),
                 'date' => Carbon::now()->setDay(rand(1, 28)),
             ]);
         }
@@ -32,8 +29,6 @@ class ExpenseSeeder extends Seeder
         foreach (range(1, 40) as $i) {
             Expense::factory()->create([
                 'user_id' => $luca->id,
-                'team_id' => $luca->currentTeam->id,
-                'category_id' => rand(1, 20),
                 'date' => Carbon::now()->addMonth(-1)->setDay(rand(1, 28)),
             ]);
         }
@@ -42,8 +37,6 @@ class ExpenseSeeder extends Seeder
         foreach (range(1, 40) as $i) {
             Expense::factory()->create([
                 'user_id' => $luca->id,
-                'team_id' => $luca->currentTeam->id,
-                'category_id' => rand(1, 20),
                 'date' => Carbon::now()->addMonth(1)->setDay(rand(1, 28)),
             ]);
         }
@@ -51,21 +44,20 @@ class ExpenseSeeder extends Seeder
         // project expenses
         foreach (Project::all() as $project) {
             foreach (range(1, 5) as $i) {
-                Expense::factory()->create([
-                    'user_id' => $luca->id,
-                    'team_id' => $luca->currentTeam->id,
-                    'category_id' => rand(1, 20),
-                    'project_id' => $project->id,
-                    'date' => Carbon::now()->setDay(rand(1, 28)),
-                ]);
+                Expense::factory()
+                    ->recycle($project)
+                    ->create([
+                        'user_id' => $luca->id,
+                        'date' => Carbon::now()->setDay(rand(1, 28)),
+                    ]);
 
-                Expense::factory()->create([
-                    'user_id' => $luca->id,
-                    'team_id' => $luca->currentTeam->id,
-                    'category_id' => rand(1, 20),
-                    'project_id' => $project->id,
-                    'date' => Carbon::now()->subMonth()->setDay(rand(1, 28)),
-                ]);
+                Expense::factory()
+                    ->recycle($project)
+                    ->create([
+                        'user_id' => $luca->id,
+                        'project_id' => $project->id,
+                        'date' => Carbon::now()->subMonth()->setDay(rand(1, 28)),
+                    ]);
             }
         }
     }

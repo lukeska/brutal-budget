@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -17,16 +18,21 @@ class ExpenseFactory extends Factory
      */
     public function definition(): array
     {
-        $user = User::factory()->withPersonalTeam()->create();
-
         return [
             'date' => now(),
             'amount' => $this->faker->numberBetween(0, 100) * 100,
-            'notes' => $this->faker->sentence(6),
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-            'category_id' => $user->currentTeam->categories->first()->id,
+            'user_id' => User::factory()->withPersonalTeam(),
+            'team_id' => function (array $attributes) {
+                return User::find($attributes['user_id'])->currentTeam->id;
+            },
+            'category_id' => function (array $attributes) {
+                return User::find($attributes['user_id'])->currentTeam->categories->random()->id;
+            },
+            'notes' => function (array $attributes) {
+                return $this->faker->expenseNote(Category::find($attributes['category_id'])->name);
+            },
             'is_regular' => $this->faker->boolean(80),
+            'project_id' => null,
         ];
     }
 

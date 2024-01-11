@@ -172,6 +172,7 @@ return [
         App\Providers\JetstreamServiceProvider::class,
 
         App\Providers\BrutalBudgetServiceProvider::class,
+        App\Providers\FakerServiceProvider::class,
     ])->toArray(),
 
     /*
