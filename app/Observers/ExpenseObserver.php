@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\ExpenseCreated;
 use App\Facades\Totals;
 use App\Models\Expense;
 use Carbon\Carbon;
@@ -14,6 +15,8 @@ class ExpenseObserver
     public function created(Expense $expense): void
     {
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
+
+        ExpenseCreated::dispatch($expense);
     }
 
     /**

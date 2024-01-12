@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
@@ -10,6 +10,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ExpenseFormSidebar from "@/Pages/Expenses/Partials/ExpenseFormSidebar.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
+import Echo from "laravel-echo";
 
 defineProps<{
     title: String;
@@ -35,6 +36,12 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route("logout"));
 };
+
+onMounted(() => {
+    window.Echo.private(`teams.1`).listen("ExpenseCreated", (e) => {
+        console.log(e);
+    });
+});
 </script>
 
 <template>

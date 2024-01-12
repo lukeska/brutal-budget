@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\ExpenseCreated;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProjectController;

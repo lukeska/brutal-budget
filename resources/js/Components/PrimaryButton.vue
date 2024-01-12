@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-defineProps<{
-    type: {
-        type: String;
-        default: "submit";
-    };
-}>();
+export interface Props {
+    type?: string;
+}
+
+withDefaults(defineProps<Props>(), {
+    buttonType: "submit",
+});
 </script>
 
 <template>

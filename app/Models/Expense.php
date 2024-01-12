@@ -40,16 +40,6 @@ class Expense extends Model
         return $this->belongsTo(Jetstream::teamModel());
     }
 
-    /*public function getAmountAttribute($value): string
-    {
-        return number_format($value / 100, 2, '.', '');
-    }
-
-    public function setAmountAttribute($value): void
-    {
-        $this->attributes['amount'] = $value * 100;
-    }*/
-
     /*
      * Scopes
      */
