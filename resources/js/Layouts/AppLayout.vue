@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -10,14 +10,15 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ExpenseFormSidebar from "@/Pages/Expenses/Partials/ExpenseFormSidebar.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
-import Echo from "laravel-echo";
+import { showExpenseNotification } from "@/Helpers/Notifications";
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 
 defineProps<{
     title: String;
 }>();
 
 const expenseStore = useExpenseStore();
-
+const page = usePage();
 const showingNavigationDropdown = ref(false);
 let sidebarOpen = ref(false);
 
@@ -37,9 +38,14 @@ const logout = () => {
     router.post(route("logout"));
 };
 
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+
 onMounted(() => {
     window.Echo.private(`teams.1`).listen("ExpenseCreated", (e) => {
         console.log(e);
+        let expense = e.expense;
+        expense.amount = currencyFormatter.format(expense.amount / 100);
+        showExpenseNotification(expense);
     });
 });
 </script>
