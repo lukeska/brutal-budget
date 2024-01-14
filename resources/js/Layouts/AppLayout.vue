@@ -40,10 +40,12 @@ const logout = () => {
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 
-onMounted(() => {
-    window.Echo.private(`teams.1`).listen("ExpenseCreated", (e) => {
-        console.log(e);
+onMounted(() => {});
+
+page.props.auth.user.all_teams.forEach(function (team) {
+    window.Echo.private(`teams.${team.id}`).listen("ExpenseCreated", (e) => {
         let expense = e.expense;
+        console.log(expense);
         expense.amount = currencyFormatter.format(expense.amount / 100);
         showExpenseNotification(expense);
     });

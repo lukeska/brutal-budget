@@ -18,5 +18,13 @@ class UserSeeder extends Seeder
             'email' => 'luca@example.com',
             'password' => Hash::make('123123123'),
         ]);
+
+        $viola = User::factory()->withPersonalTeam()->create([
+            'name' => 'viola',
+            'email' => 'viola@example.com',
+            'password' => Hash::make('123123123'),
+        ]);
+
+        $luca->currentTeam->users()->attach($viola, ['role' => 'admin']);
     }
 }

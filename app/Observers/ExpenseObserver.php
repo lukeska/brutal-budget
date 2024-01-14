@@ -16,7 +16,7 @@ class ExpenseObserver
     {
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
 
-        ExpenseCreated::dispatch($expense);
+        broadcast(new ExpenseCreated($expense))->toOthers();
     }
 
     /**
