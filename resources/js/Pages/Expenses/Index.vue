@@ -9,7 +9,7 @@ import ViewSelector from "@/Pages/Expenses/Partials/ViewSelector.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { showExpenseNotification } from "@/Helpers/Notifications";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
-import { usePage } from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 
@@ -46,6 +46,9 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
 onMounted(() => {
     page.props.auth.user.all_teams.forEach(function (team) {
         window.Echo.private(`teams.${team.id}`).listen("ExpenseCreated", (e) => {
+            router.reload({
+                preserveScroll: true,
+            });
             let expense = e.expense;
             console.log(expense);
             expense.amount = currencyFormatter.format(expense.amount / 100);
