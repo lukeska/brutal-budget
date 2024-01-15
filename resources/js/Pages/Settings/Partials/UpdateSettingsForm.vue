@@ -231,6 +231,13 @@ const enableNotifications = () => {
     });
 };
 
+const testNotification = () => {
+    const notification = new Notification("Test notification", {
+        body: "All good here!",
+        icon: "/images/icons/icon-512x512.png",
+    });
+};
+
 watchEffect(() => {
     form.currency = selected.value?.code || null;
 });
@@ -353,7 +360,10 @@ watchEffect(() => {
             </template>
 
             <template #actions>
-                <div v-if="notificationsAreEnabled">
+                <div
+                    v-if="notificationsAreEnabled"
+                    class="flex space-x-4">
+                    <SecondaryButton @click.prevent="testNotification">Test notification</SecondaryButton>
                     <DangerButton @click.prevent="disableNotifications">Disable</DangerButton>
                 </div>
                 <div v-else>
