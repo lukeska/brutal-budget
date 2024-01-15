@@ -1,25 +1,26 @@
-const registration = await navigator.serviceWorker.getRegistration();
-
 const sendNotification = async () => {
-    console.log(registration);
     if (Notification.permission === "granted") {
-        showNotification({ message: "All good here" });
+        showNotification("All good here");
     } else {
         if (Notification.permission !== "denied") {
             const permission = await Notification.requestPermission();
 
             if (permission === "granted") {
-                showNotification({ message: "All good here" });
+                showNotification("All good here");
             }
         }
     }
 };
 
-const showNotification = (body) => {
+const showNotification = (message) => {
+    const registration = navigator.serviceWorker.getRegistration().then((registration) => {
+        // something
+    });
+
     const title = "This is a test";
 
     const payload = {
-        body,
+        body: message,
     };
 
     if ("showNotification" in registration) {
