@@ -1,23 +1,17 @@
-<script lang="ts">
-import AppLayout from "@/Layouts/AppLayout.vue";
-
-export default {
-    // Using a render function...
-    layout: (h, page) => h(AppLayout, [page]),
-
-    // Using shorthand syntax...
-    layout: AppLayout,
-};
-</script>
-
 <script lang="ts" setup>
 import ExpensesByDate from "@/Pages/Expenses/Partials/ExpensesByDate.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 import CategoryMonthlyTotalItem from "@/Pages/Expenses/Partials/CategoryMonthlyTotalItem.vue";
 import ExpensesTotals from "@/Pages/Expenses/Partials/ExpensesTotals.vue";
 import ExpenseTypeDropdown from "@/Pages/Expenses/Partials/ExpenseTypeDropdown.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import ViewSelector from "@/Pages/Expenses/Partials/ViewSelector.vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { showExpenseNotification } from "@/Helpers/Notifications";
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
 
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
@@ -47,42 +41,56 @@ const currentMonthlyTotal = computed(() => {
         return item.isCurrent === true;
     });
 });
+
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+onMounted(() => {
+    page.props.auth.user.all_teams.forEach(function (team) {
+        window.Echo.private(`teams.${team.id}`).listen("ExpenseCreated", (e) => {
+            let expense = e.expense;
+            console.log(expense);
+            expense.amount = currencyFormatter.format(expense.amount / 100);
+            showExpenseNotification(expense);
+        });
+    });
+});
 </script>
 
 <template>
-    <!--    <template #header>
-        <div class="flex w-full items-center justify-between">
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Expenses</h2>
+    <AppLayout title="Expenses">
+        <template #header>
+            <div class="flex w-full items-center justify-between">
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">Expenses</h2>
 
-            <div class="justify-end-center flex flex-col items-end space-y-1 sm:flex-row sm:space-x-4">
-                <div>
-                    <ViewSelector :expenses-view="expensesView" />
-                </div>
-                <div>
-                    <ExpenseTypeDropdown />
+                <div class="justify-end-center flex flex-col items-end space-y-1 sm:flex-row sm:space-x-4">
+                    <div>
+                        <ViewSelector :expenses-view="expensesView" />
+                    </div>
+                    <div>
+                        <ExpenseTypeDropdown />
+                    </div>
                 </div>
             </div>
-        </div>
-    </template>-->
+        </template>
 
-    <div class="container mx-auto max-w-4xl px-2 py-12">
-        <div class="mb-6">
-            <ExpensesTotals :monthly-totals="monthlyTotals" />
-        </div>
+        <div class="container mx-auto max-w-4xl px-2 py-12">
+            <div class="mb-6">
+                <ExpensesTotals :monthly-totals="monthlyTotals" />
+            </div>
 
-        <div class="space-y-3">
-            <template v-if="expensesView == 'categories'">
-                <div
-                    v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
-                    :key="total.id">
-                    <CategoryMonthlyTotalItem
-                        :monthly-totals="findTotalsByCategoryId(total.category.id)"
-                        :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
-                </div>
-            </template>
-            <template v-if="expensesView == 'daily'">
-                <ExpensesByDate :expenses="expenses" />
-            </template>
+            <div class="space-y-3">
+                <template v-if="expensesView == 'categories'">
+                    <div
+                        v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
+                        :key="total.id">
+                        <CategoryMonthlyTotalItem
+                            :monthly-totals="findTotalsByCategoryId(total.category.id)"
+                            :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
+                    </div>
+                </template>
+                <template v-if="expensesView == 'daily'">
+                    <ExpensesByDate :expenses="expenses" />
+                </template>
+            </div>
         </div>
-    </div>
+    </AppLayout>
 </template>

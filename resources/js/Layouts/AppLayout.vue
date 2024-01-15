@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
@@ -18,7 +18,6 @@ defineProps<{
 }>();
 
 const expenseStore = useExpenseStore();
-const page = usePage();
 const showingNavigationDropdown = ref(false);
 let sidebarOpen = ref(false);
 
@@ -37,19 +36,6 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route("logout"));
 };
-
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
-
-onMounted(() => {});
-
-page.props.auth.user.all_teams.forEach(function (team) {
-    window.Echo.private(`teams.${team.id}`).listen("ExpenseCreated", (e) => {
-        let expense = e.expense;
-        console.log(expense);
-        expense.amount = currencyFormatter.format(expense.amount / 100);
-        showExpenseNotification(expense);
-    });
-});
 </script>
 
 <template>

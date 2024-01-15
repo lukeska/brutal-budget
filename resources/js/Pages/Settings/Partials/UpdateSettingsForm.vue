@@ -17,6 +17,7 @@ import {
     TransitionRoot,
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const props = defineProps<{
     user: Object;
@@ -215,102 +216,150 @@ const updateSettings = () => {
     });
 };
 
+const notificationPermission = ref(Notification.permission);
+const notificationsAreEnabled = computed((): boolean => {
+    return notificationPermission.value === "granted";
+});
+
+const disableNotifications = () => {
+    //Notification.requestPermission() = "denied";
+};
+
+const enableNotifications = () => {
+    Notification.requestPermission().then((permission) => {
+        notificationPermission.value = permission;
+    });
+};
+
 watchEffect(() => {
     form.currency = selected.value?.code || null;
 });
 </script>
 
 <template>
-    <FormSection @submitted="updateSettings">
-        <template #title> User Settings</template>
+    <div class="space-y-10">
+        <!-- Currency selector -->
+        <FormSection @submitted="updateSettings">
+            <template #title> User Settings</template>
 
-        <template #description> Update your account's currency preference.</template>
+            <template #description> Update your account's currency preference.</template>
 
-        <template #form>
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <InputLabel
-                    for="currency"
-                    value="Currency" />
-                <div>
-                    <Combobox v-model="selected">
-                        <div class="relative mt-1">
-                            <div
-                                class="relative w-full cursor-default overflow-hidden rounded-lg border border-gray-300 bg-white text-left shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                                <ComboboxInput
-                                    class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
-                                    :displayValue="(currency) => `${currency.code} - ${currency.name}`"
-                                    @change="query = $event.target.value" />
-                                <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
-                                    <ChevronUpDownIcon
-                                        class="h-5 w-5 text-gray-400"
-                                        aria-hidden="true" />
-                                </ComboboxButton>
+            <template #form>
+                <!-- Name -->
+                <div class="col-span-6 sm:col-span-4">
+                    <InputLabel
+                        for="currency"
+                        value="Currency" />
+                    <div>
+                        <Combobox v-model="selected">
+                            <div class="relative mt-1">
+                                <div
+                                    class="relative w-full cursor-default overflow-hidden rounded-lg border border-gray-300 bg-white text-left shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                                    <ComboboxInput
+                                        class="w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0"
+                                        :displayValue="(currency) => `${currency.code} - ${currency.name}`"
+                                        @change="query = $event.target.value" />
+                                    <ComboboxButton class="absolute inset-y-0 right-0 flex items-center pr-2">
+                                        <ChevronUpDownIcon
+                                            class="h-5 w-5 text-gray-400"
+                                            aria-hidden="true" />
+                                    </ComboboxButton>
+                                </div>
+                                <TransitionRoot
+                                    leave="transition ease-in duration-100"
+                                    leaveFrom="opacity-100"
+                                    leaveTo="opacity-0"
+                                    @after-leave="query = ''">
+                                    <ComboboxOptions
+                                        class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                        <div
+                                            v-if="filteredCurrencies.length === 0 && query !== ''"
+                                            class="relative cursor-default select-none px-4 py-2 text-gray-700">
+                                            Nothing found.
+                                        </div>
+
+                                        <ComboboxOption
+                                            v-for="currency in filteredCurrencies"
+                                            as="template"
+                                            :key="currency.code"
+                                            :value="currency"
+                                            v-slot="{ selected, active }">
+                                            <li
+                                                class="relative cursor-default select-none py-2 pl-10 pr-4"
+                                                :class="{
+                                                    'bg-teal-600 text-white': active,
+                                                    'text-gray-900': !active,
+                                                }">
+                                                <span
+                                                    class="block truncate"
+                                                    :class="{ 'font-medium': selected, 'font-normal': !selected }">
+                                                    {{ currency.code }} - {{ currency.name }}
+                                                </span>
+                                                <span
+                                                    v-if="selected"
+                                                    class="absolute inset-y-0 left-0 flex items-center pl-3"
+                                                    :class="{ 'text-white': active, 'text-teal-600': !active }">
+                                                    <CheckIcon
+                                                        class="h-5 w-5"
+                                                        aria-hidden="true" />
+                                                </span>
+                                            </li>
+                                        </ComboboxOption>
+                                    </ComboboxOptions>
+                                </TransitionRoot>
                             </div>
-                            <TransitionRoot
-                                leave="transition ease-in duration-100"
-                                leaveFrom="opacity-100"
-                                leaveTo="opacity-0"
-                                @after-leave="query = ''">
-                                <ComboboxOptions
-                                    class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                                    <div
-                                        v-if="filteredCurrencies.length === 0 && query !== ''"
-                                        class="relative cursor-default select-none px-4 py-2 text-gray-700">
-                                        Nothing found.
-                                    </div>
+                        </Combobox>
+                    </div>
 
-                                    <ComboboxOption
-                                        v-for="currency in filteredCurrencies"
-                                        as="template"
-                                        :key="currency.code"
-                                        :value="currency"
-                                        v-slot="{ selected, active }">
-                                        <li
-                                            class="relative cursor-default select-none py-2 pl-10 pr-4"
-                                            :class="{
-                                                'bg-teal-600 text-white': active,
-                                                'text-gray-900': !active,
-                                            }">
-                                            <span
-                                                class="block truncate"
-                                                :class="{ 'font-medium': selected, 'font-normal': !selected }">
-                                                {{ currency.code }} - {{ currency.name }}
-                                            </span>
-                                            <span
-                                                v-if="selected"
-                                                class="absolute inset-y-0 left-0 flex items-center pl-3"
-                                                :class="{ 'text-white': active, 'text-teal-600': !active }">
-                                                <CheckIcon
-                                                    class="h-5 w-5"
-                                                    aria-hidden="true" />
-                                            </span>
-                                        </li>
-                                    </ComboboxOption>
-                                </ComboboxOptions>
-                            </TransitionRoot>
-                        </div>
-                    </Combobox>
+                    <InputError
+                        :message="form.errors.name"
+                        class="mt-2" />
                 </div>
+            </template>
 
-                <InputError
-                    :message="form.errors.name"
-                    class="mt-2" />
-            </div>
-        </template>
+            <template #actions>
+                <ActionMessage
+                    :on="form.recentlySuccessful"
+                    class="me-3">
+                    Saved.
+                </ActionMessage>
 
-        <template #actions>
-            <ActionMessage
-                :on="form.recentlySuccessful"
-                class="me-3">
-                Saved.
-            </ActionMessage>
+                <PrimaryButton
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing">
+                    Save
+                </PrimaryButton>
+            </template>
+        </FormSection>
 
-            <PrimaryButton
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing">
-                Save
-            </PrimaryButton>
-        </template>
-    </FormSection>
+        <!-- Notification settings -->
+        <FormSection @submitted="updateSettings">
+            <template #title>Notifications</template>
+
+            <template #description>
+                Get notifications about new expenses being added by other people in your teams.
+            </template>
+
+            <template #form>
+                <!-- Name -->
+                <div class="col-span-6 sm:col-span-4">
+                    <div v-if="notificationsAreEnabled">
+                        <div>Notifications are currently enabled.</div>
+                    </div>
+                    <div v-else>
+                        <div>Notifications are currently disabled.</div>
+                    </div>
+                </div>
+            </template>
+
+            <template #actions>
+                <!--                <div v-if="notificationsAreEnabled">
+                    <DangerButton @click.prevent="disableNotifications">Disable</DangerButton>
+                </div>
+                <div v-else>
+                    <PrimaryButton @click.prevent="enableNotifications">Enable</PrimaryButton>
+                </div>-->
+            </template>
+        </FormSection>
+    </div>
 </template>
