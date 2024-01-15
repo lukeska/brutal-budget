@@ -1,3 +1,34 @@
+const registration = await navigator.serviceWorker.getRegistration();
+
+const sendNotification = async () => {
+    console.log(registration);
+    if (Notification.permission === "granted") {
+        showNotification({ message: "All good here" });
+    } else {
+        if (Notification.permission !== "denied") {
+            const permission = await Notification.requestPermission();
+
+            if (permission === "granted") {
+                showNotification({ message: "All good here" });
+            }
+        }
+    }
+};
+
+const showNotification = (body) => {
+    const title = "This is a test";
+
+    const payload = {
+        body,
+    };
+
+    if ("showNotification" in registration) {
+        registration.showNotification(title, payload);
+    } else {
+        new Notification(title, payload);
+    }
+};
+
 const showExpenseNotification = (expense) => {
     if (Notification.permission === "granted") {
         // Create and display the notification
@@ -22,4 +53,4 @@ const showExpenseNotification = (expense) => {
     }
 };
 
-export { showExpenseNotification };
+export { showExpenseNotification, sendNotification };

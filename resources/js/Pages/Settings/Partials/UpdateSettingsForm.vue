@@ -18,6 +18,7 @@ import {
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import DangerButton from "@/Components/DangerButton.vue";
+import { sendNotification } from "@/Helpers/Notifications";
 
 const props = defineProps<{
     user: Object;
@@ -231,11 +232,8 @@ const enableNotifications = () => {
     });
 };
 
-const testNotification = () => {
-    const notification = new Notification("Test notification", {
-        body: "All good here!",
-        icon: "/images/icons/icon-512x512.png",
-    });
+const testNotification = async () => {
+    await sendNotification();
 };
 
 watchEffect(() => {
