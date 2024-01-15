@@ -14,20 +14,19 @@ const sendNotification = async () => {
 
 const showNotification = (message) => {
     const registration = navigator.serviceWorker.getRegistration().then((registration) => {
-        // something
+        console.log(registration);
+        const title = "This is a test";
+
+        const payload = {
+            body: message,
+        };
+
+        if (registration && "showNotification" in registration) {
+            registration.showNotification(title, payload);
+        } else {
+            new Notification(title, payload);
+        }
     });
-
-    const title = "This is a test";
-
-    const payload = {
-        body: message,
-    };
-
-    if ("showNotification" in registration) {
-        registration.showNotification(title, payload);
-    } else {
-        new Notification(title, payload);
-    }
 };
 
 const showExpenseNotification = (expense) => {
