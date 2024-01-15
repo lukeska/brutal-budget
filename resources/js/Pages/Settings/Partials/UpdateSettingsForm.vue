@@ -353,12 +353,12 @@ watchEffect(() => {
             </template>
 
             <template #actions>
-                <!--                <div v-if="notificationsAreEnabled">
+                <div v-if="notificationsAreEnabled">
                     <DangerButton @click.prevent="disableNotifications">Disable</DangerButton>
                 </div>
                 <div v-else>
                     <PrimaryButton @click.prevent="enableNotifications">Enable</PrimaryButton>
-                </div>-->
+                </div>
             </template>
         </FormSection>
     </div>
