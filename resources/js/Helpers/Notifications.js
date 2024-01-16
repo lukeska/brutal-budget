@@ -1,3 +1,5 @@
+const registration = navigator.serviceWorker.getRegistration();
+
 const sendNotification = async () => {
     if (Notification.permission === "granted") {
         showNotification("All good here");
@@ -13,20 +15,17 @@ const sendNotification = async () => {
 };
 
 const showNotification = (message) => {
-    const registration = navigator.serviceWorker.getRegistration().then((registration) => {
-        console.log(registration);
-        const title = "This is a test";
+    const title = "This is a test";
 
-        const payload = {
-            body: message,
-        };
+    const payload = {
+        body: message,
+    };
 
-        if (registration && "showNotification" in registration) {
-            registration.showNotification(title, payload);
-        } else {
-            new Notification(title, payload);
-        }
-    });
+    if ("showNotification" in registration) {
+        registration.showNotification(title, payload);
+    } else {
+        new Notification(title, payload);
+    }
 };
 
 const showExpenseNotification = (expense) => {
