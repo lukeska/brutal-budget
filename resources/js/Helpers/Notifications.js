@@ -1,27 +1,28 @@
 const sendNotification = async () => {
+    const registration = await navigator.serviceWorker.getRegistration();
     if (Notification.permission === "granted") {
-        showNotification("All good here");
+        showNotification(registration, "All good here");
     } else {
         if (Notification.permission !== "denied") {
             const permission = await Notification.requestPermission();
 
             if (permission === "granted") {
-                showNotification("All good here");
+                showNotification(registration, "All good here");
             }
         }
     }
 };
 
-const showNotification = (message) => {
+const showNotification = (registration, message) => {
     const title = "This is a test";
 
     const payload = {
         body: message,
     };
 
-    if (window.registration && "showNotification" in window.registration) {
-        console.log("registration2", window.registration);
-        window.registration.showNotification(title, payload);
+    if (registration && "showNotification" in registration) {
+        console.log("registration2", registration);
+        registration.showNotification(title, payload);
     } else {
         new Notification(title, payload);
     }
