@@ -16,6 +16,18 @@
     @inertiaHead
 
     @laravelPWA
+
+    <script>
+        const registration = await navigator.serviceWorker.getRegistration();
+
+        if (registration && "showNotification" in registration) {
+            registration.showNotification("This is a yo", {
+                body: "yoooo",
+            });
+        } else {
+            new Notification(title, payload);
+        }
+    </script>
 </head>
 <body class="font-sans antialiased">
 @inertia
