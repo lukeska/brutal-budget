@@ -1,6 +1,10 @@
 const sendNotification = async () => {
-    const registration = await navigator.serviceWorker.getRegistration();
-    console.log(registration);
+    navigator.serviceWorker.getRegistration().then(function (registration) {
+        console.log(navigator);
+        console.log(navigator.serviceWorker);
+        console.error(registration);
+    });
+    return;
     if (Notification.permission === "granted") {
         showNotification(registration, "All good here");
     } else {
