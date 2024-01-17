@@ -51,7 +51,7 @@
 <meta name="msapplication-TileColor" content="{{ $config['background_color'] }}">
 <meta name="msapplication-TileImage" content="{{ data_get(end($config['icons']), 'src') }}">
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
     // Initialize the service worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/serviceworker.js', {
@@ -65,6 +65,62 @@
         }, function (err) {
             // registration failed :(
             console.log('Laravel PWA: ServiceWorker registration failed: ', err);
+        });
+    }
+</script>-->
+<script>
+    if ('serviceWorker' in navigator) {
+        const registerServiceWorker = async () => {
+            await navigator.serviceWorker.register('/serviceworker.js');
+            const registration = await navigator.serviceWorker.ready;
+
+            if (registration.waiting && registration.active) {
+                console.log('new sw waiting');
+                window.swNeedUpdate = true;
+            }
+
+            registration.onupdatefound = () => {
+                const installingWorker = registration.installing;
+
+                if (installingWorker) {
+                    console.log('installing sw found');
+                    installingWorker.onstatechange = async () => {
+                        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('new sw installed');
+                            window.swNeedUpdate = true;
+
+                            await SWHelper.prepareCachesForUpdate();
+                            await SWHelper.skipWaiting();
+                        }
+                    };
+                }
+
+            };
+        };
+
+        registerServiceWorker();
+
+        const SWHelper = {
+            async getWaitingWorker() {
+                const registrations = await navigator?.serviceWorker?.getRegistrations() || [];
+                const registrationWithWaiting = registrations.find(reg => reg.waiting);
+                return registrationWithWaiting?.waiting;
+            },
+
+            async skipWaiting() {
+                return (await SWHelper.getWaitingWorker())?.postMessage({type: 'SKIP_WAITING'});
+            },
+
+            async prepareCachesForUpdate() {
+                return (await SWHelper.getWaitingWorker())?.postMessage({type: 'PREPARE_CACHES_FOR_UPDATE'});
+            }
+        };
+
+        window.addEventListener('beforeunload', async () => {
+            if (window.swNeedUpdate) {
+                console.log('send skipWaiting');
+                await SWHelper.skipWaiting();
+            }
         });
     }
 </script>
