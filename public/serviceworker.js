@@ -330,7 +330,7 @@ const routes = [
 const filesToCache = [...buildFiles, ...staticFiles, ...routes];
 
 self.numBadges = 0;
-const version = 411;
+const version = Date.now();
 
 const cacheName = `pwa-cache-${version}`;
 
