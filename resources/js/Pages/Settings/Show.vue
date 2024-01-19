@@ -3,6 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 import UpdateProfileInformationForm from "@/Pages/Profile/Partials/UpdateProfileInformationForm.vue";
 import UpdateSettingsForm from "@/Pages/Settings/Partials/UpdateSettingsForm.vue";
+import UpdatePushSettingsForm from "@/Pages/Settings/Partials/UpdatePushSettingsForm.vue";
 </script>
 
 <template>
@@ -16,6 +17,7 @@ import UpdateSettingsForm from "@/Pages/Settings/Partials/UpdateSettingsForm.vue
                 <div>
                     <UpdateSettingsForm :user="$page.props.auth.user" />
                     <SectionBorder />
+                    <UpdatePushSettingsForm :user="$page.props.auth.user" />
                 </div>
             </div>
         </div>
