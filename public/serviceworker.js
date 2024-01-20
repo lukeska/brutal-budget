@@ -546,12 +546,13 @@ const sendMessage = async (message) => {
 };
 
 const pushHandler = async (e) => {
+    console.log(e);
     const data = e.data.json();
     const { title, message, interaction } = data;
 
     const options = {
         body: message,
-        icon: "/src/img/icons/icon-512x512.png",
+        icon: "/images/icons/icon-512x512.png",
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
