@@ -20,24 +20,23 @@ class UserPushSettingsController extends Controller
             key: $request->get('key'),
             token: $request->get('token'),
         );
-        //dd(\Illuminate\Support\Facades\Request::all());
+
+        return back();
+    }
+
+    public function unsubscribe(Request $request)
+    {
+        Auth::user()->deletePushSubscription(
+            endpoint: $request->get('endpoint'),
+        );
+
+        return back();
     }
 
     public function pushTest()
     {
-        /*$webPush = new WebPush([
-            'VAPID' => [
-                'publicKey' => config('webpush.vapid.public_key'),
-                'privateKey' => config('webpush.vapid.private_key'),
-                'subject' => 'https://brutal-budget.test',
-            ],
-        ]);
-        $webPush->sendOneNotification(
-            Subscription::create()
-        );*/
-        Log::debug('push test');
         Auth::user()->notify(new ExpenseCreated(Expense::find(1)));
 
-        return Inertia::render('Settings/Show');
+        return back();
     }
 }
