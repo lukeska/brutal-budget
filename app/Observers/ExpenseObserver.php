@@ -2,10 +2,13 @@
 
 namespace App\Observers;
 
-use App\Events\ExpenseCreated;
+use App\Events\ExpenseCreated  as ExpenseCreatedEvent;
 use App\Facades\Totals;
 use App\Models\Expense;
+use App\Notifications\ExpenseCreated as ExpenseCreatedNotification;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class ExpenseObserver
 {
@@ -16,7 +19,13 @@ class ExpenseObserver
     {
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
 
-        broadcast(new ExpenseCreated($expense))->toOthers();
+        broadcast(new ExpenseCreatedEvent($expense))->toOthers();
+
+        $users = $expense->team->allUsers()->reject(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
+
+        Notification::send($users, new ExpenseCreatedNotification($expense));
     }
 
     /**

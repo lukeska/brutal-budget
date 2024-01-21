@@ -16,6 +16,8 @@ const form = useForm({
     token: null,
 });
 
+const formTestNotification = useForm({});
+
 const notificationPermission = ref(Notification.permission);
 
 const notificationsEnabled = ref(false);
@@ -34,6 +36,9 @@ onMounted(() => {
         sw.pushManager.getSubscription().then((subscription) => {
             console.log(subscription);
 
+            // TODO: this is not enough. Need to check if the current user has a subscription on the server.
+            // I can have push enabled on the browser, then log in with a different user.
+            // In that case push notifications won't work until I subscribe the new user too.
             pushEnabled.value = !!subscription;
         });
     });
@@ -92,7 +97,9 @@ const enablePush = () => {
 };
 
 const testNotification = async () => {
-    router.post(route("user-push-settings.push-test"));
+    formTestNotification.post(route("user-push-settings.push-test"), {
+        preserveScroll: true,
+    });
 };
 </script>
 
@@ -122,21 +129,25 @@ const testNotification = async () => {
                 <PrimaryButton
                     v-if="!notificationsEnabled && !pushEnabled"
                     @click.prevent="enableNotificationsAndPush"
+                    :disabled="form.processing"
                     >Enable
                 </PrimaryButton>
                 <PrimaryButton
                     v-if="notificationsEnabled && !pushEnabled"
                     @click.prevent="enablePush"
+                    :disabled="form.processing"
                     >Enable
                 </PrimaryButton>
                 <SecondaryButton
                     v-if="notificationsEnabled && pushEnabled"
                     @click.prevent="testNotification"
+                    :disabled="form.processing || formTestNotification.processing"
                     >Test notification
                 </SecondaryButton>
                 <DangerButton
                     v-if="notificationsEnabled && pushEnabled"
                     @click.prevent="disableNotifications"
+                    :disabled="form.processing || formTestNotification.processing"
                     >Disable</DangerButton
                 >
             </div>

@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
+use NumberFormatter;
 
 class Expense extends Model
 {
@@ -38,6 +40,21 @@ class Expense extends Model
     public function team(): BelongsTo
     {
         return $this->belongsTo(Jetstream::teamModel());
+    }
+
+    /*
+     * Accessors
+     */
+    protected function formattedAmount(): Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
+                $formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, 'EUR');
+
+                return $formatter->formatCurrency($attributes['amount'] / 100, 'EUR');
+            },
+        );
     }
 
     /*
