@@ -17,40 +17,13 @@ const form = useForm({
 });
 
 const notificationPermission = ref(Notification.permission);
+
 const notificationsEnabled = ref(false);
 const pushEnabled = ref(false);
 
-const disableNotifications = () => {
-    //Notification.requestPermission() = "denied";
-};
-
-const enableNotifications = () => {
-    Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-            // get service worker
-            navigator.serviceWorker.ready.then((sw) => {
-                // subscribe
-                sw.pushManager
-                    .subscribe({
-                        userVisibleOnly: true,
-                        applicationServerKey: import.meta.env.VITE_VAPID_PUBLIC_KEY,
-                    })
-                    .then((subscription) => {
-                        //console.log(JSON.parse(JSON.stringify(subscription)));
-                        const subscriptionJson = JSON.parse(JSON.stringify(subscription));
-                        console.log(subscriptionJson);
-                        form.endpoint = subscriptionJson.endpoint;
-                        form.key = subscriptionJson.keys.p256dh;
-                        form.token = subscriptionJson.keys.auth;
-                        //return;
-                        router.post(route("user-push-settings.subscribe"), form);
-                        // subscription successful
-                        /*fetch("/api/push-subscribe", {
-                            method: "post",
-                            body: JSON.stringify(subscription),
-                        }).then(alert("ok"));*/
-                    });
-            });
+const notificationsAreEnabled = computed((): boolean => {
+    return notificationPermission.value === "granted";
+});
 
 onMounted(() => {
     // check if notifications are granted
