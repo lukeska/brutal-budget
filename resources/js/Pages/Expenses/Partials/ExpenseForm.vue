@@ -298,12 +298,12 @@ watchEffect(() => {
         <div class="flex w-full space-x-3 bg-gray-100 px-6 py-4">
             <div class="relative flex flex-1 items-center space-x-px">
                 <PrimaryButton
-                    type="submit"
                     @click.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')"
                     :class="[
                         expenseStore.isNewExpense ? 'rounded-l-md rounded-r-none' : 'rounded-md',
                         'h-10 flex-1  bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500',
-                    ]">
+                    ]"
+                    :disabled="form.processing">
                     <span class="mx-auto">
                         {{
                             !expenseStore.isNewExpense ? "Update" : form.months == 12 ? "Create 12 expenses" : "Create"
@@ -313,8 +313,8 @@ watchEffect(() => {
                 <PrimaryButton
                     v-if="expenseStore.isNewExpense"
                     @click.prevent="showMultipleExpensesOptions = !showMultipleExpensesOptions"
-                    type="button"
-                    class="h-10 rounded-l-none rounded-r-md bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500">
+                    class="h-10 rounded-l-none rounded-r-md bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500"
+                    :disabled="form.processing">
                     <IconDotsVertical :size="20" />
                 </PrimaryButton>
                 <div
@@ -353,7 +353,8 @@ watchEffect(() => {
             <button
                 type="submit"
                 class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow"
-                @click.prevent="expenseStore.isNewExpense ? emit('cancel') : submit('delete')">
+                @click.prevent="expenseStore.isNewExpense ? emit('cancel') : submit('delete')"
+                :disabled="form.processing">
                 <IconTrash />
             </button>
         </div>
