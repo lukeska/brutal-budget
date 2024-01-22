@@ -7,7 +7,6 @@ import ExpenseTypeDropdown from "@/Pages/Expenses/Partials/ExpenseTypeDropdown.v
 import { computed, onMounted } from "vue";
 import ViewSelector from "@/Pages/Expenses/Partials/ViewSelector.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { showExpenseNotification } from "@/Helpers/Notifications";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { router, usePage } from "@inertiajs/vue3";
 
@@ -42,19 +41,23 @@ const currentMonthlyTotal = computed(() => {
     });
 });
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 onMounted(() => {
-    page.props.auth.user.all_teams.forEach(function (team) {
-        window.Echo.private(`teams.${team.id}`).listen("ExpenseCreated", (e) => {
+    window.Echo.private(`teams.${page.props.auth.user.current_team_id}`)
+        .listen("ExpenseCreated", (e) => {
             router.reload({
                 preserveScroll: true,
             });
-            let expense = e.expense;
-            console.log(expense);
-            expense.amount = currencyFormatter.format(expense.amount / 100);
-            showExpenseNotification(expense);
+        })
+        .listen("ExpenseUpdated", (e) => {
+            router.reload({
+                preserveScroll: true,
+            });
+        })
+        .listen("ExpenseDeleted", (e) => {
+            router.reload({
+                preserveScroll: true,
+            });
         });
-    });
 });
 </script>
 

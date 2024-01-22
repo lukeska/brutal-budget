@@ -7,18 +7,27 @@ use App\Notifications\ExpenseCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Inertia\Inertia;
-use Minishlink\WebPush\Subscription;
-use Minishlink\WebPush\WebPush;
+use NotificationChannels\WebPush\PushSubscription;
 
 class UserPushSettingsController extends Controller
 {
+    public function subscribed(Request $request)
+    {
+        $subscription = app(config('webpush.model'))->findByEndpoint($request->input('endpoint'));
+
+        $isSubscribed = Auth::user()->ownsPushSubscription($subscription);
+
+        return [
+            'subscribed' => $isSubscribed,
+        ];
+    }
+
     public function subscribe(Request $request)
     {
         Auth::user()->updatePushSubscription(
-            endpoint: $request->get('endpoint'),
-            key: $request->get('key'),
-            token: $request->get('token'),
+            endpoint: $request->input('endpoint'),
+            key: $request->input('key'),
+            token: $request->input('token'),
         );
 
         return back();
@@ -27,7 +36,7 @@ class UserPushSettingsController extends Controller
     public function unsubscribe(Request $request)
     {
         Auth::user()->deletePushSubscription(
-            endpoint: $request->get('endpoint'),
+            endpoint: $request->input('endpoint'),
         );
 
         return back();

@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
-use App\Events\ExpenseCreated  as ExpenseCreatedEvent;
+use App\Events\ExpenseCreated;
+use App\Events\ExpenseDeleted;
+use App\Events\ExpenseUpdated;
 use App\Facades\Totals;
 use App\Models\Expense;
 use App\Notifications\ExpenseCreated as ExpenseCreatedNotification;
@@ -19,8 +21,10 @@ class ExpenseObserver
     {
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
 
-        broadcast(new ExpenseCreatedEvent($expense))->toOthers();
+        // broadcast event for Laravel Echo to pick up
+        broadcast(new ExpenseCreated($expense))->toOthers();
 
+        // send notifications
         $users = $expense->team->allUsers()->reject(function ($user) {
             return $user->id === Auth::user()->id;
         });
@@ -45,6 +49,9 @@ class ExpenseObserver
         }
 
         Totals::generateByCategory($expense->category->id, $expense->team->id, $newDate->format('Ym'));
+
+        // broadcast event for Laravel Echo to pick up
+        broadcast(new ExpenseUpdated($expense))->toOthers();
     }
 
     /**
@@ -53,6 +60,9 @@ class ExpenseObserver
     public function deleted(Expense $expense): void
     {
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
+
+        // broadcast event for Laravel Echo to pick up
+        broadcast(new ExpenseDeleted($expense->id, $expense->team->id))->toOthers();
     }
 
     /**

@@ -50,9 +50,9 @@ class Expense extends Model
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
                 $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
-                $formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, 'EUR');
+                $formatter->setTextAttribute(NumberFormatter::CURRENCY_CODE, $this->user->currency);
 
-                return $formatter->formatCurrency($attributes['amount'] / 100, 'EUR');
+                return $formatter->formatCurrency($attributes['amount'] / 100, $this->user->currency);
             },
         );
     }

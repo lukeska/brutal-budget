@@ -9,17 +9,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ExpenseCreated implements ShouldBroadcast
+class ExpenseDeleted implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public Expense $expense,
-    ) {
-        //$this->expense->load('user');
+    public function __construct(public int $expenseId, public int $teamId)
+    {
+        //
     }
 
     /**
@@ -30,7 +29,7 @@ class ExpenseCreated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('teams.'.$this->expense->team->id),
+            new PrivateChannel('teams.'.$this->teamId),
         ];
     }
 }
