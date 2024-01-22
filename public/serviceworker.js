@@ -74,17 +74,19 @@ const sendMessage = async (message) => {
 };
 
 const pushHandler = async (e) => {
+    console.log(e.data.json());
     const data = e.data.json();
-    const { title, message, interaction } = data;
+    const { title, body, interaction } = data;
 
     const options = {
-        body: message,
+        body: body,
         icon: "/images/icons/icon-512x512.png",
+        badge: "/images/icons/badge.png",
         vibrate: [100, 50, 100],
         data: {
             dateOfArrival: Date.now(),
         },
-        actions: [
+        /*actions: [
             {
                 action: "confirm",
                 title: "OK",
@@ -93,7 +95,7 @@ const pushHandler = async (e) => {
                 action: "close",
                 title: "Close notification",
             },
-        ],
+        ],*/
         requireInteraction: interaction,
     };
 
@@ -116,6 +118,32 @@ const pushHandler = async (e) => {
     );
 };
 
+const messageHandler = async ({ data }) => {
+    console.log("message", data);
+
+    const { type } = data;
+
+    switch (type) {
+        case "clearBadges":
+            self.numBadges = 0;
+            if ("clearAppBadge" in navigator) {
+                navigator.clearAppBadge();
+            }
+            break;
+
+        case "SKIP_WAITING":
+            const clients = await self.clients.matchAll({
+                includeUncontrolled: true,
+            });
+
+            if (clients.length < 2) {
+                self.skipWaiting();
+            }
+
+            break;
+    }
+};
+
 const notificationClickHandler = async (e) => {
     console.log("notification click", e.notification.tag);
     e.notification.close();
@@ -125,3 +153,4 @@ self.addEventListener("notificationclick", notificationClickHandler);
 self.addEventListener("install", installHandler);
 self.addEventListener("activate", activateHandler);
 self.addEventListener("push", pushHandler);
+self.addEventListener("message", messageHandler);

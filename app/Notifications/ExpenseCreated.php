@@ -39,7 +39,8 @@ class ExpenseCreated extends Notification
             ->icon('/images/icons/icon-512x512.png')
             ->body('Created by '.$this->expense->user->name)
             ->action('View account', 'view_account')
-            ->options(['TTL' => 1000]);
+            ->options(['TTL' => 1000])
+            ->badge(1);
         // ->data(['id' => $notification->id])
         // ->badge()
         // ->dir()
