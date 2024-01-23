@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Faker;
+namespace Database\Providers;
 
 use Faker\Provider\Base;
 

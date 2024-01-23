@@ -18,8 +18,6 @@ const form = useForm({
 
 const formTestNotification = useForm({});
 
-const notificationPermission = ref(Notification.permission);
-
 const notificationsEnabled = ref(false);
 const pushEnabled = ref(false);
 

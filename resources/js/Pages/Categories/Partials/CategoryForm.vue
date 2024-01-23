@@ -150,6 +150,11 @@ const updateIcon = (params) => {
                     v-text="form.errors.name"></div>
 
                 <div
+                    v-if="form.errors.limit"
+                    class="mt-1 text-xs text-red-500"
+                    v-text="form.errors.limit"></div>
+
+                <div
                     v-if="showCreateSuccessMessage"
                     class="mt-1 text-xs text-green-500">
                     Category created!

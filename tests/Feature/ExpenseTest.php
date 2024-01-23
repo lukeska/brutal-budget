@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
-/** @group Brutal */
+/** @group brutal */
 class ExpenseTest extends TestCase
 {
     use RefreshDatabase;

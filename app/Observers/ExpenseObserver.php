@@ -25,8 +25,8 @@ class ExpenseObserver
         broadcast(new ExpenseCreated($expense))->toOthers();
 
         // send notifications
-        $users = $expense->team->allUsers()->reject(function ($user) {
-            return $user->id === Auth::user()->id;
+        $users = $expense->team->allUsers()->reject(function ($user) use ($expense) {
+            return $user->id === $expense->user->id;
         });
 
         Notification::send($users, new ExpenseCreatedNotification($expense));

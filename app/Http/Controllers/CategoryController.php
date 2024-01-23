@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Data\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -27,7 +26,17 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $category = CategoryRequest::validate(Request::all());
+        if (Request::user()->cannot('create', Category::class)) {
+            return redirect('/categories')->withErrors([
+                'limit' => 'You reach the limit of categories this team can have.',
+            ]);
+        }
+
+        try {
+            $category = CategoryRequest::validate(Request::all());
+        } catch (ValidationException $e) {
+            return redirect('/categories')->withErrors($e->errors());
+        }
 
         Auth::user()->currentTeam->categories()->create($category);
 

@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-/** @group Brutal */
+/** @group brutal */
 class CategoryMonthlyTotalTest extends TestCase
 {
     use RefreshDatabase;

@@ -45,4 +45,7 @@ return [
         'transport',
         'work-expenses',
     ],
+    'limits' => [
+        'categories_per_team' => 50,
+    ],
 ];

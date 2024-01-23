@@ -28,7 +28,7 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->currentTeam->categories->count() <= config('global.limits.categories_per_team');
     }
 
     /**
