@@ -52,6 +52,10 @@ let form = useForm({
 });
 
 const submit = (action: String) => {
+    if (form.processing) {
+        return;
+    }
+
     form.amount = form.amount * 100;
 
     if (action === "update") {
@@ -352,7 +356,7 @@ watchEffect(() => {
 
             <button
                 type="submit"
-                class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow"
+                class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow disabled:opacity-50"
                 @click.prevent="expenseStore.isNewExpense ? emit('cancel') : submit('delete')"
                 :disabled="form.processing">
                 <IconTrash />
