@@ -56,7 +56,7 @@ const submit = (action: String) => {
         return;
     }
 
-    form.amount = (form.amount * 100).toFixed(2);
+    form.amount = (form.amount * 100).toFixed(0);
 
     if (action === "update") {
         form.patch(route("expenses.update", expenseStore.expense.id), {
