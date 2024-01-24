@@ -46,6 +46,12 @@ class ProjectController extends Controller
 
     public function create()
     {
+        if (Request::user()->cannot('create', Project::class)) {
+            return redirect(route('projects.index'))->withErrors([
+                'limit' => 'You reach the limit of projects this team can have.',
+            ]);
+        }
+
         $project = ProjectData::validate(Request::all());
 
         Auth::user()->currentTeam->projects()->create($project);

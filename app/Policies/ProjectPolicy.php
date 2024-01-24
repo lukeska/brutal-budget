@@ -29,7 +29,7 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->currentTeam->projects->count() <= config('global.limits.projects_per_team');
     }
 
     /**

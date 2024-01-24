@@ -47,5 +47,6 @@ return [
     ],
     'limits' => [
         'categories_per_team' => 50,
+        'projects_per_team' => 50,
     ],
 ];

@@ -27,7 +27,7 @@ class CategoryController extends Controller
     public function create()
     {
         if (Request::user()->cannot('create', Category::class)) {
-            return redirect('/categories')->withErrors([
+            return redirect(route('categories.index'))->withErrors([
                 'limit' => 'You reach the limit of categories this team can have.',
             ]);
         }
@@ -42,7 +42,7 @@ class CategoryController extends Controller
 
         Request::session()->flash('message', 'Category created correctly');
 
-        return redirect('/categories');
+        return redirect(route('categories.index'));
     }
 
     public function update(Category $category, CategoryRequest $data)
@@ -55,7 +55,7 @@ class CategoryController extends Controller
 
         Request::session()->flash('message', 'Category updated correctly');
 
-        return redirect('/categories');
+        return redirect(route('categories.index'));
     }
 
     public function updateIcon(Category $category, CategoryRequest $data)
@@ -68,7 +68,7 @@ class CategoryController extends Controller
 
         Request::session()->flash('message', 'Category updated correctly');
 
-        return redirect('/categories');
+        return redirect(route('categories.index'));
     }
 
     public function delete(Category $category)
@@ -81,6 +81,6 @@ class CategoryController extends Controller
 
         Request::session()->flash('message', 'Category deleted correctly');
 
-        return redirect('/categories');
+        return redirect(route('categories.index'));
     }
 }
