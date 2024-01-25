@@ -23,8 +23,7 @@ class ExpenseTest extends TestCase
 
         $this->get('/expenses')->assertStatus(200);
 
-        $attributes = Expense::factory()->raw([
-            'user_id' => $user->id,
+        $attributes = Expense::factory()->recycle($user)->raw([
             'notes' => 'My notes',
             'amount' => 2050,
         ]);
@@ -68,6 +67,7 @@ class ExpenseTest extends TestCase
                                 Carbon::create(2024, 1, 31)->addMonthsWithoutOverflow($index)->format('d-m-Y'),
                                 $expense['date']);
                         });
+
                         return true;
                     });
             }
@@ -80,14 +80,9 @@ class ExpenseTest extends TestCase
     public function a_user_can_edit_an_expense()
     {
         $user = $this->signIn();
-        $team = $user->currentTeam;
-        $categories = $team->categories;
 
-        $expense = Expense::factory()->create([
+        $expense = Expense::factory()->recycle($user)->create([
             'amount' => 1000,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-            'category_id' => $categories[0]->id,
         ]);
 
         $this->get(route('expenses.index'))
@@ -277,6 +272,66 @@ class ExpenseTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('errors')
                 ->where('errors.date', 'Too many expenses logged on this team this month.')
+            );
+    }
+
+    /** @test */
+    public function expense_date_must_be_within_a_valid_date_range()
+    {
+        $this->travelTo('2024-01-01');
+
+        $user = $this->signIn();
+
+        // test error messages on create
+        $attributes = Expense::factory()->recycle($user)->raw([
+            'date' => now()->addYears(2),
+        ]);
+
+        $this->followingRedirects()
+            ->put(route('expenses.create'), $attributes)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('errors')
+                ->where('errors.date', 'The date cannot be more than 2 years in the future.')
+            );
+
+        $attributes = Expense::factory()->recycle($user)->raw([
+            'date' => now()->subYear(),
+        ]);
+
+        $this->followingRedirects()
+            ->put(route('expenses.create'), $attributes)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('errors')
+                ->where('errors.date', 'The date cannot be more than 1 year in the past.')
+            );
+
+        // test error messages on update
+        $expense = Expense::factory()->recycle($user)->create([
+            'amount' => 1000,
+        ]);
+
+        $expense->amount = 2000;
+        $expense->date = now()->addYears(2);
+
+        $this->followingRedirects()
+            ->patch(route('expenses.update', $expense), $expense->toArray())
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('errors')
+                ->where('errors.date', 'The date cannot be more than 2 years in the future.')
+            );
+
+        $expense->amount = 2000;
+        $expense->date = now()->subYear();
+
+        $this->followingRedirects()
+            ->patch(route('expenses.update', $expense), $expense->toArray())
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('errors')
+                ->where('errors.date', 'The date cannot be more than 1 year in the past.')
             );
     }
 }

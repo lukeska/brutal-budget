@@ -37,12 +37,20 @@ class ExpenseRequest extends Data
                 'integer',
                 'gt:0',
             ],
-            'date' => ['required', 'date', new MaxExpensePerMonth(Auth::user()->currentTeam->id)],
+            'date' => ['required', 'date', 'after:last year', 'before:+2 year', new MaxExpensePerMonth(Auth::user()->currentTeam->id)],
             'notes' => ['nullable'],
             'category_id' => ['required', 'exists:App\Models\Category,id'], // TODO: scope to categories for the current group
             'project_id' => ['sometimes', 'nullable', 'exists:App\Models\Project,id'], // TODO: scope to projects for the current group
             'is_regular' => ['sometimes', 'bool'],
             'months' => ['sometimes', 'integer', 'gt:0'],
+        ];
+    }
+
+    public static function messages(): array
+    {
+        return [
+            'date.after' => 'The date cannot be more than 1 year in the past.',
+            'date.before' => 'The date cannot be more than 2 years in the future.',
         ];
     }
 }
