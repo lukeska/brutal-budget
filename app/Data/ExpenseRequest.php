@@ -2,7 +2,9 @@
 
 namespace App\Data;
 
+use App\Rules\MaxExpensePerMonth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
@@ -35,7 +37,7 @@ class ExpenseRequest extends Data
                 'integer',
                 'gt:0',
             ],
-            'date' => ['required', 'date'],
+            'date' => ['required', 'date', new MaxExpensePerMonth(Auth::user()->currentTeam->id)],
             'notes' => ['nullable'],
             'category_id' => ['required', 'exists:App\Models\Category,id'], // TODO: scope to categories for the current group
             'project_id' => ['sometimes', 'nullable', 'exists:App\Models\Project,id'], // TODO: scope to projects for the current group

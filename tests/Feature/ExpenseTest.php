@@ -7,6 +7,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
@@ -253,6 +254,29 @@ class ExpenseTest extends TestCase
                 ->has('expenses', 10)
                 ->has('monthlyTotals', 5)
                 ->where('monthlyTotals.2.total', 100)
+            );
+    }
+
+    /** @test */
+    public function a_team_cannot_have_more_than_x_expenses_per_month()
+    {
+        Config::set('global.limits.expenses_per_month', 1);
+
+        $user = $this->signIn();
+
+        Expense::factory()
+            ->recycle($user)
+            ->count(config('global.limits.expenses_per_month') + 1)
+            ->create();
+
+        $attributes = Expense::factory()->raw();
+
+        $this->followingRedirects()
+            ->put(route('expenses.create'), $attributes)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('errors')
+                ->where('errors.date', 'Too many expenses logged on this team this month.')
             );
     }
 }

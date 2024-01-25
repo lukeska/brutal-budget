@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\CategoryRequest;
 use App\Data\ExpenseData;
 use App\Data\ExpenseRequest;
 use App\Data\ExpensesIndexPage;
@@ -11,6 +12,7 @@ use App\Repositories\MonthlyTotalsRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ExpenseController extends Controller
@@ -61,13 +63,17 @@ class ExpenseController extends Controller
 
     public function create()
     {
-        $expense = ExpenseRequest::from(Request::all());
+        try {
+            $expense = ExpenseRequest::validateAndCreate(Request::all());
+        } catch (ValidationException $e) {
+            return redirect(route('expenses.index'))->withErrors($e->errors());
+        }
 
         $this->expensesRepository->createMonthlyExpenses($expense, Auth::user());
 
         Request::session()->flash('message', 'Expense created correctly');
 
-        return back();
+        return redirect(route('expenses.index'));
     }
 
     public function update(Expense $expense, ExpenseRequest $data)
