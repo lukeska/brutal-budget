@@ -42,17 +42,9 @@ class ExpenseController extends Controller
             $currentDate = Carbon::create($year, $month, 1);
         }
 
-        $expenses = ExpenseData::collection(Auth::user()
-            ->currentTeam
-            ->expenses()
-            ->when($regularExpenses !== null, function ($query) use ($regularExpenses) {
-                return $query->where('is_regular', $regularExpenses);
-            })
-            ->month($currentDate)
-            ->with('category')
-            ->with('project')
-            ->orderByDesc('date')
-            ->get());
+        $expenses = ExpenseData::collection(
+            $this->expensesRepository->getExpensesByMonth(Auth::user()->currentTeam->id, $currentDate, $regularExpenses)
+        );
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
