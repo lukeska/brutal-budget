@@ -31,7 +31,7 @@ class TeamPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->ownedTeams->count() < config('global.limits.owned_teams_per_user');
     }
 
     /**

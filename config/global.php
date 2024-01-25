@@ -49,5 +49,6 @@ return [
         'categories_per_team' => 50,
         'projects_per_team' => 50,
         'expenses_per_month' => 200,
+        'owned_teams_per_user' => 10,
     ],
 ];
