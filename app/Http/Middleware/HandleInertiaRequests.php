@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Repositories\CategoriesRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -34,8 +35,10 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $categoriesRepository = new CategoriesRepository();
+
         return array_merge(parent::share($request), [
-            'categories' => fn () => Auth::user() ? Auth::user()->currentTeam->categories : null,
+            'categories' => fn () => Auth::user() ? $categoriesRepository->getAll(Auth::user()->current_team_id) : null,
             'projects' => fn () => Auth::user() ? Auth::user()->currentTeam->projects : null,
         ]);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\CategoryRequest;
 use App\Models\Category;
+use App\Repositories\CategoriesRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
@@ -11,16 +12,16 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
+
+
+    public function __construct(protected CategoriesRepository $categoriesRepository)
+    {
+    }
+
     public function index()
     {
-        $categories = Auth::user()
-            ->currentTeam
-            ->categories()
-            ->orderByDesc('created_at')
-            ->get();
-
         return Inertia::render('Categories/Index', [
-            'categories' => CategoryRequest::collection($categories),
+            'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->currentTeam->id)),
         ]);
     }
 
