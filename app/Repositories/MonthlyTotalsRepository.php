@@ -13,7 +13,7 @@ use Spatie\LaravelData\DataCollection;
 
 class MonthlyTotalsRepository
 {
-    public function getMonthlyTotals(int $teamId, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
+    public function getAll(int $teamId, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
     {
         $currentDate = Carbon::now()->firstOfMonth();
 
@@ -38,7 +38,7 @@ class MonthlyTotalsRepository
 
         $data = [];
         foreach ($dates as $date) {
-            $rawTotals = $this->getMonthlyTotal($teamId, $date, $regularExpenses);
+            $rawTotals = $this->get($teamId, $date, $regularExpenses);
 
             $totalExpenses = $rawTotals->sum('amount');
 
@@ -53,9 +53,9 @@ class MonthlyTotalsRepository
         return MonthlyTotalData::collection(array_slice($data, 1));
     }
 
-    public function getMonthlyTotal(int $teamId, Carbon $date, ?bool $regular = null): Collection
+    public function get(int $teamId, Carbon $date, ?bool $regular = null): Collection
     {
-        $key = "getMonthlyTotal-{$teamId}-{$date->format('Ym')}-{$regular}";
+        $key = "monthlyTotal-get-{$teamId}-{$date->format('Ym')}-{$regular}";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {

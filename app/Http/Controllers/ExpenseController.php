@@ -43,12 +43,12 @@ class ExpenseController extends Controller
         }
 
         $expenses = ExpenseData::collection(
-            $this->expensesRepository->getExpensesByMonth(Auth::user()->currentTeam->id, $currentDate, $regularExpenses)
+            $this->expensesRepository->getByMonth(Auth::user()->currentTeam->id, $currentDate, $regularExpenses)
         );
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
-            monthlyTotals: $this->monthlyTotalsRepository->getMonthlyTotals(Auth::user()->currentTeam->id, $year, $month, $regularExpenses),
+            monthlyTotals: $this->monthlyTotalsRepository->getAll(Auth::user()->currentTeam->id, $year, $month, $regularExpenses),
             expensesView: $expensesView,
         ));
     }

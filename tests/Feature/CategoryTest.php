@@ -21,7 +21,7 @@ class CategoryTest extends TestCase
         $this->signIn();
 
         $attributes = Category::factory([
-            'name' => 'My test category',
+            'name' => 'AAA My test category',
         ])->raw();
 
         $this->followingRedirects()
@@ -29,7 +29,7 @@ class CategoryTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('Categories/Index')
-                ->where('categories.20.name', 'My test category')
+                ->where('categories.0.name', 'AAA My test category')
             );
     }
 

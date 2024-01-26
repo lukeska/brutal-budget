@@ -15,6 +15,7 @@
         "laravel-notification-channels/webpush": "^7.1",
         "laravel/framework": "^10.10",
         "laravel/jetstream": "^4.0",
+        "laravel/pulse": "^1.0@beta",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "mailersend/laravel-driver": "^2.3",
@@ -78,6 +79,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "prefer-stable": true
 }

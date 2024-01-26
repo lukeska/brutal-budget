@@ -11,7 +11,7 @@ class CategoriesRepository
 {
     public function getAll(int $teamId): Collection
     {
-        $key = "getAll-{$teamId}";
+        $key = "categories-getAll-{$teamId}";
         $tags = $this->getCacheTags($teamId);
 
         if (Cache::tags($tags)->has($key)) {

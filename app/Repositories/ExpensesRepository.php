@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Cache;
 
 class ExpensesRepository
 {
-    public function getExpensesByMonth(int $teamId, Carbon $date, ?bool $regular = null): Collection
+    public function getByMonth(int $teamId, Carbon $date, ?bool $regular = null): Collection
     {
-        $key = "getExpensesByMonth-{$teamId}-{$date->format('Ym')}-{$regular}";
+        $key = "expenses-getByMonth-{$teamId}-{$date->format('Ym')}-{$regular}";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {
