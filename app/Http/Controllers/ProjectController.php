@@ -5,22 +5,23 @@ namespace App\Http\Controllers;
 use App\Data\ExpenseData;
 use App\Data\ProjectData;
 use App\Models\Project;
+use App\Repositories\ProjectsRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
+
+
+    public function __construct(protected ProjectsRepository $projectsRepository)
+    {
+    }
+
     public function index()
     {
-        $projects = Auth::user()
-            ->currentTeam
-            ->projects()
-            ->orderByDesc('created_at')
-            ->get();
-
         return Inertia::render('Projects/Index', [
-            'projects' => ProjectData::collection($projects),
+            'projects' => ProjectData::collection($this->projectsRepository->getAll(Auth::user()->current_team_id)),
         ]);
     }
 

@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Project;
 use App\Models\Team;
 use App\Observers\CategoryObserver;
 use App\Observers\ExpenseObserver;
+use App\Observers\ProjectObserver;
 use App\Observers\TeamObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -35,6 +37,7 @@ class EventServiceProvider extends ServiceProvider
         Team::class => [TeamObserver::class],
         Expense::class => [ExpenseObserver::class],
         Category::class => [CategoryObserver::class],
+        Project::class => [ProjectObserver::class],
     ];
 
     /**

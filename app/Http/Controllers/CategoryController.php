@@ -21,7 +21,7 @@ class CategoryController extends Controller
     public function index()
     {
         return Inertia::render('Categories/Index', [
-            'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->currentTeam->id)),
+            'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->current_team_id)),
         ]);
     }
 
