@@ -31,12 +31,10 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->put(route('expenses.create'), $attributes)
             ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->where('expenses.0.notes', 'My notes')
-                    ->where('expenses.0.amount', 2050);
-            }
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Expenses/Index')
+                ->where('expenses.0.notes', 'My notes')
+                ->where('expenses.0.amount', 2050)
             );
     }
 

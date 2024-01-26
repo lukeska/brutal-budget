@@ -14,7 +14,7 @@ class Totals
         $this->generate($categoryId, $teamId, $yearMonth, isRegular: false);
     }
 
-    protected function generate(int $categoryId, int $teamId, int $yearMonth, bool $isRegular = null): void
+    protected function generate(int $categoryId, int $teamId, int $yearMonth, ?bool $isRegular = null): void
     {
         $expenses = Expense::query()
             ->monthFromInt($yearMonth)

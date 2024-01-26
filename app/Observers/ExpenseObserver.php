@@ -9,13 +9,16 @@ use App\Facades\Totals;
 use App\Models\Expense;
 use App\Notifications\ExpenseCreated as ExpenseCreatedNotification;
 use App\Repositories\ExpensesRepository;
+use App\Repositories\MonthlyTotalsRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 
 class ExpenseObserver
 {
-    public function __construct(protected ExpensesRepository $expensesRepository)
-    {
+    public function __construct(
+        protected ExpensesRepository $expensesRepository,
+        protected MonthlyTotalsRepository $monthlyTotalsRepository,
+    ) {
     }
 
     /**
@@ -23,9 +26,9 @@ class ExpenseObserver
      */
     public function created(Expense $expense): void
     {
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
+        $this->flushCache($expense->team_id, $expense->date);
 
-        $this->expensesRepository->flushCache($expense->team_id, $expense->date);
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
 
         // broadcast event for Laravel Echo to pick up
         broadcast(new ExpenseCreated($expense))->toOthers();
@@ -43,22 +46,22 @@ class ExpenseObserver
      */
     public function updated(Expense $expense): void
     {
+        $newDate = new Carbon($expense->date);
+
+        $this->expensesRepository->flushCache($expense->team_id, $newDate);
+
+        Totals::generateByCategory($expense->category->id, $expense->team->id, $newDate->format('Ym'));
+
         // date was changed, must update total relate to past date
         if ($expense->wasChanged('date')) {
 
             $originalDate = new Carbon($expense->getOriginal('date'));
-            $newDate = new Carbon($expense->date);
 
             if ($originalDate->format('Ym') != $newDate->format('Yd')) {
+                $this->flushCache($expense->team_id, $originalDate);
                 Totals::generateByCategory($expense->category->id, $expense->team->id, $originalDate->format('Ym'));
-
-                $this->expensesRepository->flushCache($expense->team_id, $originalDate);
             }
         }
-
-        Totals::generateByCategory($expense->category->id, $expense->team->id, $newDate->format('Ym'));
-
-        $this->expensesRepository->flushCache($expense->team_id, $newDate);
 
         // broadcast event for Laravel Echo to pick up
         broadcast(new ExpenseUpdated($expense))->toOthers();
@@ -69,9 +72,9 @@ class ExpenseObserver
      */
     public function deleted(Expense $expense): void
     {
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
+        $this->flushCache($expense->team_id, new Carbon($expense->date));
 
-        $this->expensesRepository->flushCache($expense->team_id, new Carbon($expense->date));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
 
         // broadcast event for Laravel Echo to pick up
         broadcast(new ExpenseDeleted($expense->id, $expense->team->id))->toOthers();
@@ -91,5 +94,11 @@ class ExpenseObserver
     public function forceDeleted(Expense $expense): void
     {
         //
+    }
+
+    protected function flushCache(int $teamId, \Carbon\Carbon $date): void
+    {
+        $this->expensesRepository->flushCache($teamId, $date);
+        $this->monthlyTotalsRepository->flushCache($teamId, $date);
     }
 }

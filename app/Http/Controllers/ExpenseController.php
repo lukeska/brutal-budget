@@ -48,7 +48,7 @@ class ExpenseController extends Controller
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
-            monthlyTotals: $this->monthlyTotalsRepository->getMonthlyTotals($year, $month, $regularExpenses),
+            monthlyTotals: $this->monthlyTotalsRepository->getMonthlyTotals(Auth::user()->currentTeam->id, $year, $month, $regularExpenses),
             expensesView: $expensesView,
         ));
     }

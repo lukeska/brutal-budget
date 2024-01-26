@@ -12,7 +12,7 @@ class ExpensesRepository
 {
     public function getExpensesByMonth(int $teamId, Carbon $date, ?bool $regular = null): Collection
     {
-        $key = `getExpensesByMonth:{$teamId}:{$date->format('Ym')}:{$regular}`;
+        $key = "getExpensesByMonth-{$teamId}-{$date->format('Ym')}-{$regular}";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {
@@ -53,7 +53,7 @@ class ExpensesRepository
 
     public function getCacheTags(int $teamId, Carbon $date): array
     {
-        return [`expenses:{$teamId}:{$date->format('Ym')}`];
+        return ["expenses-{$teamId}-{$date->format('Ym')}"];
     }
 
     public function flushCache(int $teamId, Carbon $date): void
