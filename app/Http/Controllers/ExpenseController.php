@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\CategoryRequest;
 use App\Data\ExpenseData;
 use App\Data\ExpenseRequest;
 use App\Data\ExpensesIndexPage;
@@ -61,11 +60,12 @@ class ExpenseController extends Controller
             return redirect(route('expenses.index'))->withErrors($e->errors());
         }
 
-        $this->expensesRepository->createMonthlyExpenses($expense, Auth::user());
+        $expenses = $this->expensesRepository->createMonthlyExpenses($expense, Auth::user());
 
         Request::session()->flash('message', 'Expense created correctly');
+        Request::session()->flash('new_expense', ExpenseData::from($expenses->first()));
 
-        return redirect(route('expenses.index'));
+        return to_route('expenses.index');
     }
 
     public function update(Expense $expense, ExpenseRequest $data)

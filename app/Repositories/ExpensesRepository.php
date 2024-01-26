@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Data\ExpenseRequest;
 use App\Models\Expense;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class ExpensesRepository
@@ -36,19 +36,23 @@ class ExpensesRepository
         return $expenses;
     }
 
-    public function createMonthlyExpenses(ExpenseRequest $expense, ?\Illuminate\Contracts\Auth\Authenticatable $user): void
+    public function createMonthlyExpenses(ExpenseRequest $expense, ?\Illuminate\Contracts\Auth\Authenticatable $user): Collection
     {
+        $expenses = collect();
+
         foreach ($this->getMonthlyAmounts($expense->amount, $expense->months) as $index => $amount) {
             $expenseArray = $expense->except('months')->toArray();
             $expenseArray['amount'] = $amount;
             $expenseArray['date'] = Carbon::parse($expenseArray['date'])->addMonthsWithoutOverflow($index);
 
-            Expense::create([
+            $expenses->add(Expense::create([
                 ...($expenseArray),
                 'user_id' => $user->getAuthIdentifier(),
                 'team_id' => $user->currentTeam->id,
-            ]);
+            ]));
         }
+
+        return $expenses;
     }
 
     public function getCacheTags(int $teamId, Carbon $date): array

@@ -56,19 +56,27 @@ const submit = (action: String) => {
         return;
     }
 
-    form.amount = (form.amount * 100).toFixed(0);
-
     if (action === "update") {
-        form.patch(route("expenses.update", expenseStore.expense.id), {
+        form.transform((data) => ({
+            ...data,
+            amount: (data.amount * 100).toFixed(0),
+        })).patch(route("expenses.update", expenseStore.expense.id), {
             preserveScroll: true,
             onSuccess: () => {
                 emit("updated");
             },
         });
     } else if (action === "create") {
-        form.put(route("expenses.create"), {
+        form.transform((data) => ({
+            ...data,
+            amount: (data.amount * 100).toFixed(0),
+        })).put(route("expenses.create"), {
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (page) => {
+                // update the current expense, so the UI will switch from create to update.
+                // This will avoid creating multiple expenses if the user clicks "create" again before the form closes
+                expenseStore.expense = page.props.flash.new_expense;
+
                 emit("created");
             },
         });
