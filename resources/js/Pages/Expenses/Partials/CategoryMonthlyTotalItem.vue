@@ -68,7 +68,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                 <div class="flex space-x-3">
                     <div class="text-right font-mono">
                         <div class="text-xl">
-                            {{ currencyFormatter.format(currentCategoryMonthlyTotal.amount / 100) }}
+                            {{ currencyFormatter.format(currentCategoryMonthlyTotal.amount) }}
                         </div>
                         <div class="flex items-center space-x-2">
                             <div class="relative h-1 w-16 bg-gray-200">
@@ -112,9 +112,9 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
 
                                     {{
                                         currencyFormatter.format(
-                                            (monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
+                                            monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
                                                 ? monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
-                                                : monthlyTotal.categoryMonthlyTotals[0].amount) / 100,
+                                                : monthlyTotal.categoryMonthlyTotals[0].amount,
                                         )
                                     }}
                                 </div>
@@ -122,7 +122,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                         </div>
                         <div class="font-mono">
                             <span v-if="monthlyTotal.categoryMonthlyTotals.length > 0">
-                                {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].amount / 100) }}
+                                {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].amount) }}
                             </span>
                             <span v-else>-</span>
                         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Data\Transformers\IntToCurrencyTransformer;
 use Carbon\Carbon;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Attributes\WithoutValidation;
@@ -16,6 +17,7 @@ class ExpenseData extends Data
         public int|Optional $id,
         #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'd-m-Y')]
         public Carbon $date,
+        #[WithTransformer(IntToCurrencyTransformer::class)]
         public int $amount,
         public ?string $notes,
         #[MapName('is_regular')]

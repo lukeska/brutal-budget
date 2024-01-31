@@ -2,10 +2,12 @@
 
 namespace App\Data;
 
+use App\Data\Casts\CurrencyToIntCast;
 use App\Rules\MaxExpensePerMonth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
@@ -17,6 +19,7 @@ class ExpenseRequest extends Data
         public int|Optional $id,
         #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'Y-m-d')]
         public Carbon $date,
+        #[WithCast(CurrencyToIntCast::class)]
         public int $amount,
         public ?string $notes,
         #[MapName('is_regular')]
@@ -34,7 +37,6 @@ class ExpenseRequest extends Data
         return [
             'amount' => [
                 'required',
-                'integer',
                 'gt:0',
             ],
             'date' => ['required', 'date', 'after:last year', 'before:+2 year', new MaxExpensePerMonth(Auth::user()->currentTeam->id)],

@@ -28,7 +28,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                 class="flex-1 shrink-0 rounded-md border-2 bg-white p-2 text-center shadow-sm first:hidden last:hidden md:first:block md:last:block"
                 :class="[monthlyTotal.isCurrent ? 'border-indigo-500' : 'border-transparent']">
                 <div class="mb-2 text-sm text-gray-400">{{ getDate(monthlyTotal.yearMonth).format("MMM YYYY") }}</div>
-                <div class="font-mono">{{ currencyFormatter.format(monthlyTotal.total / 100) }}</div>
+                <div class="font-mono">{{ currencyFormatter.format(monthlyTotal.total) }}</div>
             </Link>
         </template>
     </div>

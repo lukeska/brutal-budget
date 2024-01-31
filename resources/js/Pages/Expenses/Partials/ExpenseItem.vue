@@ -19,7 +19,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                 <CategoryIcon :category="expense.category" />
             </div>
         </slot>
-        <div class="min-w-[80px] text-right font-mono">{{ currencyFormatter.format(expense.amount / 100) }}</div>
+        <div class="min-w-[80px] text-right font-mono">{{ currencyFormatter.format(expense.amount) }}</div>
         <div class="text-gray-500">{{ expense.notes }}</div>
     </div>
 </template>

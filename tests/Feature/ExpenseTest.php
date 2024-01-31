@@ -71,7 +71,7 @@ class ExpenseTest extends TestCase
             }
             );
 
-        $this->assertEquals(10000, Expense::all()->sum('amount'));
+        $this->assertEquals(1000000, Expense::all()->sum('amount'));
     }
 
     /** @test */
@@ -79,6 +79,8 @@ class ExpenseTest extends TestCase
     {
         $user = $this->signIn();
 
+        // the expense creation doesn't go through Laravel Data casts,
+        // so the amount stored is 1000, which is displayed as 10 on the frontend
         $expense = Expense::factory()->recycle($user)->create([
             'amount' => 1000,
         ]);
@@ -88,11 +90,13 @@ class ExpenseTest extends TestCase
             ->assertInertia(function (AssertableInertia $page) {
                 return $page
                     ->component('Expenses/Index')
-                    ->where('expenses.0.amount', 1000);
+                    ->where('expenses.0.amount', 10);
             }
             );
 
-        $expense->amount = 2000;
+        // This amount will go through Laravel data casts.
+        // Will be stored as 2000 in the database, and displayed as 20 on the frontend
+        $expense->amount = 20;
 
         $this->followingRedirects()
             ->patch(route('expenses.update', $expense), $expense->toArray())
@@ -100,9 +104,11 @@ class ExpenseTest extends TestCase
             ->assertInertia(function (AssertableInertia $page) {
                 return $page
                     ->component('Expenses/Index')
-                    ->where('expenses.0.amount', 2000);
+                    ->where('expenses.0.amount', 20);
             }
             );
+
+        $this->assertEquals(2000, $expense->fresh()->amount);
     }
 
     /** @test */
@@ -118,7 +124,7 @@ class ExpenseTest extends TestCase
         ]);
 
         $expenseGroup1 = Expense::factory()->create([
-            'amount' => 1111,
+            'amount' => 111100,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
         ]);
@@ -146,7 +152,7 @@ class ExpenseTest extends TestCase
             );
 
         $expenseGroup2 = Expense::factory()->create([
-            'amount' => 2222,
+            'amount' => 222200,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
         ]);
@@ -206,14 +212,14 @@ class ExpenseTest extends TestCase
         $user = $this->signIn();
 
         $expensePastMonth = Expense::factory()->create([
-            'amount' => 2222,
+            'amount' => 222200,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
             'date' => Carbon::now()->addMonth(-1),
         ]);
 
         $expenseCurrentMonth = Expense::factory()->create([
-            'amount' => 1111,
+            'amount' => 111100,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
         ]);
@@ -234,7 +240,7 @@ class ExpenseTest extends TestCase
         $user = $this->signIn();
 
         Expense::factory(10)->create([
-            'amount' => 10,
+            'amount' => 1000,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
         ]);

@@ -42,7 +42,7 @@ const formatDate = (date: string): string => {
 };
 
 let form = useForm({
-    amount: expenseStore.expense.amount ? expenseStore.expense.amount / 100 : null,
+    amount: expenseStore.expense.amount ? expenseStore.expense.amount : null,
     date: formatDate(expenseStore.expense.date), //: new Date().toISOString().split("T")[0],
     notes: expenseStore.expense.notes,
     category_id: expenseStore.expense.category?.id,
@@ -57,20 +57,14 @@ const submit = (action: String) => {
     }
 
     if (action === "update") {
-        form.transform((data) => ({
-            ...data,
-            amount: (data.amount * 100).toFixed(0),
-        })).patch(route("expenses.update", expenseStore.expense.id), {
+        form.patch(route("expenses.update", expenseStore.expense.id), {
             preserveScroll: true,
             onSuccess: () => {
                 emit("updated");
             },
         });
     } else if (action === "create") {
-        form.transform((data) => ({
-            ...data,
-            amount: (data.amount * 100).toFixed(0),
-        })).put(route("expenses.create"), {
+        form.put(route("expenses.create"), {
             preserveScroll: true,
             onSuccess: (page) => {
                 // update the current expense, so the UI will switch from create to update.
