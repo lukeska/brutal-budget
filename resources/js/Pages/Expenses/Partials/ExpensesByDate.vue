@@ -45,25 +45,30 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
 <template>
     <div
         v-for="(expenseByDate, date) in expensesByDate"
-        :key="date"
-        class="rounded border">
-        <div class="flex w-full border-b px-3 py-1">
-            <div class="min-w-[90px]">{{ date }}</div>
-            <div class="ml-4 rounded-full bg-gray-200 px-2">{{ expenseByDate.length }}</div>
+        :key="date">
+        <div class="divide-y overflow-hidden rounded-md bg-white shadow-sm">
+            <div class="flex w-full px-4 py-3">
+                <div class="min-w-[90px] font-semibold">{{ date }}</div>
+                <div class="ml-4 inline-flex items-center rounded-full bg-gray-200 px-2 text-sm">
+                    {{ expenseByDate.length }}
+                </div>
 
-            <div class="flex-1 text-right font-mono">
-                {{ currencyFormatter.format(expenseByDate.reduce((total, item) => total + item.amount, 0) / 100) }}
+                <div class="flex-1 text-right font-mono">
+                    {{ currencyFormatter.format(expenseByDate.reduce((total, item) => total + item.amount, 0) / 100) }}
+                </div>
             </div>
+            <button
+                v-for="expense in expenseByDate"
+                class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50"
+                @click.prevent="expenseStore.showSidebar(expense)">
+                <div :style="'color:' + expense.category.hex">
+                    <CategoryIcon :category="expense.category" />
+                </div>
+                <div class="min-w-[80px] text-right font-mono">
+                    {{ currencyFormatter.format(expense.amount / 100) }}
+                </div>
+                <div class="text-gray-500">{{ expense.notes }}</div>
+            </button>
         </div>
-        <button
-            v-for="expense in expenseByDate"
-            class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50"
-            @click.prevent="expenseStore.showSidebar(expense)">
-            <div :style="'color:' + expense.category.hex">
-                <CategoryIcon :category="expense.category" />
-            </div>
-            <div class="min-w-[80px] text-right font-mono">{{ currencyFormatter.format(expense.amount / 100) }}</div>
-            <div class="text-gray-500">{{ expense.notes }}</div>
-        </button>
     </div>
 </template>
