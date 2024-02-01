@@ -2,6 +2,7 @@
 
 use App\Events\ExpenseCreated;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserPushSettingsController;
@@ -23,12 +24,6 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->to(route('dashboard'));
-    /*return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);*/
 });
 
 Route::middleware([
@@ -36,9 +31,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');

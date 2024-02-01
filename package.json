@@ -43,6 +43,7 @@
         "@sentry/vite-plugin": "^2.10.2",
         "@sentry/vue": "^7.92.0",
         "@tabler/icons-vue": "^2.40.0",
+        "chart.js": "^4.4.1",
         "moment": "^2.29.4",
         "pinia": "^2.1.7",
         "vue-currency-input": "^3.0.5"
