@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('team_id')->index()->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->index()->constrained();
             $table->foreignId('user_id')->index()->constrained();
-            $table->foreignId('project_id')->index()->nullable()->constrained();
+            $table->foreignId('project_id')->index()->nullable()->constrained()->nullOnDelete();
             $table->dateTime('date');
             $table->integer('amount');
             $table->string('notes')->nullable();
