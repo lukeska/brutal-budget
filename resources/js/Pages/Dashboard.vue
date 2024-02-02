@@ -6,23 +6,26 @@ import Welcome from "@/Components/Welcome.vue";
 import { onMounted, ref } from "vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { usePage } from "@inertiajs/vue3";
+import moment from "moment";
 
 let props = defineProps<{
     monthlyTotals: App.Data.MonthlyTotalData[];
 }>();
 
-const myChart = ref();
+const donut = ref();
+const bars = ref();
 
 const page = usePage();
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 
-onMounted(() => {
-    const labels = props.monthlyTotals[0].categoryMonthlyTotals.map((entry) => entry.category.name);
-    const dataValues = props.monthlyTotals[0].categoryMonthlyTotals.map((entry) => entry.amount);
-    const backgroundColors = props.monthlyTotals[0].categoryMonthlyTotals.map((entry) => entry.category.hex);
+const initDonut = () => {
+    const currentMonthlyTotals = props.monthlyTotals.find((item) => item.isCurrent === true);
+    const labels = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.category.name);
+    const dataValues = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.amount);
+    const backgroundColors = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.category.hex);
 
-    new Chart(myChart.value, {
+    new Chart(donut.value, {
         type: "doughnut",
         data: {
             labels: labels,
@@ -35,7 +38,7 @@ onMounted(() => {
             ],
         },
         options: {
-            spacing: 5,
+            spacing: 3,
             plugins: {
                 tooltip: {
                     callbacks: {
@@ -50,6 +53,77 @@ onMounted(() => {
             },
         },
     });
+};
+
+const initBars = () => {
+    const monthlyTotals = props.monthlyTotals.reverse();
+
+    const allCategoriesSet = new Set();
+    monthlyTotals.forEach((entry) => {
+        entry.categoryMonthlyTotals.forEach((category) => {
+            const { name, hex } = category.category;
+            allCategoriesSet.add(JSON.stringify({ name, hex }));
+        });
+    });
+
+    const allCategories = Array.from(allCategoriesSet).map((category) => JSON.parse(category));
+
+    const labels = monthlyTotals.map((entry) => moment(entry.yearMonth, "YYYYMM").format("MM/YY"));
+    const datasets = monthlyTotals.map((entry) =>
+        entry.categoryMonthlyTotals.reduce((acc, category) => {
+            acc[category.category.name] = category.amount;
+            return acc;
+        }, {}),
+    );
+
+    const data = {
+        labels: labels,
+        datasets: allCategories.map((category) => ({
+            label: category.name,
+            data: datasets.map((data) => data[category.name] || 0),
+            backgroundColor: category.hex,
+            stack: "Stack 0",
+        })),
+    };
+
+    new Chart(bars.value, {
+        type: "bar",
+        data: data,
+        options: {
+            indexAxis: "y",
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        callback: function (value, index, values) {
+                            return currencyFormatter.format(value);
+                        },
+                    },
+                },
+                y: {
+                    stacked: true,
+                },
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return currencyFormatter.format(context.formattedValue);
+                        },
+                    },
+                },
+                legend: {
+                    display: false,
+                    //position: "bottom",
+                },
+            },
+        },
+    });
+};
+
+onMounted(() => {
+    initDonut();
+    initBars();
 });
 </script>
 
@@ -57,6 +131,7 @@ onMounted(() => {
     <AppLayout title="Dashboard">
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">Dashboard</h2>
+            <div class="text-sm text-gray-400">{{ $page.props.auth.user.current_team.name }}</div>
         </template>
 
         <div class="py-12">
@@ -64,12 +139,12 @@ onMounted(() => {
                 <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg">
                     <div class="p-4 lg:flex lg:gap-x-4">
                         <div class="lg:w-1/2">
-                            <canvas ref="myChart"></canvas>
+                            <canvas ref="donut"></canvas>
                         </div>
-                        <div class="lg:w-1/2">some other graph</div>
+                        <div class="lg:w-1/2">
+                            <canvas ref="bars"></canvas>
+                        </div>
                     </div>
-
-                    <Welcome />
                 </div>
             </div>
         </div>

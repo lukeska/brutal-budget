@@ -19,7 +19,7 @@ class DashboardController extends Controller
                 teamId: Auth::user()->current_team_id,
                 year: now()->year,
                 month: now()->month,
-                previousMonthsOffset: 0,
+                previousMonthsOffset: 4,
                 followingMonthsOffset: 0
             ),
         ]);
