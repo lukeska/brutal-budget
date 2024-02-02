@@ -56,7 +56,7 @@ const initDonut = () => {
 };
 
 const initBars = () => {
-    const monthlyTotals = props.monthlyTotals.reverse();
+    const monthlyTotals = props.monthlyTotals;
 
     const allCategoriesSet = new Set();
     monthlyTotals.forEach((entry) => {
@@ -90,9 +90,13 @@ const initBars = () => {
         type: "bar",
         data: data,
         options: {
-            indexAxis: "y",
+            maintainAspectRatio: false,
+            //indexAxis: "y",
             scales: {
                 x: {
+                    stacked: true,
+                },
+                y: {
                     stacked: true,
                     ticks: {
                         callback: function (value, index, values) {
@@ -100,15 +104,12 @@ const initBars = () => {
                         },
                     },
                 },
-                y: {
-                    stacked: true,
-                },
             },
             plugins: {
                 tooltip: {
                     callbacks: {
                         label: function (context) {
-                            return currencyFormatter.format(context.formattedValue);
+                            return context.dataset.label + ": " + currencyFormatter.format(context.formattedValue);
                         },
                     },
                 },
@@ -137,11 +138,13 @@ onMounted(() => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                    <div class="p-4 lg:flex lg:gap-x-4">
+                    <div class="space-y-6 p-4 lg:flex lg:items-center lg:gap-x-4 lg:space-y-0">
                         <div class="lg:w-1/2">
-                            <canvas ref="donut"></canvas>
+                            <div class="mx-auto">
+                                <canvas ref="donut"></canvas>
+                            </div>
                         </div>
-                        <div class="lg:w-1/2">
+                        <div class="min-h-[600px] lg:w-1/2">
                             <canvas ref="bars"></canvas>
                         </div>
                     </div>
