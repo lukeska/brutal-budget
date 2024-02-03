@@ -3,9 +3,9 @@ import Chart from "chart.js/auto";
 
 import AppLayout from "@/Layouts/AppLayout.vue";
 import Welcome from "@/Components/Welcome.vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
-import { usePage } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 
 let props = defineProps<{
@@ -126,6 +126,10 @@ onMounted(() => {
     initDonut();
     initBars();
 });
+
+const currentMonthlyTotal = computed(() => {
+    return props.monthlyTotals.find((item) => item.isCurrent === true);
+});
 </script>
 
 <template>
@@ -137,8 +141,24 @@ onMounted(() => {
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                    <div class="space-y-6 p-4 lg:flex lg:items-center lg:gap-x-4 lg:space-y-0">
+                <div class="divide-y overflow-hidden bg-white shadow-xl sm:rounded-lg">
+                    <div class="flex">
+                        <div class="px-6 py-3">
+                            <div class="text-xs text-gray-500">
+                                {{ moment(currentMonthlyTotal.yearMonth, "YYYYMM").format("MM/YY") }} - Expenses so far
+                            </div>
+
+                            <div class="mb-3 mt-1 text-2xl">
+                                {{ currencyFormatter.format(currentMonthlyTotal.total) }}
+                            </div>
+                            <Link
+                                :href="route('expenses.index')"
+                                class="text-sm text-indigo-500">
+                                See all &rarr;
+                            </Link>
+                        </div>
+                    </div>
+                    <div class="space-y-6 px-4 py-8 lg:flex lg:items-center lg:gap-x-4 lg:space-y-0">
                         <div class="lg:w-1/2">
                             <div class="mx-auto">
                                 <canvas ref="donut"></canvas>
