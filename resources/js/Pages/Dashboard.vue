@@ -7,6 +7,7 @@ import { computed, onMounted, ref } from "vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { Link, usePage } from "@inertiajs/vue3";
 import moment from "moment";
+import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 
 let props = defineProps<{
     monthlyTotals: App.Data.MonthlyTotalData[];
@@ -142,20 +143,47 @@ const currentMonthlyTotal = computed(() => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="divide-y overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                    <div class="flex">
-                        <div class="px-6 py-3">
-                            <div class="text-xs text-gray-500">
-                                {{ moment(currentMonthlyTotal.yearMonth, "YYYYMM").format("MM/YY") }} - Expenses so far
-                            </div>
+                    <div class="divide-y md:flex md:divide-x">
+                        <div class="md:w-1/2">
+                            <div class="px-3 py-3 md:px-6">
+                                <div class="mb-1 text-xs text-gray-500">
+                                    {{ moment(currentMonthlyTotal.yearMonth, "YYYYMM").format("MM/YY") }} - Expenses so
+                                    far
+                                </div>
 
-                            <div class="mb-3 mt-1 text-2xl">
-                                {{ currencyFormatter.format(currentMonthlyTotal.total) }}
+                                <div class="mb-1 text-2xl">
+                                    {{ currencyFormatter.format(currentMonthlyTotal.total) }}
+                                </div>
+                                <Link
+                                    :href="route('expenses.index')"
+                                    class="text-sm text-indigo-500">
+                                    See all &rarr;
+                                </Link>
                             </div>
-                            <Link
-                                :href="route('expenses.index')"
-                                class="text-sm text-indigo-500">
-                                See all &rarr;
-                            </Link>
+                        </div>
+                        <div class="md:w-1/2">
+                            <div class="px-3 py-3 md:px-6">
+                                <div class="mb-1 text-xs text-gray-500">Top categories</div>
+                                <div class="flex w-full">
+                                    <template
+                                        v-for="monthlyTotal in currentMonthlyTotal.categoryMonthlyTotals.slice(0, 3)"
+                                        :key="monthlyTotal.id">
+                                        <div class="w-1/3">
+                                            <div class="text-xl">
+                                                {{ currencyFormatter.format(monthlyTotal.amount) }}
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <span :style="'color:' + monthlyTotal.category.hex">
+                                                    <CategoryIcon :category="monthlyTotal.category" />
+                                                </span>
+                                                <span class="text-sm text-gray-700">{{
+                                                    monthlyTotal.category.name
+                                                }}</span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="space-y-6 px-4 py-8 lg:flex lg:items-center lg:gap-x-4 lg:space-y-0">
