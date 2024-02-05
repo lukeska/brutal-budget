@@ -2,12 +2,14 @@
 import Chart from "chart.js/auto";
 
 import AppLayout from "@/Layouts/AppLayout.vue";
-import Welcome from "@/Components/Welcome.vue";
 import { computed, onMounted, ref } from "vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { Link, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
+import { IconChartDonut4, IconChartDonutFilled } from "@tabler/icons-vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { useExpenseStore } from "@/Stores/ExpenseStore";
 
 let props = defineProps<{
     monthlyTotals: App.Data.MonthlyTotalData[];
@@ -17,6 +19,8 @@ const donut = ref();
 const bars = ref();
 
 const page = usePage();
+
+const expenseStore = useExpenseStore();
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 
@@ -131,6 +135,10 @@ onMounted(() => {
 const currentMonthlyTotal = computed(() => {
     return props.monthlyTotals.find((item) => item.isCurrent === true);
 });
+
+const expensesAvailable = computed(() => {
+    return currentMonthlyTotal.total > 0;
+});
 </script>
 
 <template>
@@ -143,7 +151,7 @@ const currentMonthlyTotal = computed(() => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="divide-y overflow-hidden bg-white shadow-xl sm:rounded-lg">
-                    <div class="divide-y md:flex md:divide-x">
+                    <div class="divide-y md:flex md:divide-x md:divide-y-0">
                         <div class="md:w-1/2">
                             <div class="px-3 py-3 md:px-6">
                                 <div class="mb-1 text-xs text-gray-500">
@@ -162,7 +170,9 @@ const currentMonthlyTotal = computed(() => {
                             </div>
                         </div>
                         <div class="md:w-1/2">
-                            <div class="px-3 py-3 md:px-6">
+                            <div
+                                v-if="expensesAvailable"
+                                class="px-3 py-3 md:px-6">
                                 <div class="mb-1 text-xs text-gray-500">Top categories</div>
                                 <div class="flex w-full">
                                     <template
@@ -186,14 +196,32 @@ const currentMonthlyTotal = computed(() => {
                             </div>
                         </div>
                     </div>
-                    <div class="space-y-6 px-4 py-8 lg:flex lg:items-center lg:gap-x-4 lg:space-y-0">
-                        <div class="lg:w-1/2">
-                            <div class="mx-auto">
-                                <canvas ref="donut"></canvas>
+                    <div class="">
+                        <div
+                            v-if="expensesAvailable"
+                            class="space-y-6 px-4 py-8 lg:flex lg:items-center lg:gap-x-4 lg:space-y-0">
+                            <div class="lg:w-1/2">
+                                <div class="mx-auto">
+                                    <canvas ref="donut"></canvas>
+                                </div>
+                            </div>
+                            <div class="min-h-[600px] lg:w-1/2">
+                                <canvas ref="bars"></canvas>
                             </div>
                         </div>
-                        <div class="min-h-[600px] lg:w-1/2">
-                            <canvas ref="bars"></canvas>
+                        <div
+                            v-else
+                            class="grid w-full grid-cols-1 grid-rows-1 place-items-center content-center py-10">
+                            <IconChartDonut4
+                                :size="400"
+                                class="col-[1] row-[1] text-gray-50" />
+                            <div class="col-[1] row-[1] w-96 text-center">
+                                <p class="mb-3">
+                                    No expenses yet. Go ahead, click the button below and try the thrill of logging your
+                                    first expense.
+                                </p>
+                                <PrimaryButton @click.prevent="expenseStore.showSidebar()">+ expense</PrimaryButton>
+                            </div>
                         </div>
                     </div>
                 </div>
