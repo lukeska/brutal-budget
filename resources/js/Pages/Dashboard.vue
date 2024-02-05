@@ -137,7 +137,7 @@ const currentMonthlyTotal = computed(() => {
 });
 
 const expensesAvailable = computed(() => {
-    return currentMonthlyTotal.total > 0;
+    return currentMonthlyTotal.value.total > 0;
 });
 </script>
 
