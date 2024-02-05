@@ -211,11 +211,11 @@ const expensesAvailable = computed(() => {
                         </div>
                         <div
                             v-else
-                            class="grid w-full grid-cols-1 grid-rows-1 place-items-center content-center py-10">
+                            class="grid w-full grid-cols-1 grid-rows-1 place-items-center content-center px-4 py-10">
                             <IconChartDonut4
                                 :size="400"
                                 class="col-[1] row-[1] text-gray-50" />
-                            <div class="col-[1] row-[1] w-96 text-center">
+                            <div class="col-[1] row-[1] max-w-[400px] text-center">
                                 <p class="mb-3">
                                     No expenses yet. Go ahead, click the button below and try the thrill of logging your
                                     first expense.
