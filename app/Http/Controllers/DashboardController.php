@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\MonthlyTotalsRepository;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -12,16 +13,24 @@ class DashboardController extends Controller
     {
     }
 
-    public function index()
+    public function index($year = null, $month = null)
     {
+        $currentDate = Carbon::now();
+
+        if ($year && $month) {
+            $currentDate = Carbon::create($year, $month, 1);
+        }
+
         return Inertia::render('Dashboard', [
             'monthlyTotals' => $this->monthlyTotalsRepository->getAll(
                 teamId: Auth::user()->current_team_id,
-                year: now()->year,
-                month: now()->month,
+                year: $currentDate->year,
+                month: $currentDate->month,
                 previousMonthsOffset: 4,
                 followingMonthsOffset: 0
             ),
+            'month' => $currentDate->month,
+            'year' => $currentDate->year,
         ]);
     }
 }

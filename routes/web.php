@@ -31,7 +31,11 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/{year?}/{month?}', [DashboardController::class, 'index'])
+        ->where([
+            'year' => '[0-9]{4}', // Year should be four digits
+            'month' => '0[1-9]|1[0-2]', // Month should be 01 to 12
+        ])->name('dashboard');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
