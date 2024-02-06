@@ -26,6 +26,8 @@ notes: string | null;
 is_regular: boolean;
 category: App.Data.CategoryData;
 project: App.Data.ProjectData | null;
+created_at: string;
+user: App.Data.UserData;
 };
 export type ExpenseRequest = {
 id?: number;
@@ -53,6 +55,9 @@ id?: number;
 name: string;
 hex: string;
 permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
+export type UserData = {
+name: string;
+};
 export type UserSettingsRequest = {
 currency: string;
 };

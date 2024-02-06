@@ -24,6 +24,9 @@ class ExpenseData extends Data
         public bool $isRegular,
         public CategoryData $category,
         public ?ProjectData $project,
+        #[MapName('created_at')]
+        public Carbon $createdAt,
+        public UserData $user,
     ) {
     }
 }

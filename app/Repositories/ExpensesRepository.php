@@ -12,7 +12,7 @@ class ExpensesRepository
 {
     public function getByMonth(int $teamId, Carbon $date, ?bool $regular = null): Collection
     {
-        $key = "expenses-getByMonth-{$teamId}-{$date->format('Ym')}-{$regular}";
+        $key = "expenses-getByMonth-$teamId-{$date->format('Ym')}-$regular";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {
@@ -26,6 +26,7 @@ class ExpensesRepository
                 ->month($date)
                 ->with('category')
                 ->with('project')
+                ->with('user')
                 ->orderByDesc('date')
                 ->orderByDesc('id')
                 ->get();

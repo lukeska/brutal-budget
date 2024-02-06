@@ -65,7 +65,7 @@ class ExpenseController extends Controller
         Request::session()->flash('message', 'Expense created correctly');
         Request::session()->flash('new_expense', ExpenseData::from($expenses->first()));
 
-        return to_route('expenses.index');
+        return back();
     }
 
     public function update(Expense $expense, ExpenseRequest $data)
