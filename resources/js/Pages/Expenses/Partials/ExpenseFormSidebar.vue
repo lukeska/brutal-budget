@@ -3,8 +3,16 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessu
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 import ExpenseForm from "@/Pages/Expenses/Partials/ExpenseForm.vue";
+import { onMounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
 
 const expenseStore = useExpenseStore();
+
+const page = usePage();
+
+if (page.props.flash.expense) {
+    expenseStore.showSidebar(page.props.flash.expense);
+}
 </script>
 
 <template>

@@ -69,7 +69,7 @@ const submit = (action: String) => {
             onSuccess: (page) => {
                 // update the current expense, so the UI will switch from create to update.
                 // This will avoid creating multiple expenses if the user clicks "create" again before the form closes
-                expenseStore.expense = page.props.flash.new_expense;
+                expenseStore.expense = page.props.flash.expense;
 
                 emit("created");
             },

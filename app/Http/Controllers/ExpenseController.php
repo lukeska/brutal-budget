@@ -52,6 +52,21 @@ class ExpenseController extends Controller
         ));
     }
 
+    public function show(Expense $expense)
+    {
+        $expense->load('category')->load('user');
+
+        Request::session()->flash('expense', ExpenseData::from($expense));
+
+        /*
+         * Redirect to expenses index with the selected expense as a flash message.
+         * The expense will be shown in the slide-in panel.
+         * Not ideal as the url doesn't reflect which expense is visible.
+         * Might review this solution in the future.
+         */
+        return to_route('expenses.index');
+    }
+
     public function create()
     {
         try {
@@ -63,7 +78,7 @@ class ExpenseController extends Controller
         $expenses = $this->expensesRepository->createMonthlyExpenses($expense, Auth::user());
 
         Request::session()->flash('message', 'Expense created correctly');
-        Request::session()->flash('new_expense', ExpenseData::from($expenses->first()));
+        Request::session()->flash('expense', ExpenseData::from($expenses->first()));
 
         return back();
     }

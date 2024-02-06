@@ -33,14 +33,15 @@ class ExpenseCreated extends Notification
 
     public function toWebPush($notifiable, $notification): WebPushMessage
     {
-        //Log::debug($this->expense->amount.' expense - '.$this->expense->category->name);
         return (new WebPushMessage)
             ->title($this->expense->formatted_amount.' expense - '.$this->expense->category->name)
             ->icon('/images/icons/icon-512x512.png')
             ->body('Created by '.$this->expense->user->name)
-            ->action('View account', 'view_account')
-            ->options(['TTL' => 1000])
-            ->badge(1);
+            ->action('View', 'view_expense')
+            ->tag('notification-expense-'.$this->expense->id)
+            ->data([
+                'destination_url' => route('expense.show', $this->expense),
+            ]);
         // ->data(['id' => $notification->id])
         // ->badge()
         // ->dir()

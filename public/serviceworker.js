@@ -75,28 +75,18 @@ const sendMessage = async (message) => {
 
 const pushHandler = async (e) => {
     console.log(e.data.json());
-    const data = e.data.json();
-    const { title, body, interaction } = data;
+    const fullData = e.data.json();
+    const { title, body, data, interaction, actions, tag } = fullData;
 
     const options = {
         body: body,
-        icon: "/images/icons/icon-512x512.png",
+        //icon: "/images/icons/icon-512x512.png",
         badge: "/images/icons/badge.png",
         vibrate: [100, 50, 100],
-        data: {
-            dateOfArrival: Date.now(),
-        },
-        /*actions: [
-            {
-                action: "confirm",
-                title: "OK",
-            },
-            {
-                action: "close",
-                title: "Close notification",
-            },
-        ],*/
+        data: data,
+        actions: actions,
         requireInteraction: interaction,
+        tag: tag,
     };
 
     e.waitUntil(
@@ -145,8 +135,22 @@ const messageHandler = async ({ data }) => {
 };
 
 const notificationClickHandler = async (e) => {
-    console.log("notification click", e.notification.tag);
+    console.log("notification event", e);
+    console.log("notification click", e.notification);
     e.notification.close();
+
+    if (e.action === "view_expense") {
+        e.waitUntil(
+            clients.matchAll().then(function (clients) {
+                if (clients && clients.length) {
+                    clients[0].navigate(e.notification.data.destination_url); // Navigate the first available client
+                } else {
+                    // If no client is available, open a new window with the specified URL
+                    clients.openWindow(e.notification.data.destination_url);
+                }
+            }),
+        );
+    }
 };
 
 self.addEventListener("notificationclick", notificationClickHandler);
