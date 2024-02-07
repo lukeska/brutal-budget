@@ -40,7 +40,7 @@ class ExpenseCreated extends Notification
             ->action('View', 'view_expense')
             ->tag('notification-expense-'.$this->expense->id)
             ->data([
-                'destination_url' => route('expense.show', $this->expense),
+                'destination_url' => route('expense.show', $this->expense, false),
             ]);
         // ->data(['id' => $notification->id])
         // ->badge()
