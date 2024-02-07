@@ -142,18 +142,23 @@ const notificationClickHandler = async (e) => {
 
     if (e.action === "view_expense") {
         e.waitUntil(
-            clients.matchAll().then(function (clientList) {
-                if (clientList && clientList.length) {
-                    clientList[0].focus();
-                    clientList[0].navigate(e.notification.data.destination_url);
-                } else {
-                    clients.openWindow(e.notification.data.destination_url).then(function (client) {
-                        if (client) {
-                            client.focus();
-                        }
-                    });
-                }
-            }),
+            clients
+                .matchAll({
+                    type: "worker",
+                    includeUncontrolled: true,
+                })
+                .then(function (clientList) {
+                    if (clientList && clientList.length) {
+                        clientList[0].focus();
+                        clientList[0].navigate(e.notification.data.destination_url);
+                    } else {
+                        clients.openWindow(e.notification.data.destination_url).then(function (client) {
+                            if (client) {
+                                client.focus();
+                            }
+                        });
+                    }
+                }),
         );
     }
 };
