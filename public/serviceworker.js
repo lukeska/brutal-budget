@@ -149,10 +149,10 @@ const notificationClickHandler = async (e) => {
                 })
                 .then(function (clientList) {
                     if (clientList && clientList.length) {
-                        clientList[0].focus();
                         clientList[0].navigate(e.notification.data.destination_url);
+                        return clientList[0].focus();
                     } else {
-                        clients.openWindow(e.notification.data.destination_url).then(function (client) {
+                        return clients.openWindow(e.notification.data.destination_url).then(function (client) {
                             if (client) {
                                 client.focus();
                             }
