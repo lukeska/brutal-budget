@@ -80,8 +80,7 @@ const pushHandler = async (e) => {
 
     const options = {
         body: body,
-        icon: null,
-        //icon: "/images/icons/icon-512x512.png",
+        icon: "/images/icons/icon-512x512.png",
         badge: "/images/icons/badge.png",
         vibrate: [100, 50, 100],
         data: data,
@@ -95,7 +94,8 @@ const pushHandler = async (e) => {
             .showNotification(title, options)
             .then(hasActiveClients)
             .then((activeClients) => {
-                if (!activeClients) {
+                // TODO: not setting active badges for now as the app doesn't include ways to clear them
+                /*if (!activeClients) {
                     console.log("set badge");
                     self.numBadges += 1;
                     navigator.setAppBadge(self.numBadges);
@@ -103,7 +103,7 @@ const pushHandler = async (e) => {
                     sendMessage(`badges: ${self.numBadges}`);
                 } else {
                     sendMessage("no badge");
-                }
+                }*/
             })
             .catch((err) => sendMessage(err)),
     );
@@ -144,10 +144,14 @@ const notificationClickHandler = async (e) => {
         e.waitUntil(
             clients.matchAll().then(function (clientList) {
                 if (clientList && clientList.length) {
-                    clientList[0].navigate(e.notification.data.destination_url); // Navigate the first available client
+                    clientList[0].focus();
+                    clientList[0].navigate(e.notification.data.destination_url);
                 } else {
-                    // If no client is available, open a new window with the specified URL
-                    clients.openWindow(e.notification.data.destination_url);
+                    clients.openWindow(e.notification.data.destination_url).then(function (client) {
+                        if (client) {
+                            client.focus();
+                        }
+                    });
                 }
             }),
         );
