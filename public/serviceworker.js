@@ -80,6 +80,7 @@ const pushHandler = async (e) => {
 
     const options = {
         body: body,
+        icon: null,
         //icon: "/images/icons/icon-512x512.png",
         badge: "/images/icons/badge.png",
         vibrate: [100, 50, 100],
