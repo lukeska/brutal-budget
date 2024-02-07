@@ -135,15 +135,15 @@ const messageHandler = async ({ data }) => {
 };
 
 const notificationClickHandler = async (e) => {
-    console.log("notification event", e);
+    console.log("notification event 2", e);
     console.log("notification click", e.notification);
     e.notification.close();
 
     if (e.action === "view_expense") {
         e.waitUntil(
-            clients.matchAll().then(function (clients) {
-                if (clients && clients.length) {
-                    clients[0].navigate(e.notification.data.destination_url); // Navigate the first available client
+            clients.matchAll().then(function (clientList) {
+                if (clientList && clientList.length) {
+                    clientList[0].navigate(e.notification.data.destination_url); // Navigate the first available client
                 } else {
                     // If no client is available, open a new window with the specified URL
                     clients.openWindow(e.notification.data.destination_url);
