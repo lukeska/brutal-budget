@@ -146,6 +146,8 @@ const notificationClickHandler = async (e) => {
                     includeUncontrolled: true,
                 })
                 .then(function (clientList) {
+                    return clients.openWindow(e.notification.data.destination_url);
+
                     console.log("clientList", clientList);
                     let client = null;
 
