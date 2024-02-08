@@ -138,7 +138,7 @@ const messageHandler = async ({ data }) => {
 const notificationClickHandler = async (e) => {
     console.log("notification event 2", e);
     console.log("notification click", e.notification);
-    e.notification.close();
+    //e.notification.close();
 
     if (e.action === "view_expense") {
         e.waitUntil(
@@ -148,7 +148,28 @@ const notificationClickHandler = async (e) => {
                     includeUncontrolled: true,
                 })
                 .then(function (clientList) {
-                    if (clientList && clientList.length) {
+                    let client = null;
+
+                    for (let i = 0; i < clientList.length; i++) {
+                        let item = clientList[i];
+
+                        if (item.url) {
+                            client = item;
+                            break;
+                        }
+                    }
+
+                    if (client && "navigate" in client) {
+                        client.focus();
+                        e.notification.close();
+                        return client.navigate(e.notification.data.destination_url);
+                    } else {
+                        e.notification.close();
+                        // if client doesn't have navigate function, try to open a new browser window
+                        return clients.openWindow(e.notification.data.destination_url);
+                    }
+
+                    /*if (clientList && clientList.length) {
                         clientList[0].navigate(e.notification.data.destination_url);
                         return clientList[0].focus();
                     } else {
@@ -157,7 +178,7 @@ const notificationClickHandler = async (e) => {
                                 client.focus();
                             }
                         });
-                    }
+                    }*/
                 }),
         );
     }
