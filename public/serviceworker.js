@@ -19,7 +19,7 @@ const routes = [];
 const filesToCache = [...buildFiles, ...staticFiles, ...routes];
 
 self.numBadges = 0;
-const version = 1;
+const version = Date.now();
 
 const cacheName = `bb-cache-${version}`;
 
@@ -137,7 +137,7 @@ const messageHandler = async ({ data }) => {
 const notificationClickHandler = async (e) => {
     console.log("notification event 4", e);
     console.log("notification click", e.notification);
-    //e.notification.close();
+    e.notification.close();
 
     if (e.action === "view_expense") {
         e.waitUntil(
@@ -158,14 +158,14 @@ const notificationClickHandler = async (e) => {
                         }
                     }
 
-                    if (client && "navigate" in client) {
+                    if (client && "navigate" in client && "focus" in client) {
                         console.log("navigate");
                         client.focus();
-                        e.notification.close();
+
                         return client.navigate(e.notification.data.destination_url);
                     } else {
                         console.log("openWindow");
-                        e.notification.close();
+
                         // if client doesn't have navigate function, try to open a new browser window
                         return clients.openWindow(e.notification.data.destination_url);
                     }
