@@ -135,8 +135,8 @@ const messageHandler = async ({ data }) => {
 };
 
 const notificationClickHandler = async (e) => {
-    console.log("notification event 5", e);
-    console.log("notification click", e.notification);
+    //console.log("notification event 5", e);
+    //console.log("notification click", e.notification);
     e.notification.close();
 
     if (e.action === "view_expense") {
@@ -146,28 +146,7 @@ const notificationClickHandler = async (e) => {
                     includeUncontrolled: true,
                 })
                 .then(function (clientList) {
-                    return clients.openWindow(e.notification.data.destination_url);
-
-                    console.log("clientList", clientList);
-                    let client = null;
-
-                    if (clientList.length > 0) {
-                        client = clientList[0];
-                    }
-
-                    if (client && "navigate" in client && "focus" in client) {
-                        console.log("navigate");
-                        return client.focus().then((windowClient) => {
-                            windowClient.navigate(e.notification.data.destination_url);
-                        });
-                    } else if (clients.openWindow) {
-                        console.log("openWindow");
-
-                        // if client doesn't have navigate function, try to open a new browser window
-                        return clients.openWindow(e.notification.data.destination_url);
-                    }
-
-                    /*if (clientList && clientList.length) {
+                    if (clientList && clientList.length) {
                         clientList[0].navigate(e.notification.data.destination_url);
                         return clientList[0].focus();
                     } else {
@@ -176,7 +155,7 @@ const notificationClickHandler = async (e) => {
                                 client.focus();
                             }
                         });
-                    }*/
+                    }
                 }),
         );
     }
