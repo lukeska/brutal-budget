@@ -135,7 +135,7 @@ const messageHandler = async ({ data }) => {
 };
 
 const notificationClickHandler = async (e) => {
-    console.log("notification event 4", e);
+    console.log("notification event 5", e);
     console.log("notification click", e.notification);
     e.notification.close();
 
@@ -149,21 +149,16 @@ const notificationClickHandler = async (e) => {
                     console.log("clientList", clientList);
                     let client = null;
 
-                    for (let i = 0; i < clientList.length; i++) {
-                        let item = clientList[i];
-
-                        if (item.url) {
-                            client = item;
-                            break;
-                        }
+                    if (clientList.length > 0) {
+                        client = clientList[0];
                     }
 
                     if (client && "navigate" in client && "focus" in client) {
                         console.log("navigate");
-                        client.focus();
-
-                        return client.navigate(e.notification.data.destination_url);
-                    } else {
+                        return client.focus().then((windowClient) => {
+                            windowClient.navigate(e.notification.data.destination_url);
+                        });
+                    } else if (clients.openWindow) {
                         console.log("openWindow");
 
                         // if client doesn't have navigate function, try to open a new browser window
