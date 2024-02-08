@@ -21,7 +21,7 @@ class ExpensePolicy
      */
     public function view(User $user, Expense $expense): bool
     {
-        //
+        return $user->belongsToTeam($expense->team);
     }
 
     /**

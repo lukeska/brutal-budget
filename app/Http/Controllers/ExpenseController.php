@@ -54,9 +54,15 @@ class ExpenseController extends Controller
 
     public function show(Expense $expense)
     {
-        $expense->load('category')->load('user');
+        if (Request::user()->can('view', $expense)) {
+            if (Request::user()->current_team_id !== $expense->team_id) {
+                Request::user()->switchTeam($expense->team);
+            }
 
-        Request::session()->flash('expense', ExpenseData::from($expense));
+            $expense->load('category')->load('user');
+
+            Request::session()->flash('expense', ExpenseData::from($expense));
+        }
 
         /*
          * Redirect to expenses index with the selected expense as a flash message.
