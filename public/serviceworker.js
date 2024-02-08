@@ -136,7 +136,7 @@ const messageHandler = async ({ data }) => {
 };
 
 const notificationClickHandler = async (e) => {
-    console.log("notification event 2", e);
+    console.log("notification event 3", e);
     console.log("notification click", e.notification);
     //e.notification.close();
 
@@ -144,7 +144,6 @@ const notificationClickHandler = async (e) => {
         e.waitUntil(
             clients
                 .matchAll({
-                    type: "worker",
                     includeUncontrolled: true,
                 })
                 .then(function (clientList) {
@@ -160,10 +159,12 @@ const notificationClickHandler = async (e) => {
                     }
 
                     if (client && "navigate" in client) {
+                        console.log("navigate");
                         client.focus();
                         e.notification.close();
                         return client.navigate(e.notification.data.destination_url);
                     } else {
+                        console.log("openWindow");
                         e.notification.close();
                         // if client doesn't have navigate function, try to open a new browser window
                         return clients.openWindow(e.notification.data.destination_url);
