@@ -33,6 +33,7 @@ class ProjectController extends Controller
             ->where('project_id', $project->id)
             ->with('category')
             ->with('project')
+            ->with('user')
             ->orderByDesc('date')
             ->get();
 
