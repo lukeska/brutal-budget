@@ -19,7 +19,7 @@ const routes = [];
 const filesToCache = [...buildFiles, ...staticFiles, ...routes];
 
 self.numBadges = 0;
-const version = Date.now();
+const version = 1;
 
 const cacheName = `bb-cache-${version}`;
 
