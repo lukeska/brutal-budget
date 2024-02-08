@@ -136,7 +136,7 @@ const messageHandler = async ({ data }) => {
 };
 
 const notificationClickHandler = async (e) => {
-    console.log("notification event 3", e);
+    console.log("notification event 4", e);
     console.log("notification click", e.notification);
     //e.notification.close();
 
@@ -147,6 +147,7 @@ const notificationClickHandler = async (e) => {
                     includeUncontrolled: true,
                 })
                 .then(function (clientList) {
+                    console.log("clientList", clientList);
                     let client = null;
 
                     for (let i = 0; i < clientList.length; i++) {
