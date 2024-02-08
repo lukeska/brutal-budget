@@ -37,7 +37,7 @@ const installHandler = (e) => {
                 caches
                     .open(cacheName)
                     .then((cache) =>
-                        cache.addAll(filesToCache.map((file) => new Request(file, { cache: "no-cache" }))),
+                        //cache.addAll(filesToCache.map((file) => new Request(file, { cache: "no-cache" }))),
                     );
             }),
     );
