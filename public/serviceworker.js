@@ -34,11 +34,10 @@ const installHandler = (e) => {
                 includeUncontrolled: true,
             })
             .then((clients) => {
-                caches
-                    .open(cacheName)
-                    .then((cache) =>
-                        //cache.addAll(filesToCache.map((file) => new Request(file, { cache: "no-cache" }))),
-                    );
+                caches.open(cacheName);
+                /*.then((cache) =>
+                    cache.addAll(filesToCache.map((file) => new Request(file, { cache: "no-cache" }))),
+                )*/
             }),
     );
 };
