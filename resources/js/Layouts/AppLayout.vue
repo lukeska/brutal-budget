@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -10,8 +10,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ExpenseFormSidebar from "@/Pages/Expenses/Partials/ExpenseFormSidebar.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
-import { showExpenseNotification } from "@/Helpers/Notifications";
-import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { IconSquareRoundedPlus } from "@tabler/icons-vue";
 
 defineProps<{
     title: String;
@@ -48,7 +47,7 @@ const logout = () => {
             :sidebarOpen="sidebarOpen"
             @close="sidebarOpen = false" />
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 pb-12">
             <nav class="border-b border-gray-100 bg-white">
                 <!-- Primary Navigation Menu -->
                 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -244,11 +243,14 @@ const logout = () => {
 
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center space-x-2 sm:hidden">
-                            <PrimaryButton
-                                type="button"
-                                @click.prevent="expenseStore.showSidebar()"
-                                >+ Expense</PrimaryButton
-                            >
+                            <div class="fixed bottom-2 right-2">
+                                <button
+                                    type="button"
+                                    class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-transparent bg-gray-800 p-0 text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 disabled:opacity-50"
+                                    @click.prevent="expenseStore.showSidebar()">
+                                    <IconSquareRoundedPlus size="30" />
+                                </button>
+                            </div>
                             <button
                                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                                 @click="showingNavigationDropdown = !showingNavigationDropdown">
