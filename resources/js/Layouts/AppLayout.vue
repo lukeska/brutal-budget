@@ -243,12 +243,12 @@ const logout = () => {
 
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center space-x-2 sm:hidden">
-                            <div class="fixed bottom-2 right-2">
+                            <div class="fixed bottom-5 right-5">
                                 <button
                                     type="button"
-                                    class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-transparent bg-gray-800 p-0 text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 disabled:opacity-50"
+                                    class="inline-flex h-16 w-16 items-center justify-center rounded-full border border-transparent bg-gray-800 p-0 text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 disabled:opacity-50"
                                     @click.prevent="expenseStore.showSidebar()">
-                                    <IconSquareRoundedPlus size="30" />
+                                    <IconSquareRoundedPlus size="38" />
                                 </button>
                             </div>
                             <button
