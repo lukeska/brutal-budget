@@ -23,7 +23,7 @@ class CategoryRequest extends DataResource
         public string $hex,
         #[MapName('monthly_totals_sum_amount')]
         #[WithTransformer(IntToCurrencyTransformer::class)]
-        public int|Optional $monthlyTotalsSumAmount,
+        public ?int $monthlyTotalsSumAmount,
     ) {
     }
 
