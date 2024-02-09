@@ -1,179 +1,149 @@
-<script lang="ts" setup>
-import { ref, nextTick } from "vue";
-import { useForm } from "@inertiajs/vue3";
-import CategoryColorForm from "@/Pages/Categories/Partials/CategoryColorForm.vue";
-import CategoryIconForm from "@/Pages/Categories/Partials/CategoryIconForm.vue";
-import DangerButton from "@/Components/DangerButton.vue";
+<script setup lang="ts">
+import { useCategoryStore } from "@/Stores/CategoryStore";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { IconTrash } from "@tabler/icons-vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { iconComponents } from "@/Pages/Categories/Partials/CategoryIcons.js";
+import { ListboxOption } from "@headlessui/vue";
 
-let props = withDefaults(
-    defineProps<{
-        category?: App.Data.CategoryData;
-    }>(),
-    {
-        category: {
-            id: null,
-            name: "",
-            icon: "IconReceipt2",
-            hex: "#fca5a5",
-        },
-    },
-);
+const emit = defineEmits<{
+    created: [];
+    updated: [];
+    cancel: [];
+    deleted: [];
+}>();
 
-const emit = defineEmits(["created", "cancel"]);
+const categoryStore = useCategoryStore();
 
-let form = useForm({
-    name: props.category.name,
-    icon: props.category.icon,
-    hex: props.category.hex,
+const page = usePage();
+
+const form = useForm({
+    name: categoryStore.category.name,
+    icon: categoryStore.category.icon,
+    hex: categoryStore.category.hex,
 });
 
-const nameField = ref();
-let showForm = ref(props.category.id == null);
-let showCreateSuccessMessage = ref(false);
-
 const submit = (action: String) => {
-    if (action === "update") {
-        if (form.name === props.category.name) {
-            showForm.value = false;
-            return;
-        }
+    if (form.processing) {
+        return;
+    }
 
-        form.patch(route("categories.update", props.category.id), {
+    if (action === "update") {
+        form.patch(route("categories.update", categoryStore.category.id), {
             preserveScroll: true,
-            onSuccess: () => clearForm(),
+            onSuccess: () => {
+                emit("updated");
+            },
         });
     } else if (action === "create") {
         form.put(route("categories.create"), {
             preserveScroll: true,
-            onSuccess: () => {
-                form.name = props.category.name;
+            onSuccess: (page) => {
+                // update the current expense, so the UI will switch from create to update.
+                // This will avoid creating multiple expenses if the user clicks "create" again before the form closes
+                categoryStore.category = page.props.flash.category;
+
                 emit("created");
-                showCreateSuccessMessage.value = true;
-                setTimeout(function () {
-                    showCreateSuccessMessage.value = false;
-                }, 3000);
             },
         });
     } else if (action === "delete") {
-        form.delete(route("categories.delete", props.category.id), {
+        form.delete(route("categories.delete", categoryStore.category.id), {
             preserveScroll: true,
+            onSuccess: () => {
+                emit("deleted");
+            },
         });
     }
 };
 
-const initAndShowForm = () => {
-    showForm.value = true;
-
-    form.name = props.category.name;
-
-    form.clearErrors();
-
-    nextTick(() => {
-        nameField.value.focus();
-    });
-};
-
-const clearForm = () => {
-    showForm.value = false;
-};
-
-const cancelEdit = () => {
-    showForm.value = false;
-
-    emit("cancel");
-};
-
-const updateIcon = (params) => {
-    form.icon = params.icon;
-    form.hex = params.hex;
-
-    if (props.category.id === null) {
-        return;
-    }
-
-    form.post(route("categories.update-icon", props.category.id), {
-        preserveScroll: true,
-    });
+const selectIcon = (icon: string, hex: string) => {
+    form.icon = icon;
+    form.hex = hex;
 };
 </script>
 
 <template>
-    <div class="flex items-center justify-between gap-x-6 py-5">
-        <div class="flex flex-1 items-start gap-x-3">
-            <button
-                v-show="!showForm"
-                class="block max-w-sm flex-1 cursor-text rounded-md border-0 px-3 py-1.5 text-left text-sm font-semibold leading-6 text-gray-900 ring-0 ring-inset ring-gray-100 hover:ring-1"
-                @click.prevent="initAndShowForm()">
-                {{ category.name }}
-            </button>
-            <form
-                v-show="showForm"
-                class="flex-1"
-                @submit.prevent="submit">
-                <div class="relative flex max-w-sm items-center space-x-2">
-                    <div class="w-full">
-                        <label
-                            class="sr-only"
-                            for="name"
-                            >Name</label
-                        >
+    <form
+        class="relative flex h-full flex-col"
+        @keydown.enter.prevent="submit(categoryStore.isNewCategory ? 'create' : 'update')">
+        <div class="flex-1 overflow-x-hidden overflow-y-scroll px-6 py-4">
+            <div class="flex flex-col gap-y-6">
+                <!-- Name -->
+                <div>
+                    <label
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        for="name"
+                        >Name</label
+                    >
+                    <div class="mt-2">
                         <input
                             id="name"
-                            ref="nameField"
                             v-model="form.name"
-                            class="block w-full rounded-md border-0 py-1.5 pr-36 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             name="name"
-                            data-1p-ignore
-                            placeholder="Bills, House, Gym, etc."
-                            type="text" />
+                            type="text"
+                            data-1p-ignore />
                     </div>
 
-                    <div class="absolute right-1 top-1 space-x-2">
+                    <div
+                        v-if="form.errors.name"
+                        class="mt-1 text-xs text-red-500"
+                        v-text="form.errors.name"></div>
+
+                    <div
+                        v-if="form.errors.limit"
+                        class="mt-1 text-xs text-red-500"
+                        v-text="form.errors.limit"></div>
+                </div>
+
+                <!-- Tcon -->
+                <div>
+                    <label
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        for="icon"
+                        >Icon</label
+                    >
+                    <div class="grid grid-cols-5 gap-2 sm:grid-cols-7">
                         <button
-                            class="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            type="submit"
-                            @click="submit(props.category.id === null ? 'create' : 'update')">
-                            {{ props.category.id === null ? "Create" : "Update" }}
-                        </button>
-                        <button
-                            class="rounded bg-white px-2 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                            type="button"
-                            @click.prevent="cancelEdit()">
-                            Cancel
+                            v-for="icon in iconComponents()"
+                            :key="icon.name"
+                            @click.prevent="selectIcon(icon.name, icon.hex)">
+                            <div
+                                :class="[
+                                    form.icon === icon.name ? 'border-indigo-500 bg-indigo-50' : '',
+                                    'block inline-flex h-12 w-12 items-center justify-center rounded rounded-md border-[3px] transition',
+                                ]">
+                                <component
+                                    :is="icon.component"
+                                    :style="'color:' + icon.hex"
+                                    :size="32" />
+                            </div>
                         </button>
                     </div>
                 </div>
-
-                <div
-                    v-if="form.errors.name"
-                    class="mt-1 text-xs text-red-500"
-                    v-text="form.errors.name"></div>
-
-                <div
-                    v-if="form.errors.limit"
-                    class="mt-1 text-xs text-red-500"
-                    v-text="form.errors.limit"></div>
-
-                <div
-                    v-if="showCreateSuccessMessage"
-                    class="mt-1 text-xs text-green-500">
-                    Category created!
-                </div>
-            </form>
+            </div>
         </div>
-
         <div>
-            <CategoryIconForm
-                :icon="category.icon"
-                @updated="updateIcon" />
-        </div>
+            <div class="flex w-full space-x-3 bg-gray-100 px-6 py-4">
+                <div class="relative flex flex-1 items-center space-x-px">
+                    <PrimaryButton
+                        @click.prevent="submit(categoryStore.isNewCategory ? 'create' : 'update')"
+                        class="h-10 flex-1 rounded-md bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500"
+                        :disabled="form.processing">
+                        <span class="mx-auto">
+                            {{ !categoryStore.isNewCategory ? "Update" : "Create" }}
+                        </span>
+                    </PrimaryButton>
+                </div>
 
-        <div v-if="props.category.id !== null">
-            <DangerButton
-                @click="submit('delete')"
-                :disabled="!category.permissions.delete"
-                >Delete
-            </DangerButton>
+                <button
+                    type="submit"
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow disabled:opacity-50"
+                    @click.prevent="categoryStore.isNewCategory ? emit('cancel') : submit('delete')"
+                    :disabled="form.processing || !categoryStore.category.permissions.delete">
+                    <IconTrash />
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
 </template>

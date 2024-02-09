@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
             'projects' => fn () => $user ? $projectsRepository->getAll($user->current_team_id) : null,
             'flash' => [
                 'expense' => fn () => $request->session()->get('expense'),
+                'category' => fn () => $request->session()->get('category'),
             ],
         ]);
     }

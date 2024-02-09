@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\CategoryData;
 use App\Data\CategoryRequest;
 use App\Models\Category;
 use App\Repositories\CategoriesRepository;
@@ -12,8 +13,6 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
-
-
     public function __construct(protected CategoriesRepository $categoriesRepository)
     {
     }
@@ -42,6 +41,7 @@ class CategoryController extends Controller
         Auth::user()->currentTeam->categories()->create($category);
 
         Request::session()->flash('message', 'Category created correctly');
+        Request::session()->flash('category', CategoryData::from($category));
 
         return redirect(route('categories.index'));
     }

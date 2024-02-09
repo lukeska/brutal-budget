@@ -17,6 +17,7 @@ id?: number;
 name: string;
 icon: string;
 hex: string;
+monthly_totals_sum_amount?: number;
 permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
 export type ExpenseData = {
 id?: number;

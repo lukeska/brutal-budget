@@ -2,10 +2,13 @@
 
 namespace App\Data;
 
+use App\Data\Transformers\IntToCurrencyTransformer;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Momentum\Lock\Data\DataResource;
+use Spatie\LaravelData\Attributes\MapName;
+use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Optional;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +21,9 @@ class CategoryRequest extends DataResource
         public string $name,
         public string $icon,
         public string $hex,
+        #[MapName('monthly_totals_sum_amount')]
+        #[WithTransformer(IntToCurrencyTransformer::class)]
+        public int|Optional $monthlyTotalsSumAmount,
     ) {
     }
 

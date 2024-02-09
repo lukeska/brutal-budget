@@ -27,4 +27,9 @@ class Category extends Model
     {
         return $this->hasMany(Expense::class);
     }
+
+    public function monthlyTotals(): HasMany
+    {
+        return $this->hasMany(CategoryMonthlyTotal::class);
+    }
 }

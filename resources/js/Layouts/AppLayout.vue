@@ -47,6 +47,8 @@ const logout = () => {
             :sidebarOpen="sidebarOpen"
             @close="sidebarOpen = false" />
 
+        <slot name="before-content" />
+
         <div class="min-h-screen bg-gray-100 pb-12">
             <nav class="border-b border-gray-100 bg-white">
                 <!-- Primary Navigation Menu -->

@@ -1,41 +1,72 @@
 <script lang="ts" setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { ref } from "vue";
+import CategoryFormSidebar from "@/Pages/Categories/Partials/CategoryFormSidebar.vue";
+import { useCategoryStore } from "@/Stores/CategoryStore";
+import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
+
+const categoryStore = useCategoryStore();
 
 let props = defineProps<{
     categories: App.Data.CategoryData[];
 }>();
 
-let showCreateForm = ref(false);
+const page = usePage();
+
+const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+
+const grandTotal = computed(() => {
+    let totalAmount = 0;
+
+    for (let i = 0; i < props.categories.length; i++) {
+        totalAmount += props.categories[i].monthly_totals_sum_amount;
+    }
+    return totalAmount;
+});
 </script>
 
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Categories</h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">Categories</h2>
+                <SecondaryButton @click.prevent="categoryStore.showSidebar()">Add category</SecondaryButton>
+            </div>
+        </template>
+
+        <template #before-content>
+            <CategoryFormSidebar />
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-5xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg lg:p-8">
-                    <PrimaryButton @click.prevent="showCreateForm = true">Create new category</PrimaryButton>
-                    <div class="mt-3 bg-zinc-50 px-5">
-                        <CategoryForm
-                            v-if="showCreateForm"
-                            @cancel="showCreateForm = false" />
-                    </div>
-
-                    <ul
-                        class="divide-y divide-gray-100"
-                        role="list">
-                        <li
-                            v-for="category in categories"
-                            :key="category.id">
-                            <CategoryForm :category="category" />
-                        </li>
-                    </ul>
+            <div class="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    <button
+                        v-for="category in categories"
+                        :key="category.id"
+                        class="divide-y rounded-md bg-white shadow"
+                        @click.prevent="categoryStore.showSidebar(category)">
+                        <div class="flex items-center space-x-4 p-4 text-lg">
+                            <div :style="'color:' + category.hex">
+                                <CategoryIcon :category="category" />
+                            </div>
+                            <div>{{ category.name }}</div>
+                        </div>
+                        <div class="grid grid-cols-3 divide-x text-left">
+                            <div class="col-span-2 px-4 py-2">
+                                <div class="mb-1 text-xs text-gray-500">Total expenses</div>
+                                <div>{{ currencyFormatter.format(category.monthly_totals_sum_amount) }}</div>
+                            </div>
+                            <div class="inline-flex items-center justify-center">
+                                <span class="text-lg font-semibold">
+                                    {{ parseInt((category.monthly_totals_sum_amount * 100) / grandTotal) }}%
+                                </span>
+                            </div>
+                        </div>
+                    </button>
                 </div>
             </div>
         </div>

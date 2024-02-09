@@ -1,27 +1,20 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
-import { useExpenseStore } from "@/Stores/ExpenseStore";
-import ExpenseForm from "@/Pages/Expenses/Partials/ExpenseForm.vue";
-import { usePage } from "@inertiajs/vue3";
+import { useCategoryStore } from "@/Stores/CategoryStore";
+import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
 
-const expenseStore = useExpenseStore();
-
-const page = usePage();
-
-if (page.props.flash.expense) {
-    expenseStore.showSidebar(page.props.flash.expense);
-}
+const categoryStore = useCategoryStore();
 </script>
 
 <template>
     <TransitionRoot
-        :show="expenseStore.sidebarOpen"
+        :show="categoryStore.sidebarOpen"
         as="template">
         <Dialog
             as="div"
             class="relative z-50"
-            @close="expenseStore.sidebarOpen = false">
+            @close="categoryStore.sidebarOpen = false">
             <TransitionChild
                 as="template"
                 enter="transition-opacity ease-linear duration-300"
@@ -45,11 +38,11 @@ if (page.props.flash.expense) {
                     <DialogPanel class="relative ml-16 flex w-full max-w-md flex-1">
                         <!-- Sidebar component, swap this element with another sidebar if you like -->
                         <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white">
-                            <ExpenseForm
-                                @cancel="expenseStore.hideSidebar()"
-                                @created="expenseStore.hideSidebar()"
-                                @updated="expenseStore.hideSidebar()"
-                                @deleted="expenseStore.hideSidebar()" />
+                            <CategoryForm
+                                @cancel="categoryStore.hideSidebar()"
+                                @created="categoryStore.hideSidebar()"
+                                @updated="categoryStore.hideSidebar()"
+                                @deleted="categoryStore.hideSidebar()" />
                         </div>
 
                         <!-- Close button -->
@@ -65,7 +58,7 @@ if (page.props.flash.expense) {
                                 <button
                                     class="-m-2.5 p-2.5"
                                     type="button"
-                                    @click="expenseStore.hideSidebar()">
+                                    @click="categoryStore.hideSidebar()">
                                     <span class="sr-only">Close sidebar</span>
                                     <XMarkIcon
                                         aria-hidden="true"
