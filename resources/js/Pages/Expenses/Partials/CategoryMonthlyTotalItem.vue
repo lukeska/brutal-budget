@@ -7,7 +7,6 @@ import ExpenseItem from "@/Pages/Expenses/Partials/ExpenseItem.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { usePage } from "@inertiajs/vue3";
 import { getDate } from "@/Helpers/DatesHelper";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
@@ -44,17 +43,10 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
 </script>
 
 <template>
-    <div class="divide-y overflow-hidden rounded-md bg-white shadow-sm">
-        <div class="relative divide-y">
-            <div class="relative flex justify-between py-1 pl-3 pr-1">
+    <div class="divide-y overflow-hidden shadow-sm">
+        <div class="relative bg-white">
+            <div class="relative flex justify-between py-2 pl-3 pr-1">
                 <div class="flex items-center space-x-1">
-                    <div class="w-6">
-                        <IconChevronDown
-                            :class="[
-                                showExpenses ? '-rotate-180' : '',
-                                'mx-auto text-gray-300 transition duration-500',
-                            ]" />
-                    </div>
                     <div
                         class="flex-1"
                         :style="'color:' + category.hex">
@@ -81,13 +73,21 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                     </div>
 
                     <button
-                        class="relative z-10 h-full w-8 rounded-lg bg-indigo-400 text-white transition duration-150 ease-in-out hover:bg-indigo-500 focus:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-indigo-500 sm:w-10"
+                        class="relative z-10 h-full w-8 rounded-lg bg-white text-indigo-400 transition duration-150 ease-in-out hover:bg-indigo-100 focus:bg-indigo-500 focus:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-indigo-500 sm:w-10"
                         @click.prevent="expenseStore.showSidebar(null, category)">
                         <IconCirclePlus class="mx-auto" />
                     </button>
                 </div>
             </div>
-            <div class="flex divide-x">
+            <button
+                class="absolute inset-0 z-0 h-full w-full"
+                @click.prevent="showExpenses = !showExpenses"></button>
+        </div>
+
+        <div
+            v-if="showExpenses"
+            class="divide-y">
+            <div class="flex divide-x bg-white">
                 <template
                     v-for="monthlyTotal in monthlyTotals"
                     :key="monthlyTotal.yearMonth">
@@ -130,16 +130,10 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                 </template>
             </div>
             <button
-                class="absolute inset-0 z-0 h-full w-full"
-                @click.prevent="showExpenses = !showExpenses"></button>
-        </div>
-
-        <div v-if="showExpenses">
-            <button
                 v-for="expense in expenses"
                 :key="expense.id"
                 @click.prevent="expenseStore.showSidebar(expense)"
-                class="w-full">
+                class="w-full bg-white">
                 <ExpenseItem :expense="expense">
                     <template v-slot:prefix>
                         <div class="text-sm">

@@ -83,11 +83,12 @@ onMounted(() => {
                 <ExpensesTotals :monthly-totals="monthlyTotals" />
             </div>
 
-            <div class="space-y-3">
+            <div class="divide-y shadow">
                 <template v-if="expensesView == 'categories'">
                     <div
                         v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
-                        :key="total.id">
+                        :key="total.id"
+                        class="overflow-hidden first:rounded-t-md last:rounded-b-md">
                         <CategoryMonthlyTotalItem
                             :monthly-totals="findTotalsByCategoryId(total.category.id)"
                             :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
