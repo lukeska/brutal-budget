@@ -10,7 +10,7 @@ use App\Models\Expense;
 use App\Notifications\ExpenseCreated as ExpenseCreatedNotification;
 use App\Repositories\ExpensesRepository;
 use App\Repositories\MonthlyTotalsRepository;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Notification;
 
 class ExpenseObserver
@@ -26,9 +26,9 @@ class ExpenseObserver
      */
     public function created(Expense $expense): void
     {
-        $this->flushCache($expense->team_id, $expense->date);
+        $this->flushCache($expense->team_id, Carbon::create($expense->date));
 
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((Carbon::create($expense->date))->format('Ym')));
 
         // broadcast event for Laravel Echo to pick up
         broadcast(new ExpenseCreated($expense))->toOthers();
@@ -96,7 +96,7 @@ class ExpenseObserver
         //
     }
 
-    protected function flushCache(int $teamId, \Carbon\Carbon $date): void
+    protected function flushCache(int $teamId, Carbon $date): void
     {
         $this->expensesRepository->flushCache($teamId, $date);
         $this->monthlyTotalsRepository->flushCache($teamId, $date);

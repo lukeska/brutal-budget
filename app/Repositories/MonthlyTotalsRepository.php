@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Data\CategoryMonthlyTotalData;
+use App\Data\CategoryTotalData;
 use App\Data\MonthlyTotalData;
 use App\Models\CategoryMonthlyTotal;
 use Illuminate\Support\Carbon;
@@ -88,13 +89,39 @@ class MonthlyTotalsRepository
         return $total;
     }
 
-    public function getCacheTags(int $teamId, \Carbon\Carbon $date): array
+    public function getCategoriesTotals(int $teamId): DataCollection
     {
+        $key = "monthlyTotal-getCategoriesTotals-$teamId";
+        $tags = $this->getCacheTags($teamId);
+
+        if (Cache::tags($tags)->has($key)) {
+            $categoryTotals = Cache::tags($tags)->get($key);
+        } else {
+            $categoryTotalsRaw = CategoryMonthlyTotal::query()
+                ->groupBy('category_id')
+                ->selectRaw('category_id, SUM(amount) as total')
+                ->where('team_id', $teamId)
+                ->whereNull('is_regular')
+                ->get();
+
+            $categoryTotals = CategoryTotalData::collection($categoryTotalsRaw->toArray());
+        }
+
+        return $categoryTotals;
+    }
+
+    public function getCacheTags(int $teamId, ?Carbon $date = null): array
+    {
+        if ($date === null) {
+            return ["monthlytotals-$teamId"];
+        }
+
         return ["monthlytotals-{$teamId}-{$date->format('Ym')}"];
     }
 
-    public function flushCache(int $teamId, \Carbon\Carbon $date): void
+    public function flushCache(int $teamId, Carbon $date): void
     {
         Cache::tags($this->getCacheTags($teamId, $date))->flush();
+        Cache::tags($this->getCacheTags($teamId))->flush();
     }
 }

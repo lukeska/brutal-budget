@@ -62,6 +62,7 @@ class ExpenseTest extends TestCase
                 return $page
                     ->component('Expenses/Index')
                     ->where('expenses', function (Collection $expenses) {
+                        // TODO: this page will only have a single expense. No need to loop
                         $expenses->each(function ($expense, $index) {
                             $this->assertEquals(
                                 Carbon::create(2024, 1, 31)->addMonthsWithoutOverflow($index)->format('d-m-Y'),

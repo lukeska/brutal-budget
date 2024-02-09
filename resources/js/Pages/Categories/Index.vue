@@ -12,6 +12,7 @@ const categoryStore = useCategoryStore();
 
 let props = defineProps<{
     categories: App.Data.CategoryData[];
+    totals: App.Data.CategoryTotalData[];
 }>();
 
 const page = usePage();
@@ -21,11 +22,19 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
 const grandTotal = computed(() => {
     let totalAmount = 0;
 
-    for (let i = 0; i < props.categories.length; i++) {
-        totalAmount += props.categories[i].monthly_totals_sum_amount;
+    for (let i = 0; i < props.totals.length; i++) {
+        totalAmount += props.totals[i].total;
     }
     return totalAmount;
 });
+
+const getTotalByCategory = (categoryId: number): number => {
+    const total = props.totals.find((item) => {
+        return item.category_id === categoryId;
+    });
+
+    return total ? total.total : 0;
+};
 </script>
 
 <template>
@@ -58,11 +67,13 @@ const grandTotal = computed(() => {
                         <div class="grid grid-cols-3 divide-x text-left">
                             <div class="col-span-2 px-4 py-2">
                                 <div class="mb-1 text-xs text-gray-500">Total expenses</div>
-                                <div>{{ currencyFormatter.format(category.monthly_totals_sum_amount) }}</div>
+                                <div>
+                                    {{ currencyFormatter.format(getTotalByCategory(category.id)) }}
+                                </div>
                             </div>
                             <div class="inline-flex items-center justify-center">
                                 <span class="text-lg font-semibold">
-                                    {{ parseInt((category.monthly_totals_sum_amount * 100) / grandTotal) }}%
+                                    {{ parseInt((getTotalByCategory(category.id) * 100) / grandTotal) }}%
                                 </span>
                             </div>
                         </div>

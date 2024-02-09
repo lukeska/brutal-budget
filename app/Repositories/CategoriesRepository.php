@@ -21,7 +21,6 @@ class CategoriesRepository
                 ->where('team_id', $teamId)
                 ->orderBy('name')
                 ->orderByDesc('id')
-                ->withSum('monthlyTotals', 'amount')
                 ->get();
 
             Cache::tags($tags)->put($key, $categories);

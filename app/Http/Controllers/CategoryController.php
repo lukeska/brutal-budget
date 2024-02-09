@@ -6,6 +6,7 @@ use App\Data\CategoryData;
 use App\Data\CategoryRequest;
 use App\Models\Category;
 use App\Repositories\CategoriesRepository;
+use App\Repositories\MonthlyTotalsRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
@@ -13,14 +14,17 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
-    public function __construct(protected CategoriesRepository $categoriesRepository)
-    {
+    public function __construct(
+        protected CategoriesRepository $categoriesRepository,
+        protected MonthlyTotalsRepository $monthlyTotalsRepository,
+    ) {
     }
 
     public function index()
     {
         return Inertia::render('Categories/Index', [
             'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->current_team_id)),
+            'totals' => $this->monthlyTotalsRepository->getCategoriesTotals(Auth::user()->current_team_id),
         ]);
     }
 

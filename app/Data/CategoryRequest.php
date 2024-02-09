@@ -21,9 +21,6 @@ class CategoryRequest extends DataResource
         public string $name,
         public string $icon,
         public string $hex,
-        #[MapName('monthly_totals_sum_amount')]
-        #[WithTransformer(IntToCurrencyTransformer::class)]
-        public ?int $monthlyTotalsSumAmount,
     ) {
     }
 
