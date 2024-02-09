@@ -41,6 +41,8 @@ class ExpenseTest extends TestCase
     /** @test */
     public function a_user_can_create_monthly_expenses_from_a_single_amount()
     {
+        $this->travelTo(Carbon::create(2024, 1, 31));
+
         $user = $this->signIn();
 
         $this->get('/expenses')->assertStatus(200);
