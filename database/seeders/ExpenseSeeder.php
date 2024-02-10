@@ -17,28 +17,13 @@ class ExpenseSeeder extends Seeder
     {
         $luca = User::find(1);
 
-        // current month expenses
-        foreach (range(1, 40) as $i) {
-            Expense::factory()->create([
-                'user_id' => $luca->id,
-                'date' => Carbon::now()->setDay(rand(1, 28)),
-            ]);
-        }
-
-        // previous month expenses
-        foreach (range(1, 40) as $i) {
-            Expense::factory()->create([
-                'user_id' => $luca->id,
-                'date' => Carbon::now()->addMonth(-1)->setDay(rand(1, 28)),
-            ]);
-        }
-
-        // next month expenses
-        foreach (range(1, 40) as $i) {
-            Expense::factory()->create([
-                'user_id' => $luca->id,
-                'date' => Carbon::now()->addMonth(1)->setDay(rand(1, 28)),
-            ]);
+        foreach (range(-4, 1) as $month) {
+            foreach (range(1, 40) as $i) {
+                Expense::factory()->create([
+                    'user_id' => $luca->id,
+                    'date' => Carbon::now()->addMonths($month)->setDay(rand(1, 28)),
+                ]);
+            }
         }
 
         // project expenses

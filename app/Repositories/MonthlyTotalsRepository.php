@@ -25,7 +25,7 @@ class MonthlyTotalsRepository
         $dates = [];
         if ($previousMonthsOffset > -1) {
             foreach (range(($previousMonthsOffset + 1) * -1, -1) as $monthOffset) {
-                $dates[] = $currentDate->clone()->addMonth();
+                $dates[] = $currentDate->clone()->addMonths($monthOffset);
             }
         }
 
@@ -33,7 +33,7 @@ class MonthlyTotalsRepository
 
         if ($followingMonthsOffset > 0) {
             foreach (range(1, $followingMonthsOffset) as $monthOffset) {
-                $dates[] = $currentDate->clone()->addMonth();
+                $dates[] = $currentDate->clone()->addMonths($monthOffset);
             }
         }
 
