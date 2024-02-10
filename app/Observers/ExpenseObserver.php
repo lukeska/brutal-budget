@@ -50,17 +50,15 @@ class ExpenseObserver
 
         $this->expensesRepository->flushCache($expense->team_id, $newDate);
 
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) $newDate->format('Ym'));
+        Totals::generateByCategory($expense->category_id, $expense->team_id, (int) $newDate->format('Ym'));
 
         // date was changed, must update total relate to past date
-        if ($expense->wasChanged('date')) {
+        if ($expense->wasChanged('date') || $expense->wasChanged('category_id')) {
 
             $originalDate = new Carbon($expense->getOriginal('date'));
 
-            if ($originalDate->format('Ym') != $newDate->format('Yd')) {
-                $this->flushCache($expense->team_id, $originalDate);
-                Totals::generateByCategory($expense->category->id, $expense->team->id, (int) $originalDate->format('Ym'));
-            }
+            $this->flushCache($expense->team_id, $originalDate);
+            Totals::generateByCategory($expense->getOriginal('category_id'), $expense->team->id, (int) $originalDate->format('Ym'));
         }
 
         // broadcast event for Laravel Echo to pick up

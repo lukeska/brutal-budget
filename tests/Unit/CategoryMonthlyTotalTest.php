@@ -139,4 +139,59 @@ class CategoryMonthlyTotalTest extends TestCase
 
         $this->assertEquals(100, $groupTotalNew->first()->amount);
     }
+
+    /** @test */
+    public function it_calculate_totals_for_old_and_new_categories_when_an_expense_category_changes()
+    {
+        $luca = $this->signIn();
+        $team = $luca->currentTeam;
+        $category1 = $team->categories->first();
+        $category2 = $team->categories->last();
+
+        $expense = Expense::factory()->create([
+            'user_id' => $luca->id,
+            'category_id' => $category1->id,
+            'team_id' => $team->id,
+            'amount' => 100,
+        ]);
+
+        $groupTotalCategory1 = CategoryMonthlyTotal::query()
+            ->where('category_id', $category1->id)
+            ->where('team_id', $team->id)
+            ->whereNull('user_id')
+            ->whereNull('is_regular')
+            ->get();
+
+        $groupTotalCategory2 = CategoryMonthlyTotal::query()
+            ->where('category_id', $category2->id)
+            ->where('team_id', $team->id)
+            ->whereNull('user_id')
+            ->whereNull('is_regular')
+            ->get();
+
+        $this->assertCount(1, $groupTotalCategory1);
+        $this->assertCount(0, $groupTotalCategory2);
+
+        $expense->update([
+            'category_id' => $category2->id,
+        ]);
+
+        $groupTotalCategory1 = CategoryMonthlyTotal::query()
+            ->where('category_id', $category1->id)
+            ->where('team_id', $team->id)
+            ->whereNull('user_id')
+            ->whereNull('is_regular')
+            ->get();
+
+        $groupTotalCategory2 = CategoryMonthlyTotal::query()
+            ->where('category_id', $category2->id)
+            ->where('team_id', $team->id)
+            ->whereNull('user_id')
+            ->whereNull('is_regular')
+            ->get();
+
+        $this->assertCount(0, $groupTotalCategory1);
+        $this->assertCount(1, $groupTotalCategory2);
+
+    }
 }
