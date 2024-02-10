@@ -12,6 +12,9 @@ use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
 use NumberFormatter;
 
+/**
+ * @property Team $team
+ */
 class Expense extends Model
 {
     use HasFactory;
@@ -70,8 +73,8 @@ class Expense extends Model
     public function scopeMonthFromInt(Builder $query, ?int $year_month = null): void
     {
         $date = $year_month ? Carbon::create(
-            Str::of($year_month)->substr(0, 4)->toInteger(),
-            Str::of($year_month)->substr(4, 2)->toInteger(),
+            Str::of((string) $year_month)->substr(0, 4)->toInteger(),
+            Str::of((string) $year_month)->substr(4, 2)->toInteger(),
         ) : Carbon::now();
 
         $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);

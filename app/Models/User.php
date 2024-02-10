@@ -11,15 +11,18 @@ use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use NotificationChannels\WebPush\HasPushSubscriptions;
 
+/**
+ * @property Team $currentTeam
+ */
 class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
+    use HasPushSubscriptions;
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use HasPushSubscriptions;
 
     /**
      * The attributes that are mass assignable.
