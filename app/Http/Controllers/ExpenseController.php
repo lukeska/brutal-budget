@@ -91,6 +91,10 @@ class ExpenseController extends Controller
 
     public function update(Expense $expense, ExpenseRequest $data)
     {
+        if (! Request::user()->can('update', $expense)) {
+            abort(403);
+        }
+
         $expenseData = [
             ...($data->except('months')->toArray()),
             'user_id' => Auth::user()->getAuthIdentifier(),
