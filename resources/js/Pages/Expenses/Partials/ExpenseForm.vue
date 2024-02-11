@@ -130,6 +130,7 @@ watchEffect(() => {
                                 name="amount"
                                 v-model="form.amount"
                                 placeholder="0.00"
+                                :disabled="!expenseStore.expense.permissions.update"
                                 :options="{ currency: page.props.auth.user.currency, currencyDisplay: 'hidden' }" />
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                 <span
@@ -156,7 +157,7 @@ watchEffect(() => {
                     <!-- Category list -->
                     <div
                         class="mt-6"
-                        v-if="showCategoryList">
+                        v-if="showCategoryList && expenseStore.expense.permissions.update">
                         <div
                             v-if="form.errors.category_id"
                             class="mb-1 text-xs text-red-500"
@@ -181,9 +182,10 @@ watchEffect(() => {
                         <input
                             id="date"
                             v-model="form.date"
-                            class="block w-full rounded-md border-0 py-1.5 text-sm text-gray-900 ring-inset ring-gray-300 placeholder:text-gray-400 hover:shadow-sm hover:ring-1 focus:shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                            class="block w-full rounded-md border-0 py-1.5 text-sm text-gray-900 ring-inset ring-gray-300 placeholder:text-gray-400 hover:shadow-sm hover:ring-1 focus:shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-600 disabled:shadow-none disabled:ring-0 sm:leading-6"
                             name="date"
-                            type="date" />
+                            type="date"
+                            :disabled="!expenseStore.expense.permissions.update" />
                     </div>
                     <div
                         v-if="form.errors.date"
@@ -204,6 +206,7 @@ watchEffect(() => {
                             v-model="form.notes"
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             name="notes"
+                            :disabled="!expenseStore.expense.permissions.update"
                             type="text" />
                     </div>
                 </div>
@@ -227,7 +230,9 @@ watchEffect(() => {
                             <div class="mb-2 text-sm font-medium leading-6 text-gray-900">
                                 Is this part of a project?
                             </div>
-                            <Listbox v-model="selectedProject">
+                            <Listbox
+                                v-model="selectedProject"
+                                :disabled="!expenseStore.expense.permissions.update">
                                 <div class="relative mt-1">
                                     <ListboxButton
                                         class="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -284,6 +289,7 @@ watchEffect(() => {
                         <div>
                             <div class="flex items-center space-x-2">
                                 <Switch
+                                    :disabled="!expenseStore.expense.permissions.update"
                                     v-model="form.is_regular"
                                     :class="form.is_regular ? 'bg-indigo-400' : 'bg-gray-400'"
                                     class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
@@ -307,7 +313,9 @@ watchEffect(() => {
                 class="px-6 py-2 text-sm text-gray-400">
                 created {{ moment(expenseStore.expense.created_at).fromNow() }} by {{ expenseStore.expense.user.name }}
             </div>
-            <div class="flex w-full space-x-3 bg-gray-100 px-6 py-4">
+            <div
+                class="flex w-full space-x-3 bg-gray-100 px-6 py-4"
+                v-if="expenseStore.expense.permissions.update">
                 <div class="relative flex flex-1 items-center space-x-px">
                     <PrimaryButton
                         @click.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')"

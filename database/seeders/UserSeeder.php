@@ -25,7 +25,16 @@ class UserSeeder extends Seeder
             'password' => Hash::make('123123123'),
         ]);
 
+        $mati = User::factory()->withPersonalTeam()->create([
+            'name' => 'mati',
+            'email' => 'mati@example.com',
+            'password' => Hash::make('123123123'),
+        ]);
+
         $luca->currentTeam->users()->attach($viola, ['role' => 'admin']);
+        $luca->currentTeam->users()->attach($mati, ['role' => 'editor']);
+
         $viola->switchTeam($luca->currentTeam);
+        $mati->switchTeam($luca->currentTeam);
     }
 }

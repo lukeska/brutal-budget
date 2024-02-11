@@ -3,16 +3,19 @@
 namespace App\Data;
 
 use App\Data\Transformers\IntToCurrencyTransformer;
+use App\Models\Expense;
 use Carbon\Carbon;
+use Momentum\Lock\Data\DataResource;
 use Spatie\LaravelData\Attributes\MapName;
-use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 
-class ExpenseData extends Data
+class ExpenseData extends DataResource
 {
+    protected string $modelClass = Expense::class;
+
     public function __construct(
         public int|Optional $id,
         #[WithTransformer(DateTimeInterfaceTransformer::class, format: 'd-m-Y')]

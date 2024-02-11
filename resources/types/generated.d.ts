@@ -32,7 +32,7 @@ category: App.Data.CategoryData;
 project: App.Data.ProjectData | null;
 created_at: string;
 user: App.Data.UserData;
-};
+permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
 export type ExpenseRequest = {
 id?: number;
 date: string;
