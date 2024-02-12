@@ -5,14 +5,11 @@ import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { usePage } from "@inertiajs/vue3";
+import ExpensesByDateItem from "@/Pages/Expenses/Partials/ExpensesByDateItem.vue";
 
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
 }>();
-
-const page = usePage();
-
-const expenseStore = useExpenseStore();
 
 const expensesByDate = computed(() => {
     const itemsByDate = {};
@@ -38,37 +35,17 @@ const expensesByDate = computed(() => {
 
     return sortedItemsByDate;
 });
-
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 </script>
 
 <template>
-    <div
-        v-for="(expenseByDate, date) in expensesByDate"
-        :key="date">
-        <div class="divide-y overflow-hidden rounded-md bg-white shadow-sm">
-            <div class="flex w-full px-4 py-3">
-                <div class="min-w-[90px] font-semibold">{{ date }}</div>
-                <div class="ml-4 inline-flex items-center rounded-full bg-gray-200 px-2 text-sm">
-                    {{ expenseByDate.length }}
-                </div>
-
-                <div class="flex-1 text-right font-mono">
-                    {{ currencyFormatter.format(expenseByDate.reduce((total, item) => total + item.amount, 0)) }}
-                </div>
-            </div>
-            <button
-                v-for="expense in expenseByDate"
-                class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50"
-                @click.prevent="expenseStore.showSidebar(expense)">
-                <div :style="'color:' + expense.category.hex">
-                    <CategoryIcon :category="expense.category" />
-                </div>
-                <div class="min-w-[80px] text-right font-mono">
-                    {{ currencyFormatter.format(expense.amount) }}
-                </div>
-                <div class="text-gray-500">{{ expense.notes }}</div>
-            </button>
+    <div class="divide-y overflow-hidden rounded-md bg-white shadow-sm">
+        <div
+            v-for="(expenseByDate, date) in expensesByDate"
+            :key="date">
+            <ExpensesByDateItem
+                :date="date"
+                :expenses="expenseByDate"
+                :total="expenses.reduce((total, item) => total + item.amount, 0)" />
         </div>
     </div>
 </template>
