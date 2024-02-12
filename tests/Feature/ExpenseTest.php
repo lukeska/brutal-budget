@@ -74,7 +74,7 @@ class ExpenseTest extends TestCase
             }
             );
 
-        $this->assertEquals(1000000, Expense::all()->sum('amount'));
+        $this->assertEquals(1000000, Expense::sum('amount'));
     }
 
     /** @test */
@@ -84,6 +84,7 @@ class ExpenseTest extends TestCase
 
         // the expense creation doesn't go through Laravel Data casts,
         // so the amount stored is 1000, which is displayed as 10 on the frontend
+        /** @var Expense $expense */
         $expense = Expense::factory()->recycle($user)->create([
             'amount' => 1000,
         ]);
@@ -218,7 +219,7 @@ class ExpenseTest extends TestCase
             'amount' => 222200,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
-            'date' => Carbon::now()->addMonth(-1),
+            'date' => Carbon::now()->addMonths(-1),
         ]);
 
         $expenseCurrentMonth = Expense::factory()->create([
@@ -315,6 +316,7 @@ class ExpenseTest extends TestCase
             );
 
         // test error messages on update
+        /** @var Expense $expense */
         $expense = Expense::factory()->recycle($user)->create([
             'amount' => 1000,
         ]);

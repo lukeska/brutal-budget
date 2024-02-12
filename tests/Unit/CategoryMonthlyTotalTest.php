@@ -108,6 +108,7 @@ class CategoryMonthlyTotalTest extends TestCase
         $today = Carbon::now();
         $nextMonth = Carbon::now()->add('1 month');
 
+        /** @var Expense $expense */
         $expense = Expense::factory()->create([
             'user_id' => $luca->id,
             'category_id' => $category1->id,
@@ -148,6 +149,7 @@ class CategoryMonthlyTotalTest extends TestCase
         $category1 = $team->categories->first();
         $category2 = $team->categories->last();
 
+        /** @var Expense $expense */
         $expense = Expense::factory()->create([
             'user_id' => $luca->id,
             'category_id' => $category1->id,

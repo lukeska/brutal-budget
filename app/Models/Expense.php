@@ -14,6 +14,7 @@ use NumberFormatter;
 
 /**
  * @property Team $team
+ * @property string $formatted_amount
  */
 class Expense extends Model
 {

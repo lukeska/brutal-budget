@@ -18,6 +18,7 @@ class InviteTeamMemberTest extends TestCase
         if (! Features::sendsTeamInvitations()) {
             $this->markTestSkipped('Team invitations not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -40,6 +41,7 @@ class InviteTeamMemberTest extends TestCase
         if (! Features::sendsTeamInvitations()) {
             $this->markTestSkipped('Team invitations not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -47,6 +49,7 @@ class InviteTeamMemberTest extends TestCase
 
         $this->actingAs($user = User::factory()->withPersonalTeam()->create());
 
+        /** @var \App\Models\TeamInvitation $invitation */
         $invitation = $user->currentTeam->teamInvitations()->create([
             'email' => 'test@example.com',
             'role' => 'admin',

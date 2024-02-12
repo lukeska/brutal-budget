@@ -17,6 +17,7 @@ class ApiTokenPermissionsTest extends TestCase
         if (! Features::hasApiFeatures()) {
             $this->markTestSkipped('API support is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -28,7 +29,9 @@ class ApiTokenPermissionsTest extends TestCase
             'abilities' => ['create', 'read'],
         ]);
 
+        /** @phpstan-ignore-next-line  */
         $response = $this->put('/user/api-tokens/'.$token->id, [
+            /** @phpstan-ignore-next-line  */
             'name' => $token->name,
             'permissions' => [
                 'delete',
@@ -36,8 +39,11 @@ class ApiTokenPermissionsTest extends TestCase
             ],
         ]);
 
+        /** @phpstan-ignore-next-line  */
         $this->assertTrue($user->fresh()->tokens->first()->can('delete'));
+        /** @phpstan-ignore-next-line  */
         $this->assertFalse($user->fresh()->tokens->first()->can('read'));
+        /** @phpstan-ignore-next-line  */
         $this->assertFalse($user->fresh()->tokens->first()->can('missing-permission'));
     }
 }

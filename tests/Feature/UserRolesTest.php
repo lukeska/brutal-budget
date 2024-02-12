@@ -18,6 +18,8 @@ class UserRolesTest extends TestCase
 
     protected $editor;
 
+    protected $expense;
+
     protected function setUp(): void
     {
         parent::setUp();

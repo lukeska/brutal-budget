@@ -17,6 +17,7 @@ class RegistrationTest extends TestCase
         if (! Features::enabled(Features::registration())) {
             $this->markTestSkipped('Registration support is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -30,6 +31,7 @@ class RegistrationTest extends TestCase
         if (Features::enabled(Features::registration())) {
             $this->markTestSkipped('Registration support is enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -43,6 +45,7 @@ class RegistrationTest extends TestCase
         if (! Features::enabled(Features::registration())) {
             $this->markTestSkipped('Registration support is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 

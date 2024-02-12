@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Expense>
  */
 class ExpenseFactory extends Factory
 {
@@ -29,7 +29,7 @@ class ExpenseFactory extends Factory
                 return User::find($attributes['user_id'])->currentTeam->categories->random()->id;
             },
             'notes' => function (array $attributes) {
-                return $this->faker->expenseNote(Category::find($attributes['category_id'])->name);
+                return $this->faker->expenseNote(Category::find($attributes['category_id'])->name); /** @phpstan-ignore-line */
             },
             'is_regular' => $this->faker->boolean(80),
             'project_id' => null,

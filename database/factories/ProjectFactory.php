@@ -18,7 +18,7 @@ class ProjectFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(2),
+            'name' => $this->faker->unique()->word(),
             'hex' => $this->faker->hexColor(),
             'team_id' => Team::factory(),
         ];

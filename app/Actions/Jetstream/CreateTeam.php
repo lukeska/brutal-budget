@@ -32,6 +32,7 @@ class CreateTeam implements CreatesTeams
             'personal_team' => false,
         ]));
 
+        /** @phpstan-ignore-next-line  */
         return $team;
     }
 }

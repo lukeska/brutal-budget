@@ -16,6 +16,7 @@ class CreateApiTokenTest extends TestCase
         if (! Features::hasApiFeatures()) {
             $this->markTestSkipped('API support is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -30,8 +31,11 @@ class CreateApiTokenTest extends TestCase
         ]);
 
         $this->assertCount(1, $user->fresh()->tokens);
+        /** @phpstan-ignore-next-line  */
         $this->assertEquals('Test Token', $user->fresh()->tokens->first()->name);
+        /** @phpstan-ignore-next-line  */
         $this->assertTrue($user->fresh()->tokens->first()->can('read'));
+        /** @phpstan-ignore-next-line  */
         $this->assertFalse($user->fresh()->tokens->first()->can('delete'));
     }
 }

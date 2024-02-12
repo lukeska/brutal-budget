@@ -16,6 +16,7 @@ class TwoFactorAuthenticationSettingsTest extends TestCase
         if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -34,6 +35,7 @@ class TwoFactorAuthenticationSettingsTest extends TestCase
         if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 
@@ -57,6 +59,7 @@ class TwoFactorAuthenticationSettingsTest extends TestCase
         if (! Features::canManageTwoFactorAuthentication()) {
             $this->markTestSkipped('Two factor authentication is not enabled.');
 
+            /** @phpstan-ignore-next-line  */
             return;
         }
 

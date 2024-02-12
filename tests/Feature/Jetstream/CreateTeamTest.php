@@ -19,6 +19,7 @@ class CreateTeamTest extends TestCase
         ]);
 
         $this->assertCount(2, $user->fresh()->ownedTeams);
+        /** @phpstan-ignore-next-line  */
         $this->assertEquals('Test Team', $user->fresh()->ownedTeams()->latest('id')->first()->name);
     }
 }

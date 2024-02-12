@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Data\ExpenseRequest;
 use App\Models\Expense;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -37,7 +38,7 @@ class ExpensesRepository
         return $expenses;
     }
 
-    public function createMonthlyExpenses(ExpenseRequest $expense, ?\Illuminate\Contracts\Auth\Authenticatable $user): Collection
+    public function createMonthlyExpenses(ExpenseRequest $expense, ?User $user): Collection
     {
         $expenses = collect();
 
