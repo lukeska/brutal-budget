@@ -5,6 +5,7 @@ import { IconTrash } from "@tabler/icons-vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { iconComponents } from "@/Pages/Categories/Partials/CategoryIcons.js";
 import { ListboxOption } from "@headlessui/vue";
+import { computed } from "vue";
 
 const emit = defineEmits<{
     created: [];
@@ -56,7 +57,19 @@ const submit = (action: String) => {
     }
 };
 
+const canUpdate = computed((): boolean => {
+    if (categoryStore.isNewCategory) {
+        return true;
+    }
+
+    return categoryStore.category.permissions.update;
+});
+
 const selectIcon = (icon: string, hex: string) => {
+    if (!canUpdate.value) {
+        return;
+    }
+
     form.icon = icon;
     form.hex = hex;
 };
@@ -82,6 +95,7 @@ const selectIcon = (icon: string, hex: string) => {
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             name="name"
                             type="text"
+                            :disabled="!canUpdate"
                             data-1p-ignore />
                     </div>
 
@@ -89,11 +103,6 @@ const selectIcon = (icon: string, hex: string) => {
                         v-if="form.errors.name"
                         class="mt-1 text-xs text-red-500"
                         v-text="form.errors.name"></div>
-
-                    <div
-                        v-if="form.errors.limit"
-                        class="mt-1 text-xs text-red-500"
-                        v-text="form.errors.limit"></div>
                 </div>
 
                 <!-- Tcon -->
@@ -124,7 +133,9 @@ const selectIcon = (icon: string, hex: string) => {
             </div>
         </div>
         <div>
-            <div class="flex w-full space-x-3 bg-gray-100 px-6 py-4">
+            <div
+                class="flex w-full space-x-3 bg-gray-100 px-6 py-4"
+                v-if="canUpdate">
                 <div class="relative flex flex-1 items-center space-x-px">
                     <PrimaryButton
                         @click.prevent="submit(categoryStore.isNewCategory ? 'create' : 'update')"

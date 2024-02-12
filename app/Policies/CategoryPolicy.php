@@ -28,7 +28,8 @@ class CategoryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->currentTeam->categories->count() <= config('global.limits.categories_per_team');
+        return $user->ownsTeam($user->currentTeam)
+            || $user->hasTeamRole($user->currentTeam, 'admin');
     }
 
     /**
@@ -36,7 +37,8 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category): bool
     {
-        return $user->belongsToTeam($category->team);
+        return $user->ownsTeam($category->team)
+            || $user->hasTeamRole($category->team, 'admin');
     }
 
     /**
@@ -44,8 +46,11 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category): bool
     {
-        return $user->belongsToTeam($category->team)
-            && $category->expenses()->count() === 0;
+        return $category->expenses()->count() === 0
+            && (
+                $user->ownsTeam($category->team)
+                || $user->hasTeamRole($category->team, 'admin')
+            );
     }
 
     /**

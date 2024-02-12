@@ -25,15 +25,14 @@ class CategoryController extends Controller
         return Inertia::render('Categories/Index', [
             'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->current_team_id)),
             'totals' => $this->monthlyTotalsRepository->getCategoriesTotals(Auth::user()->current_team_id),
+            'canCreate' => Request::user()->can('create', Category::class),
         ]);
     }
 
     public function create()
     {
         if (Request::user()->cannot('create', Category::class)) {
-            return redirect(route('categories.index'))->withErrors([
-                'limit' => 'You reach the limit of categories this team can have.',
-            ]);
+            abort(403);
         }
 
         try {

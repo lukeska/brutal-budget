@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Data\Transformers\IntToCurrencyTransformer;
 use App\Models\Category;
+use App\Rules\MaxCategoriesPerTeam;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Momentum\Lock\Data\DataResource;
@@ -30,6 +31,7 @@ class CategoryRequest extends DataResource
             'name' => [
                 'max:50',
                 'required',
+                new MaxCategoriesPerTeam(),
             ],
             'icon' => ['required'],
             'hex' => [

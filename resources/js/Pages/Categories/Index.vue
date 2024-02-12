@@ -13,6 +13,7 @@ const categoryStore = useCategoryStore();
 let props = defineProps<{
     categories: App.Data.CategoryData[];
     totals: App.Data.CategoryTotalData[];
+    canCreate: boolean;
 }>();
 
 const page = usePage();
@@ -42,7 +43,11 @@ const getTotalByCategory = (categoryId: number): number => {
         <template #header>
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">Categories</h2>
-                <SecondaryButton @click.prevent="categoryStore.showSidebar()">Add category</SecondaryButton>
+                <SecondaryButton
+                    v-if="props.canCreate"
+                    @click.prevent="categoryStore.showSidebar()"
+                    >Add category</SecondaryButton
+                >
             </div>
         </template>
 

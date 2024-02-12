@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Category;
 use App\Models\Expense;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -66,6 +67,42 @@ class UserRolesTest extends TestCase
 
         $this->followingRedirects()
             ->delete(route('expenses.delete', $this->expense), $this->expense->toArray())
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cannot_create_categories_as_an_editor()
+    {
+        $this->actingAs($this->editor);
+
+        $attributes = Category::factory()->raw();
+
+        $this->followingRedirects()
+            ->put(route('categories.create'), $attributes)
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cannot_edit_categories_as_an_editor()
+    {
+        $this->actingAs($this->editor);
+
+        $category = $this->editor->currentTeam->categories()->first();
+
+        $this->followingRedirects()
+            ->patch(route('categories.update', ['category' => $category->id]), ['name' => 'My test category', 'icon' => $category->icon, 'hex' => $category->hex])
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cannot_delete_categories_as_an_editor()
+    {
+        $this->actingAs($this->editor);
+
+        $category = $this->editor->currentTeam->categories()->first();
+
+        $this->followingRedirects()
+            ->delete(route('categories.delete', ['category' => $category->id]))
             ->assertStatus(403);
     }
 }

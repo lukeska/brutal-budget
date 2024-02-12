@@ -42,7 +42,7 @@ class ExpensePolicy
             // owner of the team can edit the expense
             || $user->ownsTeam($expense->team)
             // admin of the team can edit the expense
-            || ($user->belongsToTeam($expense->team) && $user->hasTeamRole($expense->team, 'admin'))) {
+            || $user->hasTeamRole($expense->team, 'admin')) {
 
             return true;
         }
@@ -61,7 +61,7 @@ class ExpensePolicy
             // owner of the team can edit the expense
             || $user->ownsTeam($expense->team)
             // admin of the team can edit the expense
-            || ($user->belongsToTeam($expense->team) && $user->hasTeamRole($expense->team, 'admin'))) {
+            || $user->hasTeamRole($expense->team, 'admin')) {
 
             return true;
         }

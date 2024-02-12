@@ -154,7 +154,7 @@ class CategoryTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('errors')
-                ->where('errors.limit', 'You reach the limit of categories this team can have.')
+                ->where('errors.name', 'You reach the limit of categories this team can have.')
             );
     }
 }
