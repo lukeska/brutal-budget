@@ -24,8 +24,6 @@ class ExpenseController extends Controller
 
     public function index($year = null, $month = null)
     {
-        $expensesView = Request::get('view') == 'daily' ? 'daily' : 'categories';
-
         $regularExpenses = null;
         if (Request::has('type')) {
             $regularExpenses = Request::get('type') == 'regular'
@@ -48,7 +46,6 @@ class ExpenseController extends Controller
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
             monthlyTotals: $this->monthlyTotalsRepository->getAll(Auth::user()->currentTeam->id, $year, $month, $regularExpenses),
-            expensesView: $expensesView,
         ));
     }
 

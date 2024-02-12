@@ -12,7 +12,6 @@ class ExpensesIndexPage extends Data
         public DataCollection $expenses,
         /** @var DataCollection<MonthlyTotalData> */
         public DataCollection $monthlyTotals,
-        public string $expensesView,
     ) {
     }
 }

@@ -4,7 +4,7 @@ import { useExpenseStore } from "@/Stores/ExpenseStore";
 import CategoryMonthlyTotalItem from "@/Pages/Expenses/Partials/CategoryMonthlyTotalItem.vue";
 import ExpensesTotals from "@/Pages/Expenses/Partials/ExpensesTotals.vue";
 import ExpenseTypeDropdown from "@/Pages/Expenses/Partials/ExpenseTypeDropdown.vue";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import ViewSelector from "@/Pages/Expenses/Partials/ViewSelector.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
@@ -15,8 +15,9 @@ const page = usePage();
 let props = defineProps<{
     expenses: App.Data.ExpenseData[];
     monthlyTotals: App.Data.MonthlyTotalData[];
-    expensesView: string;
 }>();
+
+const expensesView = ref(localStorage.getItem("expensesView") || "categories");
 
 const findTotalsByCategoryId = (categoryId: number) => {
     return props.monthlyTotals.map((item) => {
@@ -59,6 +60,11 @@ onMounted(() => {
             });
         });
 });
+
+const setExpensesView = (value) => {
+    expensesView.value = value;
+    localStorage.setItem("expensesView", value);
+};
 </script>
 
 <template>
@@ -69,7 +75,9 @@ onMounted(() => {
 
                 <div class="justify-end-center flex flex-col items-end space-y-1 sm:flex-row sm:space-x-4">
                     <div>
-                        <ViewSelector :expenses-view="expensesView" />
+                        <ViewSelector
+                            :expenses-view="expensesView"
+                            @updated="setExpensesView" />
                     </div>
                     <div>
                         <ExpenseTypeDropdown />
