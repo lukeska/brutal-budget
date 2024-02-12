@@ -55,7 +55,18 @@ class ExpensePolicy
      */
     public function delete(User $user, Expense $expense): bool
     {
-        return true;
+        if (
+            // owner of the expense can edit it
+            $user->id === $expense->user_id
+            // owner of the team can edit the expense
+            || $user->ownsTeam($expense->team)
+            // admin of the team can edit the expense
+            || ($user->belongsToTeam($expense->team) && $user->hasTeamRole($expense->team, 'admin'))) {
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

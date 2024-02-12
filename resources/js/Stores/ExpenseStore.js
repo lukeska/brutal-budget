@@ -32,9 +32,6 @@ export const useExpenseStore = defineStore("ExpenseStore", {
                     notes: null,
                     category: category ? category : page.props.categories[0],
                     is_regular: true,
-                    permissions: {
-                        update: true,
-                    },
                 };
             } else {
                 this.expense = expense;

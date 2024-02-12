@@ -109,9 +109,9 @@ class ExpenseController extends Controller
 
     public function delete(Expense $expense)
     {
-        /*if (Auth::user()->cannot('delete', $expense)) {
+        if (! Request::user()->can('delete', $expense)) {
             abort(403);
-        }*/
+        }
 
         $expense->delete();
 
