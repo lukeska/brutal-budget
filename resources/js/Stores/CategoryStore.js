@@ -4,7 +4,13 @@ export const useCategoryStore = defineStore("CategoryStore", {
     state: () => {
         return {
             sidebarOpen: false,
-            category: null,
+            category: {
+                id: null,
+                name: null,
+                icon: "IconReceipt2",
+                hex: "#fca5a5",
+                permissions: { delete: true },
+            },
         };
     },
     getters: {
