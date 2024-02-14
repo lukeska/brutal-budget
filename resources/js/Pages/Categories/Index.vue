@@ -78,7 +78,11 @@ const getTotalByCategory = (categoryId: number): number => {
                             </div>
                             <div class="inline-flex items-center justify-center">
                                 <span class="text-lg font-semibold">
-                                    {{ parseInt((getTotalByCategory(category.id) * 100) / grandTotal) }}%
+                                    {{
+                                        grandTotal == 0
+                                            ? "0"
+                                            : parseInt((getTotalByCategory(category.id) * 100) / grandTotal)
+                                    }}%
                                 </span>
                             </div>
                         </div>

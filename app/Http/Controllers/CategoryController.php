@@ -38,7 +38,7 @@ class CategoryController extends Controller
         try {
             $category = CategoryRequest::validate(Request::all());
         } catch (ValidationException $e) {
-            return redirect(route('categories.index'))->withErrors($e->errors());
+            return back()->withErrors($e->errors());
         }
 
         $category = Auth::user()->currentTeam->categories()->create($category);

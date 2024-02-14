@@ -47,7 +47,7 @@ const initDonut = () => {
             ],
         },
         options: {
-            spacing: 3,
+            spacing: 1,
             plugins: {
                 tooltip: {
                     callbacks: {
