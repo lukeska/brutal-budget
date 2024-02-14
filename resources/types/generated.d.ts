@@ -46,7 +46,6 @@ months: number;
 export type ExpensesIndexPage = {
 expenses: Array<App.Data.ExpenseData>;
 monthlyTotals: Array<App.Data.MonthlyTotalData>;
-expensesView: string;
 };
 export type MonthlyTotalData = {
 total: number;

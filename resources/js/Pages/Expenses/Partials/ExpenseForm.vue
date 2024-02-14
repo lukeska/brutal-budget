@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, onMounted, ref, watchEffect } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import CategoryLabel from "@/Pages/Categories/Partials/CategoryLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -20,6 +20,7 @@ import {
     IconCirclePlus,
 } from "@tabler/icons-vue";
 import CategoryForm from "@/Pages/Categories/Partials/CategoryForm.vue";
+import { useCategoryStore } from "@/Stores/CategoryStore";
 
 const emit = defineEmits<{
     created: [];
@@ -29,12 +30,12 @@ const emit = defineEmits<{
 }>();
 
 const expenseStore = useExpenseStore();
+const categoryStore = useCategoryStore();
 
 const page = usePage();
 
 const showAdvancedOptions = ref(false);
 const showMultipleExpensesOptions = ref(false);
-const showCategoryForm = ref(false);
 
 const categories = computed(() => page.props.categories);
 const projects = computed(() => {
@@ -111,8 +112,13 @@ const canUpdate = computed((): boolean => {
         return true;
     }
 
-    return expenseStore.expense.permissions.update;
+    return expenseStore.expense.permissions?.update;
 });
+
+const selectNewCategory = (category: App.Data.CategoryData) => {
+    categoryStore.hideSidebar();
+    selectCategory(category.id);
+};
 
 const selectCategory = (categoryId: number) => {
     form.category_id = categoryId;
@@ -124,10 +130,14 @@ const selectedProject = ref(projects.value.find((item) => item.id === form.proje
 watchEffect(() => {
     form.project_id = selectedProject.value?.id || null;
 });
+
+onMounted(() => {
+    categoryStore.hideSidebar();
+});
 </script>
 
 <template>
-    <div class="relative h-full">
+    <div class="relative h-full overflow-x-hidden">
         <form
             class="relative flex h-full flex-col"
             @keydown.enter.prevent="submit(expenseStore.isNewExpense ? 'create' : 'update')">
@@ -191,10 +201,10 @@ watchEffect(() => {
                                     </button>
                                 </template>
                                 <button
-                                    @click.prevent="showCategoryForm = true"
+                                    @click.prevent="categoryStore.showSidebar(null)"
                                     class="inline-flex flex-col items-center rounded bg-gray-100 px-2 py-1.5 text-sm text-gray-400">
                                     <IconCirclePlus :size="32" />
-                                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">Add category</div>
+                                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">Add new</div>
                                 </button>
                             </div>
                         </div>
@@ -409,19 +419,31 @@ watchEffect(() => {
                 </div>
             </div>
         </form>
-        <div :class="[showCategoryForm ? '' : 'translate-x-full', 'absolute inset-0 bg-white transition duration-300']">
-            <div class="relative h-full">
-                <div class="absolute z-10 flex h-16 w-full items-center space-x-2 border-b">
-                    <button
-                        @click.prevent="showCategoryForm = false"
-                        class="p-2">
-                        <IconArrowLeft />
-                    </button>
-                    <div class="font-semibold">Add new category</div>
-                </div>
+        <Transition
+            enter-from-class="translate-x-full"
+            enter-active-class="transition duration-300"
+            enter-to-class="translate-x-0"
+            leave-from-class="translate-x-0"
+            leave-active-class="transition duration-300"
+            leave-to-class="translate-x-full">
+            <div
+                v-if="categoryStore.isSidebarOpen"
+                class="absolute inset-0 bg-white">
+                <div class="relative h-full">
+                    <div class="absolute z-10 flex h-16 w-full items-center space-x-2 border-b">
+                        <button
+                            @click.prevent="categoryStore.hideSidebar()"
+                            class="p-2">
+                            <IconArrowLeft />
+                        </button>
+                        <div class="font-semibold">Add new category</div>
+                    </div>
 
-                <CategoryForm class="pt-16" />
+                    <CategoryForm
+                        class="pt-16"
+                        @created="selectNewCategory" />
+                </div>
             </div>
-        </div>
+        </Transition>
     </div>
 </template>

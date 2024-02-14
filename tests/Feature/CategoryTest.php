@@ -24,6 +24,9 @@ class CategoryTest extends TestCase
             'name' => 'AAA My test category',
         ])->raw();
 
+        $this->get(route('categories.index'))
+            ->assertOk();
+
         $this->followingRedirects()
             ->put(route('categories.create'), $attributes)
             ->assertOk()

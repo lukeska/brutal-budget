@@ -23,7 +23,7 @@ class CategoryController extends Controller
     public function index()
     {
         return Inertia::render('Categories/Index', [
-            'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->current_team_id)),
+            'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->currentTeam->id)),
             'totals' => $this->monthlyTotalsRepository->getCategoriesTotals(Auth::user()->current_team_id),
             'canCreate' => Request::user()->can('create', Category::class),
         ]);
@@ -41,12 +41,12 @@ class CategoryController extends Controller
             return redirect(route('categories.index'))->withErrors($e->errors());
         }
 
-        Auth::user()->currentTeam->categories()->create($category);
+        $category = Auth::user()->currentTeam->categories()->create($category);
 
         Request::session()->flash('message', 'Category created correctly');
-        Request::session()->flash('category', CategoryData::from($category));
+        Request::session()->flash('category', CategoryRequest::from($category));
 
-        return redirect(route('categories.index'));
+        return back();
     }
 
     public function update(Category $category, CategoryRequest $data)

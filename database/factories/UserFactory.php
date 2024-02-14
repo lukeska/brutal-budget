@@ -56,7 +56,6 @@ class UserFactory extends Factory
 
         return $this->has(
             Team::factory()
-                /** @phpstan-ignore-next-line */
                 ->state(fn (array $attributes, User $user) => [
                     'name' => $user->name.'\'s Team',
                     'user_id' => $user->id,

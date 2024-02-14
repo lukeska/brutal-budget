@@ -15,6 +15,7 @@ export const useCategoryStore = defineStore("CategoryStore", {
     },
     getters: {
         isNewCategory: (state) => state.category.id == null,
+        isSidebarOpen: (state) => state.sidebarOpen,
     },
     actions: {
         showSidebar(category) {

@@ -2,16 +2,13 @@
 
 namespace App\Data;
 
-use App\Data\Transformers\IntToCurrencyTransformer;
 use App\Models\Category;
 use App\Rules\MaxCategoriesPerTeam;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 use Momentum\Lock\Data\DataResource;
-use Spatie\LaravelData\Attributes\MapName;
-use Spatie\LaravelData\Attributes\WithTransformer;
 use Spatie\LaravelData\Optional;
-use Illuminate\Support\Facades\Route;
 
 class CategoryRequest extends DataResource
 {

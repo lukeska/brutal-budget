@@ -4,7 +4,6 @@ import { useForm, usePage } from "@inertiajs/vue3";
 import { IconTrash } from "@tabler/icons-vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { iconComponents } from "@/Pages/Categories/Partials/CategoryIcons.js";
-import { ListboxOption } from "@headlessui/vue";
 import { computed } from "vue";
 
 const emit = defineEmits<{
@@ -44,7 +43,9 @@ const submit = (action: String) => {
                 // This will avoid creating multiple expenses if the user clicks "create" again before the form closes
                 categoryStore.category = page.props.flash.category;
 
-                emit("created");
+                emit("created", page.props.flash.category);
+
+                form.reset();
             },
         });
     } else if (action === "delete") {
@@ -62,7 +63,15 @@ const canUpdate = computed((): boolean => {
         return true;
     }
 
-    return categoryStore.category.permissions.update;
+    return categoryStore.category.permissions?.update;
+});
+
+const canDelete = computed((): boolean => {
+    if (categoryStore.isNewCategory) {
+        return true;
+    }
+
+    return categoryStore.category.permissions?.delete;
 });
 
 const selectIcon = (icon: string, hex: string) => {
@@ -151,7 +160,7 @@ const selectIcon = (icon: string, hex: string) => {
                     type="submit"
                     class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow disabled:opacity-50"
                     @click.prevent="categoryStore.isNewCategory ? emit('cancel') : submit('delete')"
-                    :disabled="form.processing || !categoryStore.category.permissions.delete">
+                    :disabled="form.processing || !canDelete">
                     <IconTrash />
                 </button>
             </div>
