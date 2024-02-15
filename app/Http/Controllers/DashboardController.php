@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         return Inertia::render('Dashboard', [
             'monthlyTotals' => $this->monthlyTotalsRepository->getAll(
-                teamId: Auth::user()->current_team_id,
+                teamId: Auth::user()->currentTeam->id,
                 year: $currentDate->year,
                 month: $currentDate->month,
                 previousMonthsOffset: 4,

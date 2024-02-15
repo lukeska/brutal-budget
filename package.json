@@ -6,7 +6,8 @@
         "build-full": "run-p format lint && vite build",
         "build": "vite build",
         "format": "prettier \"resources/**/*.{js,ts,vue}\" --write",
-        "lint": "eslint \"resources/**/*.{js,ts,vue}\" --fix"
+        "lint": "eslint \"resources/**/*.{js,ts,vue}\" --fix",
+        "cypress:open": "cypress open"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",
@@ -17,6 +18,7 @@
         "@vitejs/plugin-vue": "^4.0.0",
         "autoprefixer": "^10.4.7",
         "axios": "^1.1.2",
+        "cypress": "^13.6.4",
         "eslint": "^8.54.0",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-config-prettier": "^9.0.0",

@@ -1,0 +1,831 @@
+{
+  "debugbar.openhandler": {
+    "name": "debugbar.openhandler",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@handle",
+    "uri": "_debugbar/open",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.clockwork": {
+    "name": "debugbar.clockwork",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@clockwork",
+    "uri": "_debugbar/clockwork/{id}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.assets.css": {
+    "name": "debugbar.assets.css",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@css",
+    "uri": "_debugbar/assets/stylesheets",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.assets.js": {
+    "name": "debugbar.assets.js",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@js",
+    "uri": "_debugbar/assets/javascript",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "debugbar.cache.delete": {
+    "name": "debugbar.cache.delete",
+    "domain": null,
+    "action": "Barryvdh\\Debugbar\\Controllers\\CacheController@delete",
+    "uri": "_debugbar/cache/{key}/{tags?}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "cypress.factory": {
+    "name": "cypress.factory",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@factory",
+    "uri": "__cypress__/factory",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.login": {
+    "name": "cypress.login",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@login",
+    "uri": "__cypress__/login",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.logout": {
+    "name": "cypress.logout",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@logout",
+    "uri": "__cypress__/logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.artisan": {
+    "name": "cypress.artisan",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@artisan",
+    "uri": "__cypress__/artisan",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.run-php": {
+    "name": "cypress.run-php",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@runPhp",
+    "uri": "__cypress__/run-php",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.csrf-token": {
+    "name": "cypress.csrf-token",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@csrfToken",
+    "uri": "__cypress__/csrf_token",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "cypress.routes": {
+    "name": "cypress.routes",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@routes",
+    "uri": "__cypress__/routes",
+    "method": [
+      "POST"
+    ]
+  },
+  "cypress.current-user": {
+    "name": "cypress.current-user",
+    "domain": null,
+    "action": "Laracasts\\Cypress\\Controllers\\CypressController@currentUser",
+    "uri": "__cypress__/current-user",
+    "method": [
+      "POST"
+    ]
+  },
+  "login": {
+    "name": "login",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@create",
+    "uri": "login",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "generated::rSkabWEd5WeCO7Qk": {
+    "name": "generated::rSkabWEd5WeCO7Qk",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@store",
+    "uri": "login",
+    "method": [
+      "POST"
+    ]
+  },
+  "logout": {
+    "name": "logout",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@destroy",
+    "uri": "logout",
+    "method": [
+      "POST"
+    ]
+  },
+  "password.request": {
+    "name": "password.request",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\PasswordResetLinkController@create",
+    "uri": "forgot-password",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.reset": {
+    "name": "password.reset",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\NewPasswordController@create",
+    "uri": "reset-password/{token}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.email": {
+    "name": "password.email",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\PasswordResetLinkController@store",
+    "uri": "forgot-password",
+    "method": [
+      "POST"
+    ]
+  },
+  "password.update": {
+    "name": "password.update",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\NewPasswordController@store",
+    "uri": "reset-password",
+    "method": [
+      "POST"
+    ]
+  },
+  "register": {
+    "name": "register",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RegisteredUserController@create",
+    "uri": "register",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "generated::d5ZGRlHGO3tt5AqS": {
+    "name": "generated::d5ZGRlHGO3tt5AqS",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RegisteredUserController@store",
+    "uri": "register",
+    "method": [
+      "POST"
+    ]
+  },
+  "user-profile-information.update": {
+    "name": "user-profile-information.update",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ProfileInformationController@update",
+    "uri": "user/profile-information",
+    "method": [
+      "PUT"
+    ]
+  },
+  "user-password.update": {
+    "name": "user-password.update",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\PasswordController@update",
+    "uri": "user/password",
+    "method": [
+      "PUT"
+    ]
+  },
+  "generated::5HSzbF4SWau8YiNI": {
+    "name": "generated::5HSzbF4SWau8YiNI",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmablePasswordController@show",
+    "uri": "user/confirm-password",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.confirmation": {
+    "name": "password.confirmation",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmedPasswordStatusController@show",
+    "uri": "user/confirmed-password-status",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "password.confirm": {
+    "name": "password.confirm",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmablePasswordController@store",
+    "uri": "user/confirm-password",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.login": {
+    "name": "two-factor.login",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticatedSessionController@create",
+    "uri": "two-factor-challenge",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "generated::l5bhIVYsBhAFTPOT": {
+    "name": "generated::l5bhIVYsBhAFTPOT",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticatedSessionController@store",
+    "uri": "two-factor-challenge",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.enable": {
+    "name": "two-factor.enable",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticationController@store",
+    "uri": "user/two-factor-authentication",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.confirm": {
+    "name": "two-factor.confirm",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmedTwoFactorAuthenticationController@store",
+    "uri": "user/confirmed-two-factor-authentication",
+    "method": [
+      "POST"
+    ]
+  },
+  "two-factor.disable": {
+    "name": "two-factor.disable",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticationController@destroy",
+    "uri": "user/two-factor-authentication",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "two-factor.qr-code": {
+    "name": "two-factor.qr-code",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorQrCodeController@show",
+    "uri": "user/two-factor-qr-code",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "two-factor.secret-key": {
+    "name": "two-factor.secret-key",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorSecretKeyController@show",
+    "uri": "user/two-factor-secret-key",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "two-factor.recovery-codes": {
+    "name": "two-factor.recovery-codes",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RecoveryCodeController@index",
+    "uri": "user/two-factor-recovery-codes",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "generated::P6bWhZVUwU07cO6C": {
+    "name": "generated::P6bWhZVUwU07cO6C",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RecoveryCodeController@store",
+    "uri": "user/two-factor-recovery-codes",
+    "method": [
+      "POST"
+    ]
+  },
+  "profile.show": {
+    "name": "profile.show",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\UserProfileController@show",
+    "uri": "user/profile",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "other-browser-sessions.destroy": {
+    "name": "other-browser-sessions.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\OtherBrowserSessionsController@destroy",
+    "uri": "user/other-browser-sessions",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "current-user-photo.destroy": {
+    "name": "current-user-photo.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\ProfilePhotoController@destroy",
+    "uri": "user/profile-photo",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "current-user.destroy": {
+    "name": "current-user.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\CurrentUserController@destroy",
+    "uri": "user",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "teams.create": {
+    "name": "teams.create",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamController@create",
+    "uri": "teams/create",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "teams.store": {
+    "name": "teams.store",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamController@store",
+    "uri": "teams",
+    "method": [
+      "POST"
+    ]
+  },
+  "teams.show": {
+    "name": "teams.show",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamController@show",
+    "uri": "teams/{team}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "teams.update": {
+    "name": "teams.update",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamController@update",
+    "uri": "teams/{team}",
+    "method": [
+      "PUT"
+    ]
+  },
+  "teams.destroy": {
+    "name": "teams.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamController@destroy",
+    "uri": "teams/{team}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "current-team.update": {
+    "name": "current-team.update",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\CurrentTeamController@update",
+    "uri": "current-team",
+    "method": [
+      "PUT"
+    ]
+  },
+  "team-members.store": {
+    "name": "team-members.store",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamMemberController@store",
+    "uri": "teams/{team}/members",
+    "method": [
+      "POST"
+    ]
+  },
+  "team-members.update": {
+    "name": "team-members.update",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamMemberController@update",
+    "uri": "teams/{team}/members/{user}",
+    "method": [
+      "PUT"
+    ]
+  },
+  "team-members.destroy": {
+    "name": "team-members.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\Inertia\\TeamMemberController@destroy",
+    "uri": "teams/{team}/members/{user}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "team-invitations.accept": {
+    "name": "team-invitations.accept",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\TeamInvitationController@accept",
+    "uri": "team-invitations/{invitation}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "team-invitations.destroy": {
+    "name": "team-invitations.destroy",
+    "domain": null,
+    "action": "Laravel\\Jetstream\\Http\\Controllers\\TeamInvitationController@destroy",
+    "uri": "team-invitations/{invitation}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "pulse": {
+    "name": "pulse",
+    "domain": null,
+    "action": "Closure",
+    "uri": "pulse",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "sanctum.csrf-cookie": {
+    "name": "sanctum.csrf-cookie",
+    "domain": null,
+    "action": "Laravel\\Sanctum\\Http\\Controllers\\CsrfCookieController@show",
+    "uri": "sanctum/csrf-cookie",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "livewire.update": {
+    "name": "livewire.update",
+    "domain": null,
+    "action": "Livewire\\Mechanisms\\HandleRequests\\HandleRequests@handleUpdate",
+    "uri": "livewire/update",
+    "method": [
+      "POST"
+    ]
+  },
+  "generated::xZxsw38syGMqJ75l": {
+    "name": "generated::xZxsw38syGMqJ75l",
+    "domain": null,
+    "action": "Livewire\\Mechanisms\\FrontendAssets\\FrontendAssets@returnJavaScriptAsFile",
+    "uri": "livewire/livewire.js",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "livewire.upload-file": {
+    "name": "livewire.upload-file",
+    "domain": null,
+    "action": "Livewire\\Features\\SupportFileUploads\\FileUploadController@handle",
+    "uri": "livewire/upload-file",
+    "method": [
+      "POST"
+    ]
+  },
+  "livewire.preview-file": {
+    "name": "livewire.preview-file",
+    "domain": null,
+    "action": "Livewire\\Features\\SupportFileUploads\\FilePreviewController@handle",
+    "uri": "livewire/preview-file/{filename}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "laravelpwa.manifest": {
+    "name": "laravelpwa.manifest",
+    "domain": null,
+    "action": "LaravelPWA\\Http\\Controllers\\LaravelPWAController@manifestJson",
+    "uri": "manifest.json",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "laravelpwa.": {
+    "name": "laravelpwa.",
+    "domain": null,
+    "action": "LaravelPWA\\Http\\Controllers\\LaravelPWAController@offline",
+    "uri": "offline",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "ignition.healthCheck": {
+    "name": "ignition.healthCheck",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\HealthCheckController",
+    "uri": "_ignition/health-check",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "ignition.executeSolution": {
+    "name": "ignition.executeSolution",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\ExecuteSolutionController",
+    "uri": "_ignition/execute-solution",
+    "method": [
+      "POST"
+    ]
+  },
+  "ignition.updateConfig": {
+    "name": "ignition.updateConfig",
+    "domain": null,
+    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\UpdateConfigController",
+    "uri": "_ignition/update-config",
+    "method": [
+      "POST"
+    ]
+  },
+  "generated::NOSKT0eISvWhru0I": {
+    "name": "generated::NOSKT0eISvWhru0I",
+    "domain": null,
+    "action": "\\Illuminate\\Broadcasting\\BroadcastController@authenticate",
+    "uri": "broadcasting/auth",
+    "method": [
+      "GET",
+      "POST",
+      "HEAD"
+    ]
+  },
+  "generated::M7riErijnCbNd2Rc": {
+    "name": "generated::M7riErijnCbNd2Rc",
+    "domain": null,
+    "action": "Closure",
+    "uri": "api/user",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "generated::mwOj8kW2EWbHcwyK": {
+    "name": "generated::mwOj8kW2EWbHcwyK",
+    "domain": null,
+    "action": "Closure",
+    "uri": "/",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "dashboard": {
+    "name": "dashboard",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\DashboardController@index",
+    "uri": "dashboard/{year?}/{month?}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "categories.index": {
+    "name": "categories.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CategoryController@index",
+    "uri": "categories",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "categories.update": {
+    "name": "categories.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CategoryController@update",
+    "uri": "categories/{category}",
+    "method": [
+      "PATCH"
+    ]
+  },
+  "categories.delete": {
+    "name": "categories.delete",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CategoryController@delete",
+    "uri": "categories/{category}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "categories.create": {
+    "name": "categories.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CategoryController@create",
+    "uri": "categories/create",
+    "method": [
+      "PUT"
+    ]
+  },
+  "categories.update-icon": {
+    "name": "categories.update-icon",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CategoryController@updateIcon",
+    "uri": "categories/{category}/icon",
+    "method": [
+      "POST"
+    ]
+  },
+  "projects.index": {
+    "name": "projects.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ProjectController@index",
+    "uri": "projects",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "projects.show": {
+    "name": "projects.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ProjectController@show",
+    "uri": "projects/{project}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "projects.update": {
+    "name": "projects.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ProjectController@update",
+    "uri": "projects/{project}",
+    "method": [
+      "PATCH"
+    ]
+  },
+  "projects.delete": {
+    "name": "projects.delete",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ProjectController@delete",
+    "uri": "projects/{project}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "projects.create": {
+    "name": "projects.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ProjectController@create",
+    "uri": "projects/create",
+    "method": [
+      "PUT"
+    ]
+  },
+  "projects.update-hex": {
+    "name": "projects.update-hex",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ProjectController@updateHex",
+    "uri": "projects/{project}/hex",
+    "method": [
+      "POST"
+    ]
+  },
+  "expenses.index": {
+    "name": "expenses.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ExpenseController@index",
+    "uri": "expenses/{year?}/{month?}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "expenses.create": {
+    "name": "expenses.create",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ExpenseController@create",
+    "uri": "expenses/create",
+    "method": [
+      "PUT"
+    ]
+  },
+  "expenses.update": {
+    "name": "expenses.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ExpenseController@update",
+    "uri": "expenses/{expense}",
+    "method": [
+      "PATCH"
+    ]
+  },
+  "expenses.delete": {
+    "name": "expenses.delete",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ExpenseController@delete",
+    "uri": "expenses/{expense}",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "expense.show": {
+    "name": "expense.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\ExpenseController@show",
+    "uri": "expense/{expense}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "user-settings.show": {
+    "name": "user-settings.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserSettingsController@show",
+    "uri": "user/settings",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "user-settings.update": {
+    "name": "user-settings.update",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserSettingsController@update",
+    "uri": "user/settings",
+    "method": [
+      "PATCH"
+    ]
+  },
+  "user-push-settings.subscribed": {
+    "name": "user-push-settings.subscribed",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserPushSettingsController@subscribed",
+    "uri": "user/settings/push-subscribed",
+    "method": [
+      "POST"
+    ]
+  },
+  "user-push-settings.subscribe": {
+    "name": "user-push-settings.subscribe",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserPushSettingsController@subscribe",
+    "uri": "user/settings/push-subscribe",
+    "method": [
+      "POST"
+    ]
+  },
+  "user-push-settings.unsubscribe": {
+    "name": "user-push-settings.unsubscribe",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserPushSettingsController@unsubscribe",
+    "uri": "user/settings/push-unsubscribe",
+    "method": [
+      "DELETE"
+    ]
+  },
+  "user-push-settings.push-test": {
+    "name": "user-push-settings.push-test",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserPushSettingsController@pushTest",
+    "uri": "user/settings/push-test",
+    "method": [
+      "POST"
+    ]
+  }
+}

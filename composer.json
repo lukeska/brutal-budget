@@ -30,6 +30,7 @@
         "barryvdh/laravel-debugbar": "^3.9",
         "brianium/paratest": "^7.3",
         "fakerphp/faker": "^1.9.1",
+        "laracasts/cypress": "^3.0",
         "larastan/larastan": "^2.8",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
