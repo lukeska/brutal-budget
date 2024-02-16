@@ -4,7 +4,7 @@ export interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-    buttonType: "submit",
+    type: "submit",
 });
 </script>
 

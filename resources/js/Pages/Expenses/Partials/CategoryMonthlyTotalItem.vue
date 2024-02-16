@@ -81,7 +81,8 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
             </div>
             <button
                 class="absolute inset-0 z-0 h-full w-full"
-                @click.prevent="showExpenses = !showExpenses"></button>
+                @click.prevent="showExpenses = !showExpenses"
+                data-cy="expand-category-expenses-button"></button>
         </div>
 
         <div

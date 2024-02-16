@@ -173,7 +173,8 @@ onMounted(() => {
                                 type="button"
                                 @click.prevent="showCategoryList = !showCategoryList"
                                 class="flex h-10 w-10 items-center justify-center rounded p-1.5 text-white"
-                                :style="'background-color:' + categoryById.hex">
+                                :style="'background-color:' + categoryById.hex"
+                                data-cy="open-category-list-button">
                                 <CategoryIcon :category="categoryById" />
                             </button>
                         </div>
@@ -196,7 +197,8 @@ onMounted(() => {
                                     :key="category.id">
                                     <button
                                         class="inline-block rounded text-sm"
-                                        @click.prevent="selectCategory(category.id)">
+                                        @click.prevent="selectCategory(category.id)"
+                                        data-cy="select-category-button">
                                         <CategoryLabel :category="category" />
                                     </button>
                                 </template>
@@ -358,7 +360,8 @@ onMounted(() => {
                                 expenseStore.isNewExpense ? 'rounded-l-md rounded-r-none' : 'rounded-md',
                                 'h-10 flex-1  bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500',
                             ]"
-                            :disabled="form.processing">
+                            :disabled="form.processing"
+                            data-cy="save-expense-button">
                             <span class="mx-auto">
                                 {{
                                     !expenseStore.isNewExpense
@@ -413,7 +416,8 @@ onMounted(() => {
                         type="submit"
                         class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow disabled:opacity-50"
                         @click.prevent="expenseStore.isNewExpense ? emit('cancel') : submit('delete')"
-                        :disabled="form.processing">
+                        :disabled="form.processing"
+                        data-cy="delete-expense-button">
                         <IconTrash />
                     </button>
                 </div>

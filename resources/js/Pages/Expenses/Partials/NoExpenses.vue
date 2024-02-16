@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { IconChartDonut4 } from "@tabler/icons-vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { useExpenseStore } from "@/Stores/ExpenseStore";
-
-const expenseStore = useExpenseStore();
+import ExpenseAddButton from "@/Pages/Expenses/Partials/ExpenseAddButton.vue";
 </script>
 
 <template>
@@ -15,7 +12,7 @@ const expenseStore = useExpenseStore();
             <p class="mb-3">
                 No expenses yet. Go ahead, click the button below and try the thrill of logging your first expense.
             </p>
-            <PrimaryButton @click.prevent="expenseStore.showSidebar()">+ expense</PrimaryButton>
+            <ExpenseAddButton />
         </div>
     </div>
 </template>
