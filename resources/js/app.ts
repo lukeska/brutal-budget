@@ -7,6 +7,7 @@ import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
 import * as Sentry from "@sentry/vue";
+import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 const pinia = createPinia();
@@ -24,7 +25,7 @@ createInertiaApp({
             logErrors: true,
         });
 
-        vm.use(pinia).use(plugin).use(ZiggyVue).mount(el);
+        vm.use(pinia).use(autoAnimatePlugin).use(plugin).use(ZiggyVue).mount(el);
 
         return vm;
     },

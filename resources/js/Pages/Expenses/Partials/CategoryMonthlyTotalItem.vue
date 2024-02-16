@@ -85,64 +85,68 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                 data-cy="expand-category-expenses-button"></button>
         </div>
 
-        <div
-            v-if="showExpenses"
-            class="divide-y">
-            <div class="flex divide-x bg-white">
-                <template
-                    v-for="monthlyTotal in monthlyTotals"
-                    :key="monthlyTotal.yearMonth">
-                    <div class="flex-1 p-2 first:hidden last:hidden md:first:block md:last:block">
-                        <div class="mb-2 flex justify-between text-xs text-gray-400">
-                            <div>{{ getDate(monthlyTotal.yearMonth).format("MMM YY") }}</div>
-                            <template v-if="monthlyTotal.categoryMonthlyTotals[0]">
-                                <div
-                                    :class="[
-                                        monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount > 0 ||
-                                        monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount == null
-                                            ? 'text-red-500'
-                                            : 'text-green-500',
-                                    ]">
-                                    <span
-                                        v-if="
+        <div v-auto-animate>
+            <div
+                v-if="showExpenses"
+                class="divide-y">
+                <div class="flex divide-x bg-white">
+                    <template
+                        v-for="monthlyTotal in monthlyTotals"
+                        :key="monthlyTotal.id">
+                        <div class="flex-1 p-2 first:hidden last:hidden md:first:block md:last:block">
+                            <div class="mb-2 flex justify-between text-xs text-gray-400">
+                                <div>{{ getDate(monthlyTotal.yearMonth).format("MMM YY") }}</div>
+                                <template v-if="monthlyTotal.categoryMonthlyTotals[0]">
+                                    <div
+                                        :class="[
                                             monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount > 0 ||
                                             monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount == null
-                                        "
-                                        >+</span
-                                    >
+                                                ? 'text-red-500'
+                                                : 'text-green-500',
+                                        ]">
+                                        <span
+                                            v-if="
+                                                monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount >
+                                                    0 ||
+                                                monthlyTotal.categoryMonthlyTotals[0]?.previous_month_delta_amount ==
+                                                    null
+                                            "
+                                            >+</span
+                                        >
 
-                                    {{
-                                        currencyFormatter.format(
-                                            monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
-                                                ? monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
-                                                : monthlyTotal.categoryMonthlyTotals[0].amount,
-                                        )
-                                    }}
-                                </div>
-                            </template>
-                        </div>
-                        <div class="font-mono">
-                            <span v-if="monthlyTotal.categoryMonthlyTotals.length > 0">
-                                {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].amount) }}
-                            </span>
-                            <span v-else>-</span>
-                        </div>
-                    </div>
-                </template>
-            </div>
-            <button
-                v-for="expense in expenses"
-                :key="expense.id"
-                @click.prevent="expenseStore.showSidebar(expense)"
-                class="w-full bg-white">
-                <ExpenseItem :expense="expense">
-                    <template v-slot:prefix>
-                        <div class="text-sm">
-                            {{ expense.date }}
+                                        {{
+                                            currencyFormatter.format(
+                                                monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
+                                                    ? monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
+                                                    : monthlyTotal.categoryMonthlyTotals[0].amount,
+                                            )
+                                        }}
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="font-mono">
+                                <span v-if="monthlyTotal.categoryMonthlyTotals.length > 0">
+                                    {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].amount) }}
+                                </span>
+                                <span v-else>-</span>
+                            </div>
                         </div>
                     </template>
-                </ExpenseItem>
-            </button>
+                </div>
+                <button
+                    v-for="expense in expenses"
+                    :key="expense.id"
+                    @click.prevent="expenseStore.showSidebar(expense)"
+                    class="w-full bg-white">
+                    <ExpenseItem :expense="expense">
+                        <template v-slot:prefix>
+                            <div class="text-sm">
+                                {{ expense.date }}
+                            </div>
+                        </template>
+                    </ExpenseItem>
+                </button>
+            </div>
         </div>
     </div>
 </template>
