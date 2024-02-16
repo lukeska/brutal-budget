@@ -1,17 +1,14 @@
 <script lang="ts" setup>
 import Chart from "chart.js/auto";
-
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { computed, onMounted, ref } from "vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { Link, usePage } from "@inertiajs/vue3";
 import moment from "moment";
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
-import { IconChartDonut4, IconChartDonutFilled } from "@tabler/icons-vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { useExpenseStore } from "@/Stores/ExpenseStore";
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import NoExpenses from "@/Pages/Expenses/Partials/NoExpenses.vue";
 
 let props = defineProps<{
     monthlyTotals: App.Data.MonthlyTotalData[];
@@ -23,8 +20,6 @@ const donut = ref();
 const bars = ref();
 
 const page = usePage();
-
-const expenseStore = useExpenseStore();
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
 
@@ -297,19 +292,8 @@ const selectedMonthYear = ref(monthYears.find((item) => item.month === props.mon
                                 <canvas ref="bars"></canvas>
                             </div>
                         </div>
-                        <div
-                            v-else
-                            class="grid w-full grid-cols-1 grid-rows-1 place-items-center content-center px-4 py-10">
-                            <IconChartDonut4
-                                :size="400"
-                                class="col-[1] row-[1] text-gray-50" />
-                            <div class="col-[1] row-[1] max-w-[400px] text-center">
-                                <p class="mb-3">
-                                    No expenses yet. Go ahead, click the button below and try the thrill of logging your
-                                    first expense.
-                                </p>
-                                <PrimaryButton @click.prevent="expenseStore.showSidebar()">+ expense</PrimaryButton>
-                            </div>
+                        <div v-else>
+                            <NoExpenses />
                         </div>
                     </div>
                 </div>

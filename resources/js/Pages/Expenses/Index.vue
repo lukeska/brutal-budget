@@ -9,6 +9,7 @@ import ViewSelector from "@/Pages/Expenses/Partials/ViewSelector.vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { router, usePage } from "@inertiajs/vue3";
+import NoExpenses from "@/Pages/Expenses/Partials/NoExpenses.vue";
 
 const page = usePage();
 
@@ -92,19 +93,26 @@ const setExpensesView = (value) => {
             </div>
 
             <div class="divide-y shadow">
-                <template v-if="expensesView == 'categories'">
-                    <div
-                        v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
-                        :key="total.id"
-                        class="overflow-hidden first:rounded-t-md last:rounded-b-md">
-                        <CategoryMonthlyTotalItem
-                            :monthly-totals="findTotalsByCategoryId(total.category.id)"
-                            :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
-                    </div>
+                <template v-if="expenses.length > 0">
+                    <template v-if="expensesView == 'categories'">
+                        <div
+                            v-for="total in currentMonthlyTotal.categoryMonthlyTotals"
+                            :key="total.id"
+                            class="overflow-hidden first:rounded-t-md last:rounded-b-md">
+                            <CategoryMonthlyTotalItem
+                                :monthly-totals="findTotalsByCategoryId(total.category.id)"
+                                :expenses="findExpensesByCategoryId(total.category.id, expenses)" />
+                        </div>
+                    </template>
+                    <template v-if="expensesView == 'daily'">
+                        <ExpensesByDate :expenses="expenses" />
+                    </template>
                 </template>
-                <template v-if="expensesView == 'daily'">
-                    <ExpensesByDate :expenses="expenses" />
-                </template>
+                <div
+                    class="overflow-hidden rounded-md"
+                    v-else>
+                    <NoExpenses />
+                </div>
             </div>
         </div>
     </AppLayout>
