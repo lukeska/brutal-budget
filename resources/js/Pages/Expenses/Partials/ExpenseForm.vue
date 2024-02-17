@@ -184,30 +184,33 @@ onMounted(() => {
                             v-text="form.errors.amount"></div>
 
                         <!-- Category list -->
-                        <div
-                            class="mt-6"
-                            v-if="showCategoryList && canUpdate">
+                        <div v-auto-animate>
                             <div
-                                v-if="form.errors.category_id"
-                                class="mb-1 text-xs text-red-500"
-                                v-text="form.errors.category_id"></div>
-                            <div class="grid grid-cols-3 gap-3">
-                                <template
-                                    v-for="category in categories"
-                                    :key="category.id">
+                                class="pt-6"
+                                v-if="showCategoryList && canUpdate">
+                                <div
+                                    v-if="form.errors.category_id"
+                                    class="mb-1 text-xs text-red-500"
+                                    v-text="form.errors.category_id"></div>
+
+                                <div class="grid grid-cols-3 gap-3">
+                                    <template
+                                        v-for="category in categories"
+                                        :key="category.id">
+                                        <button
+                                            class="inline-block rounded text-sm"
+                                            @click.prevent="selectCategory(category.id)"
+                                            data-cy="select-category-button">
+                                            <CategoryLabel :category="category" />
+                                        </button>
+                                    </template>
                                     <button
-                                        class="inline-block rounded text-sm"
-                                        @click.prevent="selectCategory(category.id)"
-                                        data-cy="select-category-button">
-                                        <CategoryLabel :category="category" />
+                                        @click.prevent="categoryStore.showSidebar(null)"
+                                        class="inline-flex flex-col items-center rounded bg-gray-100 px-2 py-1.5 text-sm text-gray-400">
+                                        <IconCirclePlus :size="32" />
+                                        <div class="overflow-hidden text-ellipsis whitespace-nowrap">Add new</div>
                                     </button>
-                                </template>
-                                <button
-                                    @click.prevent="categoryStore.showSidebar(null)"
-                                    class="inline-flex flex-col items-center rounded bg-gray-100 px-2 py-1.5 text-sm text-gray-400">
-                                    <IconCirclePlus :size="32" />
-                                    <div class="overflow-hidden text-ellipsis whitespace-nowrap">Add new</div>
-                                </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -260,82 +263,88 @@ onMounted(() => {
                         </button>
 
                         <div
-                            v-if="showAdvancedOptions"
-                            class="mt-4 flex flex-col gap-y-8">
-                            <div class="">
-                                <div class="mb-2 text-sm font-medium leading-6 text-gray-900">
-                                    Is this part of a project?
-                                </div>
-                                <Listbox
-                                    v-model="selectedProject"
-                                    :disabled="!canUpdate">
-                                    <div class="relative mt-1">
-                                        <ListboxButton
-                                            class="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                                            <span class="block truncate">{{
-                                                selectedProject ? selectedProject.name : "Pick a project"
-                                            }}</span>
-                                            <span
-                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                                <ChevronUpDownIcon
-                                                    class="h-5 w-5 text-gray-400"
-                                                    aria-hidden="true" />
-                                            </span>
-                                        </ListboxButton>
-
-                                        <transition
-                                            leave-active-class="transition duration-100 ease-in"
-                                            leave-from-class="opacity-100"
-                                            leave-to-class="opacity-0">
-                                            <ListboxOptions
-                                                class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                                                <ListboxOption
-                                                    v-slot="{ active, selected }"
-                                                    v-for="project in projects"
-                                                    :key="project.name"
-                                                    :value="project"
-                                                    as="template">
-                                                    <li
-                                                        :class="[
-                                                            active ? 'bg-amber-100 text-amber-900' : 'text-gray-900',
-                                                            'relative cursor-default select-none py-2 pl-10 pr-4',
-                                                        ]">
-                                                        <span
-                                                            :class="[
-                                                                selected ? 'font-medium' : 'font-normal',
-                                                                'block truncate',
-                                                            ]"
-                                                            >{{ project.name }}</span
-                                                        >
-                                                        <span
-                                                            v-if="selected"
-                                                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                                            <CheckIcon
-                                                                class="h-5 w-5"
-                                                                aria-hidden="true" />
-                                                        </span>
-                                                    </li>
-                                                </ListboxOption>
-                                            </ListboxOptions>
-                                        </transition>
+                            v-auto-animate
+                            class="mt-4">
+                            <div
+                                v-if="showAdvancedOptions"
+                                class="flex flex-col gap-y-8">
+                                <div class="">
+                                    <div class="mb-2 text-sm font-medium leading-6 text-gray-900">
+                                        Is this part of a project?
                                     </div>
-                                </Listbox>
-                            </div>
+                                    <Listbox
+                                        v-model="selectedProject"
+                                        :disabled="!canUpdate">
+                                        <div class="relative mt-1">
+                                            <ListboxButton
+                                                class="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                                <span class="block truncate">{{
+                                                    selectedProject ? selectedProject.name : "Pick a project"
+                                                }}</span>
+                                                <span
+                                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                                    <ChevronUpDownIcon
+                                                        class="h-5 w-5 text-gray-400"
+                                                        aria-hidden="true" />
+                                                </span>
+                                            </ListboxButton>
 
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <Switch
-                                        :disabled="!canUpdate"
-                                        v-model="form.is_regular"
-                                        :class="form.is_regular ? 'bg-indigo-400' : 'bg-gray-400'"
-                                        class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
-                                        <span class="sr-only">Is regular</span>
-                                        <span
-                                            aria-hidden="true"
-                                            :class="form.is_regular ? 'translate-x-9' : 'translate-x-0'"
-                                            class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
-                                    </Switch>
-                                    <div>This is a regular expense</div>
+                                            <transition
+                                                leave-active-class="transition duration-100 ease-in"
+                                                leave-from-class="opacity-100"
+                                                leave-to-class="opacity-0">
+                                                <ListboxOptions
+                                                    class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                                    <ListboxOption
+                                                        v-slot="{ active, selected }"
+                                                        v-for="project in projects"
+                                                        :key="project.name"
+                                                        :value="project"
+                                                        as="template">
+                                                        <li
+                                                            :class="[
+                                                                active
+                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                    : 'text-gray-900',
+                                                                'relative cursor-default select-none py-2 pl-10 pr-4',
+                                                            ]">
+                                                            <span
+                                                                :class="[
+                                                                    selected ? 'font-medium' : 'font-normal',
+                                                                    'block truncate',
+                                                                ]"
+                                                                >{{ project.name }}</span
+                                                            >
+                                                            <span
+                                                                v-if="selected"
+                                                                class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                                                <CheckIcon
+                                                                    class="h-5 w-5"
+                                                                    aria-hidden="true" />
+                                                            </span>
+                                                        </li>
+                                                    </ListboxOption>
+                                                </ListboxOptions>
+                                            </transition>
+                                        </div>
+                                    </Listbox>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <Switch
+                                            :disabled="!canUpdate"
+                                            v-model="form.is_regular"
+                                            :class="form.is_regular ? 'bg-indigo-400' : 'bg-gray-400'"
+                                            class="relative inline-flex h-[28px] w-[64px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+                                            <span class="sr-only">Is regular</span>
+                                            <span
+                                                aria-hidden="true"
+                                                :class="form.is_regular ? 'translate-x-9' : 'translate-x-0'"
+                                                class="pointer-events-none inline-block h-[24px] w-[24px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out" />
+                                        </Switch>
+                                        <div>This is a regular expense</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -53,20 +53,22 @@ const percentage = computed((): number => {
             class="absolute inset-0 h-full w-full"
             @click.prevent="showExpenses = !showExpenses"></button>
     </div>
-    <div
-        v-if="showExpenses"
-        class="border-t">
-        <button
-            v-for="expense in expenses"
-            class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50"
-            @click.prevent="expenseStore.showSidebar(expense)">
-            <div :style="'color:' + expense.category.hex">
-                <CategoryIcon :category="expense.category" />
-            </div>
-            <div class="min-w-[80px] text-right font-mono">
-                {{ currencyFormatter.format(expense.amount) }}
-            </div>
-            <div class="text-gray-500">{{ expense.notes }}</div>
-        </button>
+    <div v-auto-animate>
+        <div
+            v-if="showExpenses"
+            class="border-t">
+            <button
+                v-for="expense in expenses"
+                class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50"
+                @click.prevent="expenseStore.showSidebar(expense)">
+                <div :style="'color:' + expense.category.hex">
+                    <CategoryIcon :category="expense.category" />
+                </div>
+                <div class="min-w-[80px] text-right font-mono">
+                    {{ currencyFormatter.format(expense.amount) }}
+                </div>
+                <div class="text-gray-500">{{ expense.notes }}</div>
+            </button>
+        </div>
     </div>
 </template>
