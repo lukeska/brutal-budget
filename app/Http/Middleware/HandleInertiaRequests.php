@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'expense' => fn () => $request->session()->get('expense'),
                 'category' => fn () => $request->session()->get('category'),
+                'project' => fn () => $request->session()->get('project'),
             ],
         ]);
     }

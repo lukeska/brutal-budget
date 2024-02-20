@@ -3,11 +3,13 @@
 namespace App\Repositories;
 
 use App\Data\ExpenseRequest;
+use App\Data\ProjectTotalData;
 use App\Models\Expense;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Spatie\LaravelData\DataCollection;
 
 class ExpensesRepository
 {
@@ -57,14 +59,40 @@ class ExpensesRepository
         return $expenses;
     }
 
-    public function getCacheTags(int $teamId, Carbon $date): array
+    public function getProjectsTotals(int $teamId): DataCollection
     {
+        $key = "expenses-getProjectsTotals-$teamId";
+        $tags = $this->getCacheTags($teamId);
+
+        if (Cache::tags($tags)->has($key)) {
+            $projectTotals = Cache::tags($tags)->get($key);
+        } else {
+            $projectTotalsRaw = Expense::query()
+                ->groupBy('project_id')
+                ->selectRaw('project_id, SUM(amount) as total')
+                ->where('team_id', $teamId)
+                ->whereNotNull('project_id')
+                ->get();
+
+            $projectTotals = ProjectTotalData::collection($projectTotalsRaw->toArray());
+        }
+
+        return $projectTotals;
+    }
+
+    public function getCacheTags(int $teamId, ?Carbon $date = null): array
+    {
+        if ($date === null) {
+            return ["expenses-$teamId"];
+        }
+
         return ["expenses-{$teamId}-{$date->format('Ym')}"];
     }
 
     public function flushCache(int $teamId, Carbon $date): void
     {
         Cache::tags($this->getCacheTags($teamId, $date))->flush();
+        Cache::tags($this->getCacheTags($teamId))->flush();
     }
 
     private function getMonthlyAmounts(int $amount, int $months): array

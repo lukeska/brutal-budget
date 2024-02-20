@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\ExpenseData;
 use App\Data\ProjectData;
 use App\Models\Project;
+use App\Repositories\ExpensesRepository;
 use App\Repositories\ProjectsRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -12,16 +13,17 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-
-
-    public function __construct(protected ProjectsRepository $projectsRepository)
+    public function __construct(protected ProjectsRepository $projectsRepository,
+        protected ExpensesRepository $expensesRepository)
     {
     }
 
     public function index()
     {
         return Inertia::render('Projects/Index', [
-            'projects' => ProjectData::collection($this->projectsRepository->getAll(Auth::user()->current_team_id)),
+            'projects' => ProjectData::collection($this->projectsRepository->getAll(Auth::user()->currentTeam->id)),
+            'totals' => $this->expensesRepository->getProjectsTotals(Auth::user()->currentTeam->id),
+            'canCreate' => Request::user()->can('create', Project::class),
         ]);
     }
 
@@ -59,6 +61,7 @@ class ProjectController extends Controller
         Auth::user()->currentTeam->projects()->create($project);
 
         Request::session()->flash('message', 'Project created correctly');
+        Request::session()->flash('category', ProjectData::from($project));
 
         return redirect('/projects');
     }
