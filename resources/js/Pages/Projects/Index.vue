@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import AppLayout from "@/Layouts/AppLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { computed, ref } from "vue";
-import ProjectForm from "@/Pages/Projects/Partials/ProjectForm.vue";
+import { computed } from "vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { useProjectStore } from "@/Stores/ProjectStore";
-import CategoryFormSidebar from "@/Pages/Categories/Partials/CategoryFormSidebar.vue";
 import ProjectFormSidebar from "@/Pages/Projects/Partials/ProjectFormSidebar.vue";
-import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, Link } from "@inertiajs/vue3";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
+import { IconEdit, IconEye } from "@tabler/icons-vue";
 
 const projectStore = useProjectStore();
 
@@ -22,8 +19,6 @@ let props = defineProps<{
 const page = usePage();
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
-
-let showCreateForm = ref(false);
 
 const grandTotal = computed(() => {
     let totalAmount = 0;
@@ -62,17 +57,30 @@ const getTotalByProject = (projectId: number): number => {
 
         <div class="py-12">
             <div class="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <button
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div
                         v-for="project in projects"
                         :key="project.id"
-                        class="divide-y rounded-md bg-white text-left shadow"
-                        @click.prevent="projectStore.showSidebar(project)">
-                        <div class="flex items-center space-x-4 p-4 text-lg">
-                            <div
-                                :style="'background:' + project.hex"
-                                class="h-8 w-8 shrink-0 rounded-md"></div>
-                            <div>{{ project.name }}</div>
+                        class="divide-y rounded-md bg-white text-left shadow">
+                        <div class="flex items-center justify-between p-4">
+                            <div class="flex items-center space-x-4 text-lg">
+                                <div
+                                    :style="'background:' + project.hex"
+                                    class="h-8 w-8 shrink-0 rounded-md"></div>
+                                <div>{{ project.name }}</div>
+                            </div>
+                            <div>
+                                <button
+                                    @click.prevent="projectStore.showSidebar(project)"
+                                    class="inline-flex h-10 w-10 items-center justify-center text-gray-400 hover:text-gray-800">
+                                    <IconEdit />
+                                </button>
+                                <Link
+                                    :href="route('projects.show', { project: project })"
+                                    class="inline-flex h-10 w-10 items-center justify-center border-0 text-gray-400 hover:text-gray-800">
+                                    <IconEye />
+                                </Link>
+                            </div>
                         </div>
                         <div class="grid grid-cols-3 divide-x text-left">
                             <div class="col-span-2 px-4 py-2">
@@ -91,34 +99,7 @@ const getTotalByProject = (projectId: number): number => {
                                 </span>
                             </div>
                         </div>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="py-12">
-            <div class="mx-auto max-w-5xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg lg:p-8">
-                    <PrimaryButton
-                        type="button"
-                        @click.prevent="showCreateForm = true"
-                        >Create new project</PrimaryButton
-                    >
-                    <div class="mt-3 bg-zinc-50 px-5">
-                        <ProjectForm
-                            v-if="showCreateForm"
-                            @cancel="showCreateForm = false" />
                     </div>
-
-                    <ul
-                        class="divide-y divide-gray-100"
-                        role="list">
-                        <li
-                            v-for="project in projects"
-                            :key="project.id">
-                            <ProjectForm :project="project" />
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>

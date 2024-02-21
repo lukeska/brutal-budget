@@ -2,7 +2,7 @@
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { useProjectStore } from "@/Stores/ProjectStore";
-import ProjectForm from "@/Pages/Projects/Partials/ProjectFormNew.vue";
+import ProjectForm from "@/Pages/Projects/Partials/ProjectForm.vue";
 
 const projectStore = useProjectStore();
 </script>
