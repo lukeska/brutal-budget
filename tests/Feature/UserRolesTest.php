@@ -2,6 +2,7 @@
 
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -105,6 +106,18 @@ class UserRolesTest extends TestCase
 
         $this->followingRedirects()
             ->delete(route('categories.delete', ['category' => $category->id]))
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cannot_create_projects_as_an_editor()
+    {
+        $this->actingAs($this->editor);
+
+        $attributes = Project::factory()->raw();
+
+        $this->followingRedirects()
+            ->put(route('projects.create'), $attributes)
             ->assertStatus(403);
     }
 }

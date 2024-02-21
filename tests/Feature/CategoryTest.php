@@ -75,6 +75,8 @@ class CategoryTest extends TestCase
         ])->raw();
 
         // create a duplicate category name within the same team should fail
+        $this->get(route('categories.index'));
+
         $this->followingRedirects()
             ->put(route('categories.create'), $attributes)
             ->assertOk()
@@ -151,6 +153,8 @@ class CategoryTest extends TestCase
         $attributes = Category::factory([
             'name' => 'My test category',
         ])->raw();
+
+        $this->get(route('categories.index'));
 
         $this->followingRedirects()
             ->put(route('categories.create'), $attributes)

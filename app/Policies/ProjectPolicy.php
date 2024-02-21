@@ -29,7 +29,9 @@ class ProjectPolicy
      */
     public function create(User $user): bool
     {
-        return $user->currentTeam->projects->count() <= config('global.limits.projects_per_team');
+        return $user->ownsTeam($user->currentTeam)
+            || $user->hasTeamRole($user->currentTeam, 'admin');
+        //return $user->currentTeam->projects->count() <= config('global.limits.projects_per_team');
     }
 
     /**
