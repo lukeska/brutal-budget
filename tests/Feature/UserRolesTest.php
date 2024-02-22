@@ -21,6 +21,8 @@ class UserRolesTest extends TestCase
 
     protected $expense;
 
+    protected $project;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -36,6 +38,10 @@ class UserRolesTest extends TestCase
         $this->editor->switchTeam($this->owner->currentTeam);
 
         $this->expense = Expense::factory()->recycle($this->owner)->create();
+        $this->project = Project::factory()
+            ->recycle($this->owner)
+            ->recycle($this->owner->currentTeam)
+            ->create();
     }
 
     /** @test */
@@ -118,6 +124,26 @@ class UserRolesTest extends TestCase
 
         $this->followingRedirects()
             ->put(route('projects.create'), $attributes)
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cannot_edit_projects_as_an_editor()
+    {
+        $this->actingAs($this->editor);
+
+        $this->followingRedirects()
+            ->patch(route('projects.update', ['project' => $this->project->id]), ['name' => 'My test project', 'hex' => $this->project->hex])
+            ->assertStatus(403);
+    }
+
+    /** @test */
+    public function it_cannot_delete_projects_as_an_editor()
+    {
+        $this->actingAs($this->editor);
+
+        $this->followingRedirects()
+            ->delete(route('projects.delete', ['project' => $this->project->id]))
             ->assertStatus(403);
     }
 }

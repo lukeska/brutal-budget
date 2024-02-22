@@ -38,7 +38,8 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->belongsToTeam($project->team);
+        return $user->ownsTeam($project->team)
+            || $user->hasTeamRole($project->team, 'admin');
     }
 
     /**
@@ -46,7 +47,8 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        return $user->belongsToTeam($project->team);
+        return $user->ownsTeam($project->team)
+            || $user->hasTeamRole($project->team, 'admin');
     }
 
     /**
