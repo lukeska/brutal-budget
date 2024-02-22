@@ -3,6 +3,7 @@
 namespace App\Data;
 
 use App\Models\Project;
+use App\Rules\MaxProjectsPerTeam;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
@@ -26,6 +27,7 @@ class ProjectData extends DataResource
             'name' => [
                 'max:50',
                 'required',
+                new MaxProjectsPerTeam(),
             ],
             'hex' => [
                 'required',

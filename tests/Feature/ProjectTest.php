@@ -29,12 +29,14 @@ class ProjectTest extends TestCase
             'name' => 'My test project',
         ])->raw();
 
+        $this->get(route('projects.index'));
+
         $this->followingRedirects()
             ->put(route('projects.create'), $attributes)
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('errors')
-                ->where('errors.limit', 'You reach the limit of projects this team can have.')
+                ->where('errors.name', 'You reach the limit of projects this team can have.')
             );
     }
 }

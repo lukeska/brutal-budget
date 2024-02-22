@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\CategoryRequest;
 use App\Data\ExpenseData;
 use App\Data\ProjectData;
 use App\Models\Project;
@@ -9,6 +10,7 @@ use App\Repositories\ExpensesRepository;
 use App\Repositories\ProjectsRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -54,14 +56,11 @@ class ProjectController extends Controller
             abort(403);
         }
 
-        // TODO: add this back in as validation on ProjectData
-        /*if (Request::user()->cannot('create', Project::class)) {
-            return redirect(route('projects.index'))->withErrors([
-                'limit' => 'You reach the limit of projects this team can have.',
-            ]);
-        }*/
-
-        $project = ProjectData::validate(Request::all());
+        try {
+            $project = ProjectData::validate(Request::all());
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors());
+        }
 
         Auth::user()->currentTeam->projects()->create($project);
 

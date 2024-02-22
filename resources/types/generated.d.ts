@@ -58,6 +58,10 @@ id?: number;
 name: string;
 hex: string;
 permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
+export type ProjectTotalData = {
+project_id: number;
+total: number;
+};
 export type UserData = {
 name: string;
 };

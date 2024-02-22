@@ -31,7 +31,6 @@ class ProjectPolicy
     {
         return $user->ownsTeam($user->currentTeam)
             || $user->hasTeamRole($user->currentTeam, 'admin');
-        //return $user->currentTeam->projects->count() <= config('global.limits.projects_per_team');
     }
 
     /**
