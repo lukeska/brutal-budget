@@ -27,7 +27,7 @@ describe("Expenses", () => {
         cy.contains("Weekly groceries").contains("10.50");
     });
 
-    it.only("can create a category from an expense creation form", () => {
+    it("can create a category from an expense creation form", () => {
         cy.visit("/expenses/2024/01");
 
         cy.get('[data-cy="expense-add-button"]').first().click();

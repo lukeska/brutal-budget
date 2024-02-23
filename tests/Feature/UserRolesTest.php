@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\Category;
 use App\Models\Expense;
 use App\Models\Project;
