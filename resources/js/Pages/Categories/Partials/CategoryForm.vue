@@ -86,6 +86,7 @@ const selectIcon = (icon: string, hex: string) => {
 
 <template>
     <form
+        data-cy="category-form"
         class="relative flex h-full flex-col"
         @keydown.enter.prevent="submit(categoryStore.isNewCategory ? 'create' : 'update')">
         <div class="flex-1 overflow-x-hidden overflow-y-scroll px-6 py-4">
@@ -147,6 +148,7 @@ const selectIcon = (icon: string, hex: string) => {
                 v-if="canUpdate">
                 <div class="relative flex flex-1 items-center space-x-px">
                     <PrimaryButton
+                        data-cy="save-category-button"
                         @click.prevent="submit(categoryStore.isNewCategory ? 'create' : 'update')"
                         class="h-10 flex-1 rounded-md bg-indigo-400 shadow hover:bg-indigo-500 focus:bg-indigo-500"
                         :disabled="form.processing">
@@ -157,6 +159,7 @@ const selectIcon = (icon: string, hex: string) => {
                 </div>
 
                 <button
+                    data-cy="delete-category-button"
                     type="submit"
                     class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white text-red-400 shadow disabled:opacity-50"
                     @click.prevent="categoryStore.isNewCategory ? emit('cancel') : submit('delete')"

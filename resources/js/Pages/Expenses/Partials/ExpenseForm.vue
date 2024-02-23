@@ -116,7 +116,7 @@ const canUpdate = computed((): boolean => {
 });
 
 const selectNewCategory = (category: App.Data.CategoryData) => {
-    categoryStore.hideSidebar();
+    categoryStore.hideInnerPanel();
     selectCategory(category.id);
 };
 
@@ -132,7 +132,7 @@ watchEffect(() => {
 });
 
 onMounted(() => {
-    categoryStore.hideSidebar();
+    categoryStore.hideInnerPanel();
 });
 </script>
 
@@ -205,7 +205,8 @@ onMounted(() => {
                                         </button>
                                     </template>
                                     <button
-                                        @click.prevent="categoryStore.showSidebar(null)"
+                                        data-cy="add-category-button"
+                                        @click.prevent="categoryStore.showInnerPanel(null)"
                                         class="inline-flex flex-col items-center rounded bg-gray-100 px-2 py-1.5 text-sm text-gray-400">
                                         <IconCirclePlus :size="32" />
                                         <div class="overflow-hidden text-ellipsis whitespace-nowrap">Add new</div>
@@ -440,12 +441,12 @@ onMounted(() => {
             leave-active-class="transition duration-300"
             leave-to-class="translate-x-full">
             <div
-                v-if="categoryStore.isSidebarOpen"
+                v-if="categoryStore.isInnerPanelOpen"
                 class="absolute inset-0 bg-white">
                 <div class="relative h-full">
                     <div class="absolute z-10 flex h-16 w-full items-center space-x-2 border-b">
                         <button
-                            @click.prevent="categoryStore.hideSidebar()"
+                            @click.prevent="categoryStore.hideInnerPanel()"
                             class="p-2">
                             <IconArrowLeft />
                         </button>

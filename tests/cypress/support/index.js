@@ -28,7 +28,7 @@ before(() => {
 });
 
 after(() => {
-    cy.task("activateLocalEnvFile", {}, { log: false });
+    //cy.task("activateLocalEnvFile", {}, { log: false });
     cy.artisan("config:clear", {}, { log: false });
     cy.artisan("cache:clear", {}, { log: false });
 });
