@@ -13,13 +13,18 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
 </script>
 
 <template>
-    <div class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50">
-        <slot name="prefix">
-            <div :style="'color:' + expense.category.hex">
-                <CategoryIcon :category="expense.category" />
+    <div class="flex w-full items-center justify-between px-3 py-2 hover:bg-neutral-50">
+        <div class="w-2/3 text-left">
+            <div>
+                <slot name="prefix">
+                    <div :style="'color:' + expense.category.hex">
+                        <CategoryIcon :category="expense.category" />
+                    </div>
+                </slot>
             </div>
-        </slot>
-        <div class="min-w-[80px] text-right font-mono">{{ currencyFormatter.format(expense.amount) }}</div>
-        <div class="text-gray-500">{{ expense.notes }}</div>
+            <div class="text-gray-500">{{ expense.notes }}</div>
+        </div>
+
+        <div class="w-1/3 text-right font-mono text-lg">{{ currencyFormatter.format(expense.amount) }}</div>
     </div>
 </template>

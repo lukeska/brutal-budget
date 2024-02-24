@@ -4,6 +4,7 @@ import { usePage } from "@inertiajs/vue3";
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 import { useExpenseStore } from "@/Stores/ExpenseStore";
 import { computed, ref } from "vue";
+import ExpenseItem from "@/Pages/Expenses/Partials/ExpenseItem.vue";
 
 const page = usePage();
 
@@ -56,18 +57,13 @@ const percentage = computed((): number => {
     <div v-auto-animate>
         <div
             v-if="showExpenses"
-            class="border-t">
+            class="divide-y border-t">
             <button
                 v-for="expense in expenses"
-                class="flex w-full items-center space-x-4 px-3 py-2 hover:bg-neutral-50"
-                @click.prevent="expenseStore.showSidebar(expense)">
-                <div :style="'color:' + expense.category.hex">
-                    <CategoryIcon :category="expense.category" />
-                </div>
-                <div class="min-w-[80px] text-right font-mono">
-                    {{ currencyFormatter.format(expense.amount) }}
-                </div>
-                <div class="text-gray-500">{{ expense.notes }}</div>
+                :key="expense.id"
+                @click.prevent="expenseStore.showSidebar(expense)"
+                class="w-full bg-white">
+                <ExpenseItem :expense="expense"> </ExpenseItem>
             </button>
         </div>
     </div>
