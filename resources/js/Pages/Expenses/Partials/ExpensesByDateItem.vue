@@ -58,13 +58,15 @@ const percentage = computed((): number => {
         <div
             v-if="showExpenses"
             class="divide-y border-t">
-            <button
+            <div
                 v-for="expense in expenses"
                 :key="expense.id"
-                @click.prevent="expenseStore.showSidebar(expense)"
-                class="w-full bg-white">
+                class="relative w-full bg-white hover:bg-neutral-50">
                 <ExpenseItem :expense="expense"> </ExpenseItem>
-            </button>
+                <button
+                    class="absolute inset-0 z-10 h-full w-full"
+                    @click.prevent="expenseStore.showSidebar(expense)"></button>
+            </div>
         </div>
     </div>
 </template>

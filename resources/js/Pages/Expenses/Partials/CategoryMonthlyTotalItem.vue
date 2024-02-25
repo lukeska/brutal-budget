@@ -133,11 +133,10 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                         </div>
                     </template>
                 </div>
-                <button
+                <div
                     v-for="expense in expenses"
                     :key="expense.id"
-                    @click.prevent="expenseStore.showSidebar(expense)"
-                    class="w-full bg-white">
+                    class="relative w-full bg-white hover:bg-neutral-50">
                     <ExpenseItem :expense="expense">
                         <template v-slot:prefix>
                             <div class="text-sm">
@@ -145,7 +144,10 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                             </div>
                         </template>
                     </ExpenseItem>
-                </button>
+                    <button
+                        class="absolute inset-0 z-10 h-full w-full"
+                        @click.prevent="expenseStore.showSidebar(expense)"></button>
+                </div>
             </div>
         </div>
     </div>
