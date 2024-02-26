@@ -69,3 +69,6 @@ export type UserSettingsRequest = {
 currency: string;
 };
 }
+declare namespace App.Enums {
+export type OnboardingSteps = 1 | 2 | 3;
+}

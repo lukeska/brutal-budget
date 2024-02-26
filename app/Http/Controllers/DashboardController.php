@@ -21,7 +21,7 @@ class DashboardController extends Controller
             $currentDate = Carbon::create($year, $month, 1);
         }
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('Dashboard/Index', [
             'monthlyTotals' => $this->monthlyTotalsRepository->getAll(
                 teamId: Auth::user()->currentTeam->id,
                 year: $currentDate->year,
