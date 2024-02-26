@@ -63,9 +63,7 @@ const selectedMonthYear = ref(monthYears.find((item) => item.month === props.mon
 
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="mb-6"
-                    v-if="false">
+                <div class="mb-6">
                     <Onboarding />
                 </div>
 
