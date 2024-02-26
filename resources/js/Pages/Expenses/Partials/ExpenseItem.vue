@@ -34,7 +34,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                     </Link>
                 </div>
             </div>
-            <div class="text-gray-500">{{ expense.notes }}</div>
+            <div class="text-gray-500">{{ expense.notes ? expense.notes : "&nbsp;" }}</div>
         </div>
 
         <div class="w-1/3 text-right font-mono text-lg">{{ currencyFormatter.format(expense.amount) }}</div>
