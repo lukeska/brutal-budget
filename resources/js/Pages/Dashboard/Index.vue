@@ -15,6 +15,7 @@ let props = defineProps<{
     monthlyTotals: App.Data.MonthlyTotalData[];
     month: number;
     year: number;
+    onboardingStatuses: App.Data.OnboardingStatusData[];
 }>();
 
 const page = usePage();
@@ -64,7 +65,7 @@ const selectedMonthYear = ref(monthYears.find((item) => item.month === props.mon
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="mb-6">
-                    <Onboarding />
+                    <Onboarding :onboarding-statuses="onboardingStatuses" />
                 </div>
 
                 <div class="divide-y overflow-hidden bg-white shadow-xl sm:rounded-lg">

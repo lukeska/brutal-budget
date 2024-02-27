@@ -2,9 +2,12 @@
 
 namespace App\Enums;
 
-enum OnboardingSteps: int
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+
+#[TypeScript]
+enum OnboardingSteps: string
 {
-    case ExpenseCreated = 1;
-    case TeamMemberInvited = 2;
-    case ProjectCreated = 3;
+    case ExpenseCreated = 'expense-created';
+    case TeamMemberInvited = 'team-member-invited';
+    case ProjectCreated = 'project-created';
 }

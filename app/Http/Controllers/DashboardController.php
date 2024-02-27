@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\OnboardingStatusData;
 use App\Repositories\MonthlyTotalsRepository;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,7 @@ class DashboardController extends Controller
             ),
             'month' => $currentDate->month,
             'year' => $currentDate->year,
+            'onboardingStatuses' => OnboardingStatusData::collection(Auth::user()->onboardingStatuses),
         ]);
     }
 }

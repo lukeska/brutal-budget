@@ -53,6 +53,13 @@ yearMonth: number;
 categoryMonthlyTotals: Array<App.Data.CategoryMonthlyTotalData>;
 isCurrent: boolean;
 };
+export type OnboardingStatusData = {
+id: number;
+user_id: number;
+onboarding_step: App.Enums.OnboardingSteps;
+skipped_at: any | null;
+completed_at: any | null;
+};
 export type ProjectData = {
 id?: number;
 name: string;
@@ -70,5 +77,5 @@ currency: string;
 };
 }
 declare namespace App.Enums {
-export type OnboardingSteps = 1 | 2 | 3;
+export type OnboardingSteps = 'expense-created' | 'team-member-invited' | 'project-created';
 }

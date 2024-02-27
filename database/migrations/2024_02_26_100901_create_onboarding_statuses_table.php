@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('onboarding_statuses', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->index()->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('onboarding_step_id');
+            $table->string('onboarding_step', 50);
             $table->timestamp('skipped_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
