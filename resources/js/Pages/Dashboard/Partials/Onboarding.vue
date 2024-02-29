@@ -37,7 +37,9 @@ const getComponent = (step: App.Enums.OnboardingSteps) => {
             <div
                 v-for="onboardingStatus in onboardingStatuses"
                 :key="onboardingStatus.onboarding_step">
-                <component :is="getComponent(onboardingStatus.onboarding_step)" />
+                <component
+                    :is="getComponent(onboardingStatus.onboarding_step)"
+                    :onboarding-status="onboardingStatus" />
             </div>
         </div>
     </div>

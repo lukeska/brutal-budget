@@ -131,13 +131,14 @@
       "HEAD"
     ]
   },
-  "generated::rSkabWEd5WeCO7Qk": {
-    "name": "generated::rSkabWEd5WeCO7Qk",
+  "": {
+    "name": null,
     "domain": null,
-    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@store",
-    "uri": "login",
+    "action": "Closure",
+    "uri": "/",
     "method": [
-      "POST"
+      "GET",
+      "HEAD"
     ]
   },
   "logout": {
@@ -197,15 +198,6 @@
       "HEAD"
     ]
   },
-  "generated::d5ZGRlHGO3tt5AqS": {
-    "name": "generated::d5ZGRlHGO3tt5AqS",
-    "domain": null,
-    "action": "Laravel\\Fortify\\Http\\Controllers\\RegisteredUserController@store",
-    "uri": "register",
-    "method": [
-      "POST"
-    ]
-  },
   "user-profile-information.update": {
     "name": "user-profile-information.update",
     "domain": null,
@@ -222,16 +214,6 @@
     "uri": "user/password",
     "method": [
       "PUT"
-    ]
-  },
-  "generated::5HSzbF4SWau8YiNI": {
-    "name": "generated::5HSzbF4SWau8YiNI",
-    "domain": null,
-    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmablePasswordController@show",
-    "uri": "user/confirm-password",
-    "method": [
-      "GET",
-      "HEAD"
     ]
   },
   "password.confirmation": {
@@ -261,15 +243,6 @@
     "method": [
       "GET",
       "HEAD"
-    ]
-  },
-  "generated::l5bhIVYsBhAFTPOT": {
-    "name": "generated::l5bhIVYsBhAFTPOT",
-    "domain": null,
-    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticatedSessionController@store",
-    "uri": "two-factor-challenge",
-    "method": [
-      "POST"
     ]
   },
   "two-factor.enable": {
@@ -327,15 +300,6 @@
     "method": [
       "GET",
       "HEAD"
-    ]
-  },
-  "generated::P6bWhZVUwU07cO6C": {
-    "name": "generated::P6bWhZVUwU07cO6C",
-    "domain": null,
-    "action": "Laravel\\Fortify\\Http\\Controllers\\RecoveryCodeController@store",
-    "uri": "user/two-factor-recovery-codes",
-    "method": [
-      "POST"
     ]
   },
   "profile.show": {
@@ -506,16 +470,6 @@
       "POST"
     ]
   },
-  "generated::xZxsw38syGMqJ75l": {
-    "name": "generated::xZxsw38syGMqJ75l",
-    "domain": null,
-    "action": "Livewire\\Mechanisms\\FrontendAssets\\FrontendAssets@returnJavaScriptAsFile",
-    "uri": "livewire/livewire.js",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
   "livewire.upload-file": {
     "name": "livewire.upload-file",
     "domain": null,
@@ -581,37 +535,6 @@
     "uri": "_ignition/update-config",
     "method": [
       "POST"
-    ]
-  },
-  "generated::NOSKT0eISvWhru0I": {
-    "name": "generated::NOSKT0eISvWhru0I",
-    "domain": null,
-    "action": "\\Illuminate\\Broadcasting\\BroadcastController@authenticate",
-    "uri": "broadcasting/auth",
-    "method": [
-      "GET",
-      "POST",
-      "HEAD"
-    ]
-  },
-  "generated::M7riErijnCbNd2Rc": {
-    "name": "generated::M7riErijnCbNd2Rc",
-    "domain": null,
-    "action": "Closure",
-    "uri": "api/user",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "generated::mwOj8kW2EWbHcwyK": {
-    "name": "generated::mwOj8kW2EWbHcwyK",
-    "domain": null,
-    "action": "Closure",
-    "uri": "/",
-    "method": [
-      "GET",
-      "HEAD"
     ]
   },
   "dashboard": {

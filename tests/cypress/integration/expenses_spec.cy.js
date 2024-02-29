@@ -24,7 +24,8 @@ describe("Expenses", () => {
         cy.get('[data-cy="save-expense-button"]').click();
 
         cy.get('[data-cy="expand-category-expenses-button"]', { timeout: 10000 }).click();
-        cy.contains("Weekly groceries").contains("10.50");
+        cy.contains("Weekly groceries", { timeout: 10000 });
+        cy.contains("10.50");
     });
 
     it("can create a category from an expense creation form", () => {

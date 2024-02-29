@@ -4,6 +4,7 @@ use App\Events\ExpenseCreated;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\OnboardingStatusController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserPushSettingsController;
 use App\Http\Controllers\UserSettingsController;
@@ -69,4 +70,6 @@ Route::middleware([
     Route::post('user/settings/push-subscribe', [UserPushSettingsController::class, 'subscribe'])->name('user-push-settings.subscribe');
     Route::delete('user/settings/push-unsubscribe', [UserPushSettingsController::class, 'unsubscribe'])->name('user-push-settings.unsubscribe');
     Route::post('user/settings/push-test', [UserPushSettingsController::class, 'pushTest'])->name('user-push-settings.push-test');
+
+    Route::patch('user/onboarding/{onboardingStatus}/skip', [OnboardingStatusController::class, 'skip'])->name('onboarding-status.skip');
 });
