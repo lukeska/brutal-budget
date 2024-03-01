@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import { useForm } from "@inertiajs/vue3";
+
 let props = defineProps<{
     onboardingStatus: App.Data.OnboardingStatusData;
 }>();
@@ -21,6 +24,19 @@ const stepsData = [
     },
 ];
 
+const form = useForm({
+    id: props.onboardingStatus.id,
+});
+
+const skip = () => {
+    form.patch(route("onboarding-status.skip", form.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            emit("skipped");
+        },
+    });
+};
+
 const getTitle = () => {
     const stepObj = stepsData.find((item) => item.step === props.onboardingStatus.onboarding_step);
     return stepObj ? stepObj.title : "";
@@ -34,11 +50,16 @@ const getDescription = () => {
 
 <template>
     <div>
-        <div>
-            {{ getTitle() }}
+        <div class="mb-3 text-xl font-semibold">
+            <slot name="title"></slot>
         </div>
-        <div>
-            {{ getDescription() }}
+        <div class="flex space-x-4">
+            <slot name="action"></slot>
+            <SecondaryButton
+                @click.prevent="skip"
+                v-if="!onboardingStatus.skipped_at"
+                >Skip</SecondaryButton
+            >
         </div>
     </div>
 </template>
