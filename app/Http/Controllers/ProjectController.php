@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\CategoryRequest;
 use App\Data\ExpenseData;
 use App\Data\ProjectData;
 use App\Models\Project;

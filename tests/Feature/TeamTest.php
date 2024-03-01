@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Config;
-use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 /** @group brutal */

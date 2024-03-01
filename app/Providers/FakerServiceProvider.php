@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use Database\Providers\ExpenseProvider;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
-use Database\Providers\ExpenseProvider;
 
 class FakerServiceProvider extends ServiceProvider
 {
@@ -14,12 +14,12 @@ class FakerServiceProvider extends ServiceProvider
     public function register(): void
     {
         //if (App::environment('testing')) {
-            $this->app->singleton(\Faker\Generator::class, function () {
-                $faker = \Faker\Factory::create();
-                $faker->addProvider(new ExpenseProvider($faker));
+        $this->app->singleton(\Faker\Generator::class, function () {
+            $faker = \Faker\Factory::create();
+            $faker->addProvider(new ExpenseProvider($faker));
 
-                return $faker;
-            });
+            return $faker;
+        });
         //}
     }
 

@@ -11,7 +11,6 @@ class CategoryObserver
     {
     }
 
-
     /**
      * Handle the Category "created" event.
      */

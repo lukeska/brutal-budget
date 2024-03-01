@@ -1,6 +1,5 @@
 <?php
 
-use App\Events\ExpenseCreated;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
@@ -10,7 +9,6 @@ use App\Http\Controllers\UserPushSettingsController;
 use App\Http\Controllers\UserSettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------

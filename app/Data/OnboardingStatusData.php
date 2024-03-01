@@ -5,8 +5,6 @@ namespace App\Data;
 use App\Enums\OnboardingSteps;
 use Illuminate\Support\Carbon;
 use Spatie\LaravelData\Attributes\MapName;
-use Spatie\LaravelData\Attributes\WithCast;
-use Spatie\LaravelData\Casts\EnumCast;
 use Spatie\LaravelData\Data;
 
 class OnboardingStatusData extends Data

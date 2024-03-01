@@ -11,7 +11,6 @@ class ProjectObserver
     {
     }
 
-
     /**
      * Handle the Project "created" event.
      */

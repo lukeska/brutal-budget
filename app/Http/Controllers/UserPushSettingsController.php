@@ -6,8 +6,6 @@ use App\Models\Expense;
 use App\Notifications\ExpenseCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use NotificationChannels\WebPush\PushSubscription;
 
 class UserPushSettingsController extends Controller
 {

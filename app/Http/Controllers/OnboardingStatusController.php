@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\OnboardingStatus;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OnboardingStatusController extends Controller
@@ -67,7 +66,7 @@ class OnboardingStatusController extends Controller
     public function skip(OnboardingStatus $onboardingStatus)
     {
         $onboardingStatus->update([
-            'skipped_at' => now()
+            'skipped_at' => now(),
         ]);
 
         return back();

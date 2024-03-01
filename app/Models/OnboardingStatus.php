@@ -6,7 +6,6 @@ use App\Enums\OnboardingSteps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 class OnboardingStatus extends Model
 {
@@ -15,7 +14,7 @@ class OnboardingStatus extends Model
     protected $fillable = [
         'skipped_at',
         'completed_at',
-        'onboarding_step'
+        'onboarding_step',
     ];
 
     /**

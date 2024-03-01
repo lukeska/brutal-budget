@@ -26,6 +26,7 @@ class BrutalBudgetServiceProvider extends ServiceProvider
         Validator::extend('comma_decimal_positive', function ($attribute, $value, $parameters, $validator) {
             // Check if the value is numeric after replacing commas with dots
             $newValue = str_replace(',', '.', $value);
+
             return is_numeric($newValue) && $newValue > 0;
         });
 
