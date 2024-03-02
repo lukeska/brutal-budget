@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->index()->constrained()->cascadeOnDelete();
             $table->string('onboarding_step', 50);
+            $table->tinyInteger('order');
             $table->timestamp('skipped_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

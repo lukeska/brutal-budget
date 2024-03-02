@@ -66,6 +66,7 @@ class User extends Authenticatable
 
     public function onboardingStatuses(): HasMany
     {
-        return $this->hasMany(OnboardingStatus::class);
+        return $this->hasMany(OnboardingStatus::class)
+            ->orderBy('order');
     }
 }

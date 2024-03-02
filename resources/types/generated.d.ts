@@ -57,6 +57,7 @@ export type OnboardingStatusData = {
 id: number;
 user_id: number;
 onboarding_step: App.Enums.OnboardingSteps;
+order: number;
 skipped_at: any | null;
 completed_at: any | null;
 };

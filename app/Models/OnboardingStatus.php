@@ -12,6 +12,7 @@ class OnboardingStatus extends Model
     use HasFactory;
 
     protected $fillable = [
+        'order',
         'skipped_at',
         'completed_at',
         'onboarding_step',

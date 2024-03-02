@@ -12,24 +12,8 @@ let props = defineProps<{
 
 const page = usePage();
 
-const stepsData = [
-    {
-        step: "expense-created",
-        component: OnboardingStepExpenseCreated,
-    },
-    {
-        step: "team-member-invited",
-        component: OnboardingStepTeamMemberInvited,
-    },
-    {
-        step: "project-created",
-        component: OnboardingStepProjectCreated,
-    },
-];
-
-const getComponent = (step: App.Enums.OnboardingSteps) => {
-    const stepObj = stepsData.find((item) => item.step === step);
-    return stepObj ? stepObj.component : null;
+const currentStep = () => {
+    return false;
 };
 </script>
 
@@ -51,19 +35,21 @@ const getComponent = (step: App.Enums.OnboardingSteps) => {
                     <Link
                         class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 disabled:opacity-50"
                         :href="route('teams.show', { team: page.props.auth.user.current_team_id })"
-                        >Invite</Link
+                        >+ Invite</Link
                     >
                 </template>
             </OnboardingStep>
 
-            <div
-                v-for="onboardingStatus in onboardingStatuses"
-                :key="onboardingStatus.onboarding_step">
-                <!-- <component
-                    :is="getComponent(onboardingStatus.onboarding_step)"
-                    :onboarding-status="onboardingStatus" /> -->
-                <OnboardingStep :onboarding-status="onboardingStatus" />
-            </div>
+            <OnboardingStep :onboarding-status="onboardingStatuses[2]">
+                <template #title> Create your first project </template>
+                <template #action>
+                    <Link
+                        class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 disabled:opacity-50"
+                        :href="route('projects.index')"
+                        >+ Project</Link
+                    >
+                </template>
+            </OnboardingStep>
         </div>
     </div>
 </template>

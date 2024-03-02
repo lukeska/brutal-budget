@@ -15,6 +15,7 @@ class OnboardingStatusData extends Data
         public int $userId,
         #[MapName('onboarding_step')]
         public OnboardingSteps $onboardingStep,
+        public int $order,
         #[MapName('skipped_at')]
         public ?Carbon $skippedAt,
         #[MapName('completed_at')]

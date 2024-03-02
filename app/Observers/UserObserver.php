@@ -13,14 +13,17 @@ class UserObserver
     public function created(User $user): void
     {
         $user->onboardingStatuses()->create([
+            'order' => 1,
             'onboarding_step' => OnboardingSteps::ExpenseCreated,
         ]);
 
         $user->onboardingStatuses()->create([
+            'order' => 2,
             'onboarding_step' => OnboardingSteps::TeamMemberInvited,
         ]);
 
         $user->onboardingStatuses()->create([
+            'order' => 3,
             'onboarding_step' => OnboardingSteps::ProjectCreated,
         ]);
     }
