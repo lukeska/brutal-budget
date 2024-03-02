@@ -5,6 +5,7 @@ import OnboardingStepTeamMemberInvited from "./OnboardingStepTeamMemberInvited.v
 import OnboardingStepProjectCreated from "./OnboardingStepProjectCreated.vue";
 import ExpenseAddButton from "@/Pages/Expenses/Partials/ExpenseAddButton.vue";
 import { Link, usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
 let props = defineProps<{
     onboardingStatuses: App.Data.OnboardingStatusData[];
@@ -12,17 +13,17 @@ let props = defineProps<{
 
 const page = usePage();
 
-const currentStep = () => {
-    return false;
-};
+const currentStep = computed(() => {
+    let step = props.onboardingStatuses.find((item) => item.skipped_at === null && item.completed_at === null);
+    return step === undefined ? false : step;
+});
 </script>
 
 <template>
-    <div>
-        this is the onboarding experience
-
+    <div v-if="currentStep">
         <div class="space-y-6">
             <OnboardingStep :onboarding-status="onboardingStatuses[0]">
+                <template #index>1</template>
                 <template #title> Create your first expense </template>
                 <template #action>
                     <ExpenseAddButton></ExpenseAddButton>
@@ -30,6 +31,7 @@ const currentStep = () => {
             </OnboardingStep>
 
             <OnboardingStep :onboarding-status="onboardingStatuses[1]">
+                <template #index>2</template>
                 <template #title> Invite a friend to join your team </template>
                 <template #action>
                     <Link
@@ -41,6 +43,7 @@ const currentStep = () => {
             </OnboardingStep>
 
             <OnboardingStep :onboarding-status="onboardingStatuses[2]">
+                <template #index>3</template>
                 <template #title> Create your first project </template>
                 <template #action>
                     <Link
