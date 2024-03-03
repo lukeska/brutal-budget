@@ -26,10 +26,24 @@ class ExpenseObserver
      */
     public function created(Expense $expense): void
     {
+        /*
+         * cache clear
+         */
         $this->flushCache($expense->team_id, Carbon::parse($expense->date));
 
+        /*
+         * update category totals
+         */
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((Carbon::parse($expense->date))->format('Ym')));
 
+        /*
+         * update onboarding status
+         */
+        $expense->user->onboardingStatusExpenseCreated->complete();
+
+        /*
+         * Events
+         */
         // broadcast event for Laravel Echo to pick up
         broadcast(new ExpenseCreated($expense))->toOthers();
 

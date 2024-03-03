@@ -31,4 +31,18 @@ class OnboardingStatus extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function done(): bool
+    {
+        return $this->skipped_at !== null || $this->completed_at !== null;
+    }
+
+    public function complete(): self
+    {
+        if ($this->completed_at === null) {
+            $this->update(['completed_at' => now()]);
+        }
+
+        return $this;
+    }
 }

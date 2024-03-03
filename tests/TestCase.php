@@ -19,7 +19,7 @@ abstract class TestCase extends BaseTestCase
         Cache::flush();
     }
 
-    protected function signIn($user = null)
+    protected function signIn($user = null): User
     {
         $user = $user ?? User::factory()->withPersonalTeam()->create();
 
