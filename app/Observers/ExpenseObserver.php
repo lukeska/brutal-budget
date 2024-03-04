@@ -39,7 +39,7 @@ class ExpenseObserver
         /*
          * update onboarding status
          */
-        $expense->user->onboardingStatusExpenseCreated->complete();
+        $expense->user->onboardingStatusExpenseCreated?->complete();
 
         /*
          * Events
