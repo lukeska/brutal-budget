@@ -39,7 +39,7 @@ class OnboardingStatus extends Model
 
     public function complete(): self
     {
-        if ($this->completed_at === null) {
+        if ($this->completed_at === null && $this->skipped_at === null) {
             $this->update(['completed_at' => now()]);
         }
 

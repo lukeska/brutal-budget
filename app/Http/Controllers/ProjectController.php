@@ -63,6 +63,8 @@ class ProjectController extends Controller
 
         Auth::user()->currentTeam->projects()->create($project);
 
+        Auth::user()->onboardingStatusProjectCreated?->complete();
+
         Request::session()->flash('message', 'Project created correctly');
         Request::session()->flash('category', ProjectData::from($project));
 
