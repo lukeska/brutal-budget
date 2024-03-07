@@ -20,7 +20,9 @@ class OnboardingStatusTest extends TestCase
 
         $this->assertFalse($user->onboardingStatusExpenseCreated->done());
 
-        Expense::factory()->recycle($user)->create();
+        $attributes = Expense::factory()->recycle($user)->raw();
+
+        $this->put(route('expenses.create'), $attributes);
 
         $this->assertTrue($user->onboardingStatusExpenseCreated->fresh()->done());
     }

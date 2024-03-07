@@ -37,11 +37,6 @@ class ExpenseObserver
         Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((Carbon::parse($expense->date))->format('Ym')));
 
         /*
-         * update onboarding status
-         */
-        $expense->user->onboardingStatusExpenseCreated?->complete();
-
-        /*
          * Events
          */
         // broadcast event for Laravel Echo to pick up

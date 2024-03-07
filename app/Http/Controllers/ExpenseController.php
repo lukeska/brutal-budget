@@ -80,6 +80,8 @@ class ExpenseController extends Controller
 
         $expenses = $this->expensesRepository->createMonthlyExpenses($expense, Auth::user());
 
+        Auth::user()->onboardingStatusExpenseCreated?->complete();
+
         Request::session()->flash('message', 'Expense created correctly');
         Request::session()->flash('expense', ExpenseData::from($expenses->first()));
 
