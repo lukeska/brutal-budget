@@ -36,6 +36,8 @@ class InviteTeamMember implements InvitesTeamMembers
 
         /** @phpstan-ignore-next-line  */
         Mail::to($email)->send(new TeamInvitation($invitation));
+
+        $user->onboardingStatusTeamMemberInvited->complete();
     }
 
     /**

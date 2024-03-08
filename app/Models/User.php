@@ -83,4 +83,10 @@ class User extends Authenticatable
         return $this->hasOne(OnboardingStatus::class)
             ->where('onboarding_step', OnboardingSteps::ProjectCreated);
     }
+
+    public function onboardingStatusTeamMemberInvited(): HasOne
+    {
+        return $this->hasOne(OnboardingStatus::class)
+            ->where('onboarding_step', OnboardingSteps::TeamMemberInvited);
+    }
 }
