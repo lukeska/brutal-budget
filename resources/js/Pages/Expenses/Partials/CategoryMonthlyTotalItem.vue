@@ -144,9 +144,9 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
                             </div>
                         </template>
                     </ExpenseItem>
-                    <button
+                    <!--                    <button
                         class="absolute inset-0 z-10 h-full w-full"
-                        @click.prevent="expenseStore.showSidebar(expense)"></button>
+                        @click.prevent="expenseStore.showSidebar(expense)"></button>-->
                 </div>
             </div>
         </div>

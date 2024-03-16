@@ -2,6 +2,7 @@
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
 import { usePage, Link } from "@inertiajs/vue3";
+import { computed, ref, watchEffect } from "vue";
 
 let props = defineProps<{
     expense: App.Data.ExpenseData;
@@ -10,10 +11,17 @@ let props = defineProps<{
 const page = usePage();
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+
+const startX = ref(0);
+const currentX = ref(0);
+const distance = computed(() => Math.max(0, currentX.value - startX.value));
+watchEffect(() => console.log("watch effect " + distance.value));
 </script>
 
 <template>
-    <div class="flex w-full items-center justify-between px-3 py-2">
+    <div
+        class="relative flex w-full transform select-none items-center justify-between px-3 py-2"
+        :style="'transform: translateX(' + distance + 'px)'">
         <div class="w-2/3 text-left">
             <div class="flex items-center space-x-4">
                 <div>
@@ -38,5 +46,10 @@ const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency)
         </div>
 
         <div class="w-1/3 text-right font-mono text-lg">{{ currencyFormatter.format(expense.amount) }}</div>
+        <div
+            class="absolute inset-0 h-full w-full bg-red-100/50"
+            @touchstart="startX = currentX = $event.touches[0].clientX"
+            @touchmove="currentX = $event.touches[0].clientX"
+            @touchend="console.log('touchend')"></div>
     </div>
 </template>
