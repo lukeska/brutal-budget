@@ -14,8 +14,6 @@ const props = defineProps<{
     total: number;
 }>();
 
-const expenseStore = useExpenseStore();
-
 const showExpenses = ref(false);
 
 const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
@@ -63,9 +61,6 @@ const percentage = computed((): number => {
                 :key="expense.id"
                 class="relative w-full bg-white hover:bg-neutral-50">
                 <ExpenseItem :expense="expense"> </ExpenseItem>
-                <button
-                    class="absolute inset-0 z-10 h-full w-full"
-                    @click.prevent="expenseStore.showSidebar(expense)"></button>
             </div>
         </div>
     </div>
