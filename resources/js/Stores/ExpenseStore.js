@@ -31,6 +31,7 @@ export const useExpenseStore = defineStore("ExpenseStore", {
                     date: getCurrentDateFormatted(),
                     notes: null,
                     category: category ? category : page.props.categories[0],
+                    currency: page.props.currency,
                     is_regular: true,
                 };
             } else {

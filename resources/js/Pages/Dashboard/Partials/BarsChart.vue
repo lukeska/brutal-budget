@@ -13,7 +13,7 @@ const bars = ref();
 
 const page = usePage();
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const initBars = () => {
     const monthlyTotals = props.monthlyTotals;

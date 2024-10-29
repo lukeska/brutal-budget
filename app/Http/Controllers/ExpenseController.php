@@ -83,7 +83,7 @@ class ExpenseController extends Controller
         Auth::user()->onboardingStatusExpenseCreated?->complete();
 
         Request::session()->flash('message', 'Expense created correctly');
-        Request::session()->flash('expense', ExpenseData::from($expenses->first()));
+        Request::session()->flash('expense', ExpenseData::from($expenses->first()->load('currency')));
 
         return back();
     }

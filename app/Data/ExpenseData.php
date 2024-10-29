@@ -3,6 +3,7 @@
 namespace App\Data;
 
 use App\Data\Transformers\IntToCurrencyTransformer;
+use App\Models\Currency;
 use App\Models\Expense;
 use Carbon\Carbon;
 use Momentum\Lock\Data\DataResource;
@@ -21,6 +22,7 @@ class ExpenseData extends DataResource
         public Carbon $date,
         #[WithTransformer(IntToCurrencyTransformer::class)]
         public int $amount,
+        public CurrencyData $currency,
         public ?string $notes,
         #[MapName('is_regular')]
         public bool $isRegular,

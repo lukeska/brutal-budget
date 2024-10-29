@@ -27,6 +27,7 @@ class ExpensesRepository
                     return $query->where('is_regular', $regular);
                 })
                 ->month($date)
+                ->with('currency')
                 ->with('category')
                 ->with('project')
                 ->with('user')

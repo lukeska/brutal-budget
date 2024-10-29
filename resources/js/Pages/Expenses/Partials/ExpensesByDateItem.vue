@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const showExpenses = ref(false);
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const percentage = computed((): number => {
     let dailyTotal = props.expenses.reduce((total, item) => total + item.amount, 0);

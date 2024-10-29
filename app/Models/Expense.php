@@ -41,6 +41,11 @@ class Expense extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
     public function team(): BelongsTo
     {
         return $this->belongsTo(Jetstream::teamModel());

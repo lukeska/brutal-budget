@@ -14,7 +14,7 @@ const expenseStore = useExpenseStore();
 
 const page = usePage();
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const startX = ref(0);
 const currentX = ref(0);
