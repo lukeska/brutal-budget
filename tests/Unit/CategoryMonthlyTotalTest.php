@@ -18,7 +18,6 @@ class CategoryMonthlyTotalTest extends TestCase
     /** @test */
     public function it_can_calculate_monthly_totals()
     {
-        /** @var User $luca */
         $luca = $this->signIn();
 
         /** @var Team $team */
@@ -194,6 +193,11 @@ class CategoryMonthlyTotalTest extends TestCase
 
         $this->assertCount(0, $groupTotalCategory1);
         $this->assertCount(1, $groupTotalCategory2);
+    }
 
+    /** @test */
+    public function it_can_calculate_totals_for_expenses_in_multiple_currencies()
+    {
+        $this->markTestSkipped('this test must be implemented');
     }
 }

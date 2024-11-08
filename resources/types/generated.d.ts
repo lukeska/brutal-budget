@@ -33,6 +33,7 @@ id?: number;
 date: string;
 amount: number;
 currency: App.Data.CurrencyData;
+converted_amount: number;
 notes: string | null;
 is_regular: boolean;
 category: App.Data.CategoryData;

@@ -9,11 +9,12 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\DataCollection;
 
 class ExpensesRepository
 {
-    public function getByMonth(int $teamId, Carbon $date, ?bool $regular = null): Collection
+    public function getByMonth(int $teamId, Carbon $date, int $currencyId, ?bool $regular = null): Collection
     {
         $key = "expenses-getByMonth-$teamId-{$date->format('Ym')}-$regular";
         $tags = $this->getCacheTags($teamId, $date);
@@ -22,6 +23,11 @@ class ExpensesRepository
             $expenses = Cache::tags($tags)->get($key);
         } else {
             $expenses = Expense::query()
+                ->select('*', DB::raw('amount * rate AS converted_amount'))
+                ->leftJoin('currency_exchange_rates', function ($join) use ($currencyId) {
+                    $join->on('expenses.currency_id', '=', 'currency_exchange_rates.from_currency_id')
+                        ->where('currency_exchange_rates.to_currency_id', '=', $currencyId);
+                })
                 ->where('team_id', $teamId)
                 ->when($regular !== null, function ($query) use ($regular) {
                     return $query->where('is_regular', $regular);

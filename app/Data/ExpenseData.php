@@ -23,6 +23,9 @@ class ExpenseData extends DataResource
         #[WithTransformer(IntToCurrencyTransformer::class)]
         public int $amount,
         public CurrencyData $currency,
+        #[WithTransformer(IntToCurrencyTransformer::class)]
+        #[MapName('converted_amount')]
+        public int $convertedAmount,
         public ?string $notes,
         #[MapName('is_regular')]
         public bool $isRegular,
