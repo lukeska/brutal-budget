@@ -17,6 +17,11 @@ class CategoryMonthlyTotal extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
     public function getFormattedAmountAttribute($value): string
     {
         return number_format($value / 100, 2, '.', '');

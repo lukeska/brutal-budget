@@ -23,7 +23,7 @@ class CategoryController extends Controller
     {
         return Inertia::render('Categories/Index', [
             'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->currentTeam->id)),
-            'totals' => $this->monthlyTotalsRepository->getCategoriesTotals(Auth::user()->currentTeam->id),
+            'totals' => $this->monthlyTotalsRepository->getCategoriesTotals(Auth::user()->currentTeam->id, Auth::user()->currency_id),
             'canCreate' => Request::user()->can('create', Category::class),
         ]);
     }

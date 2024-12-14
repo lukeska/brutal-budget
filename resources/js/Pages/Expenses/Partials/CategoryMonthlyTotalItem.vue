@@ -20,7 +20,7 @@ const page = usePage();
 let showExpenses = ref(false);
 
 const percentage = computed(() => {
-    return Math.round((currentCategoryMonthlyTotal.value.amount / currentMonthlyTotal.value.total) * 100);
+    return Math.round((currentCategoryMonthlyTotal.value.converted_amount / currentMonthlyTotal.value.total) * 100);
 });
 
 const currentMonthlyTotal = computed(() => {
@@ -60,7 +60,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
                 <div class="flex space-x-3">
                     <div class="text-right font-mono">
                         <div class="text-xl">
-                            {{ currencyFormatter.format(currentCategoryMonthlyTotal.amount) }}
+                            {{ currencyFormatter.format(currentCategoryMonthlyTotal.converted_amount) }}
                         </div>
                         <div class="flex items-center space-x-2">
                             <div class="relative h-1 w-16 bg-gray-200">
@@ -118,7 +118,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
                                             currencyFormatter.format(
                                                 monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
                                                     ? monthlyTotal.categoryMonthlyTotals[0].previous_month_delta_amount
-                                                    : monthlyTotal.categoryMonthlyTotals[0].amount,
+                                                    : monthlyTotal.categoryMonthlyTotals[0].converted_amount,
                                             )
                                         }}
                                     </div>
@@ -126,7 +126,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
                             </div>
                             <div class="font-mono">
                                 <span v-if="monthlyTotal.categoryMonthlyTotals.length > 0">
-                                    {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].amount) }}
+                                    {{ currencyFormatter.format(monthlyTotal.categoryMonthlyTotals[0].converted_amount) }}
                                 </span>
                                 <span v-else>-</span>
                             </div>

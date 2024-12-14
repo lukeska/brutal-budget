@@ -34,7 +34,7 @@ class ExpenseObserver
         /*
          * update category totals
          */
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((Carbon::parse($expense->date))->format('Ym')));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, $expense->user->currency_id, (int) ((Carbon::parse($expense->date))->format('Ym')));
 
         /*
          * Events
@@ -59,7 +59,7 @@ class ExpenseObserver
 
         $this->expensesRepository->flushCache($expense->team_id, $newDate);
 
-        Totals::generateByCategory($expense->category_id, $expense->team_id, (int) $newDate->format('Ym'));
+        Totals::generateByCategory($expense->category_id, $expense->team_id, $expense->user->currency_id, (int) $newDate->format('Ym'));
 
         // date was changed, must update total relate to past date
         if ($expense->wasChanged('date') || $expense->wasChanged('category_id')) {
@@ -67,7 +67,7 @@ class ExpenseObserver
             $originalDate = new Carbon($expense->getOriginal('date'));
 
             $this->flushCache($expense->team_id, $originalDate);
-            Totals::generateByCategory($expense->getOriginal('category_id'), $expense->team->id, (int) $originalDate->format('Ym'));
+            Totals::generateByCategory($expense->getOriginal('category_id'), $expense->team->id, $expense->user->currency_id, (int) $originalDate->format('Ym'));
         }
 
         // broadcast event for Laravel Echo to pick up
@@ -81,7 +81,7 @@ class ExpenseObserver
     {
         $this->flushCache($expense->team_id, new Carbon($expense->date));
 
-        Totals::generateByCategory($expense->category->id, $expense->team->id, (int) ((new Carbon($expense->date))->format('Ym')));
+        Totals::generateByCategory($expense->category->id, $expense->team->id, $expense->user->currency_id, (int) ((new Carbon($expense->date))->format('Ym')));
 
         // broadcast event for Laravel Echo to pick up
         broadcast(new ExpenseDeleted($expense->id, $expense->team->id))->toOthers();

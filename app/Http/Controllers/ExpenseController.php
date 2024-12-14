@@ -45,7 +45,7 @@ class ExpenseController extends Controller
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
-            monthlyTotals: $this->monthlyTotalsRepository->getAll(Auth::user()->currentTeam->id, $year, $month, $regularExpenses),
+            monthlyTotals: $this->monthlyTotalsRepository->getAll(Auth::user()->currentTeam->id, Auth::user()->currency_id, $year, $month, $regularExpenses),
         ));
     }
 
@@ -82,8 +82,11 @@ class ExpenseController extends Controller
 
         Auth::user()->onboardingStatusExpenseCreated?->complete();
 
+        $newExpense = $expenses->first()->load('currency');
+        $newExpense->converted_amount = $newExpense->convertAmountTo(Auth::user()->currency_id);
+
         Request::session()->flash('message', 'Expense created correctly');
-        Request::session()->flash('expense', ExpenseData::from($expenses->first()->load('currency')));
+        Request::session()->flash('expense', ExpenseData::from($newExpense));
 
         return back();
     }

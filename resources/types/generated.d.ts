@@ -8,6 +8,8 @@ hex: string;
 export type CategoryMonthlyTotalData = {
 id: number;
 amount: number;
+currency: App.Data.CurrencyData;
+converted_amount: number;
 year_month: number;
 category: App.Data.CategoryData;
 previous_month_delta_amount: number | null;

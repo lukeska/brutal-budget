@@ -158,7 +158,7 @@ const selectedMonthYear = ref(monthYears.find((item) => item.month === props.mon
                                         :key="monthlyTotal.id">
                                         <div class="w-1/3">
                                             <div class="text-xl">
-                                                {{ currencyFormatter.format(monthlyTotal.amount) }}
+                                                {{ currencyFormatter.format(monthlyTotal.converted_amount) }}
                                             </div>
                                             <div class="flex items-center space-x-2">
                                                 <span :style="'color:' + monthlyTotal.category.hex">

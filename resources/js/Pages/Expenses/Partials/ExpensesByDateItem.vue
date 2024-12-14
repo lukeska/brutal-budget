@@ -31,7 +31,7 @@ const percentage = computed((): number => {
         <div class="flex items-center space-x-3">
             <div class="text-right font-mono">
                 <div class="text-xl">
-                    {{ currencyFormatter.format(expenses.reduce((total, item) => total + item.amount, 0)) }}
+                    {{ currencyFormatter.format(expenses.reduce((total, item) => total + item.converted_amount, 0)) }}
                 </div>
                 <div class="flex items-center space-x-2">
                     <div class="relative h-1 w-16 bg-gray-200">

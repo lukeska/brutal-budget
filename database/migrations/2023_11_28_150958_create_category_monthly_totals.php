@@ -18,6 +18,7 @@ return new class extends Migration
             // TODO: use foreignIdFor
             $table->foreignId('user_id')->nullable()->index()->constrained();
             $table->integer('amount');
+            $table->foreignId('currency_id')->default(1)->constrained('currencies');
             $table->mediumInteger(column: 'year_month', unsigned: true)->index();
             $table->boolean('is_regular')->nullable();
             $table->timestamps();

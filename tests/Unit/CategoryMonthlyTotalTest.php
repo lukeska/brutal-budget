@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Facades\Totals;
 use App\Models\CategoryMonthlyTotal;
 use App\Models\Expense;
 use App\Models\Team;
@@ -198,6 +199,49 @@ class CategoryMonthlyTotalTest extends TestCase
     /** @test */
     public function it_can_calculate_totals_for_expenses_in_multiple_currencies()
     {
-        $this->markTestSkipped('this test must be implemented');
+        $this->travelTo('2024-01-01');
+        $luca = $this->signIn();
+        $team = $luca->currentTeam;
+        $category = $team->categories->first();
+
+        Expense::withoutEvents(function () use ($luca, $category, $team) {
+            Expense::factory()->create([
+                'user_id' => $luca->id,
+                'category_id' => $category->id,
+                'team_id' => $team->id,
+                'amount' => 100,
+                'currency_id' => 1,
+            ]);
+
+            Expense::factory()->create([
+                'user_id' => $luca->id,
+                'category_id' => $category->id,
+                'team_id' => $team->id,
+                'amount' => 100,
+                'currency_id' => 2,
+            ]);
+        });
+
+        Totals::generateByCategory($category->id, $team->id, 1, 202401);
+
+        $categoryMonthlyTotal = CategoryMonthlyTotal::query()
+            ->where('category_id', $category->id)
+            ->where('team_id', $team->id)
+            ->where('year_month', '202401')
+            ->first();
+
+        $this->assertEquals(193, $categoryMonthlyTotal->amount);
+        $this->assertEquals(1, $categoryMonthlyTotal->currency_id);
+
+        Totals::generateByCategory($category->id, $team->id, 2, 202401);
+
+        $categoryMonthlyTotal = CategoryMonthlyTotal::query()
+            ->where('category_id', $category->id)
+            ->where('team_id', $team->id)
+            ->where('year_month', '202401')
+            ->first();
+
+        $this->assertEquals(208, $categoryMonthlyTotal->amount);
+        $this->assertEquals(2, $categoryMonthlyTotal->currency_id);
     }
 }

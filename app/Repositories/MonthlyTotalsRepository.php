@@ -14,7 +14,7 @@ use Spatie\LaravelData\DataCollection;
 
 class MonthlyTotalsRepository
 {
-    public function getAll(int $teamId, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
+    public function getAll(int $teamId, int $currencyId, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
     {
         $currentDate = Carbon::now()->firstOfMonth();
 
@@ -39,9 +39,9 @@ class MonthlyTotalsRepository
 
         $data = [];
         foreach ($dates as $date) {
-            $rawTotals = $this->get($teamId, $date, $regularExpenses);
+            $rawTotals = $this->get($teamId, $date, $currencyId, $regularExpenses);
 
-            $totalExpenses = $rawTotals->sum('amount');
+            $totalExpenses = $rawTotals->sum('converted_amount');
 
             $data[] = MonthlyTotalData::from([
                 'total' => $totalExpenses,
@@ -54,9 +54,9 @@ class MonthlyTotalsRepository
         return MonthlyTotalData::collection(array_slice($data, 1));
     }
 
-    public function get(int $teamId, Carbon $date, ?bool $regular = null): Collection
+    public function get(int $teamId, Carbon $date, int $currencyId, ?bool $regular = null): Collection
     {
-        $key = "monthlyTotal-get-{$teamId}-{$date->format('Ym')}-{$regular}";
+        $key = "monthlyTotal-get-{$teamId}-{$currencyId}-{$date->format('Ym')}-{$regular}";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {
@@ -64,21 +64,27 @@ class MonthlyTotalsRepository
         } else {
             $total = CategoryMonthlyTotal::query()
                 ->select(
-                    '*',
-                    DB::raw('(amount - (
+                    'category_monthly_totals.*',
+                    DB::raw('((amount - (
                         SELECT amount
                         FROM category_monthly_totals AS t2
                         WHERE t2.category_id = category_monthly_totals.category_id
                           AND t2.year_month = '.$date->clone()->subMonth()->format('Ym').
                         ' ORDER BY t2.year_month DESC
                         LIMIT 1
-                    )) as previous_month_delta_amount')
+                    )) * rate) as previous_month_delta_amount'),
+                    DB::raw('amount * rate AS converted_amount')
                 )
+                ->leftJoin('currency_exchange_rates', function ($join) use ($currencyId) {
+                    $join->on('category_monthly_totals.currency_id', '=', 'currency_exchange_rates.from_currency_id')
+                        ->where('currency_exchange_rates.to_currency_id', '=', $currencyId);
+                })
                 ->where('team_id', $teamId)
                 ->where('year_month', $date->format('Ym'))
                 ->whereNull('user_id')
                 ->where('is_regular', $regular)
                 ->with('category')
+                ->with('currency')
                 ->orderByDesc('amount')
                 ->orderByDesc('id')
                 ->get();
@@ -89,19 +95,21 @@ class MonthlyTotalsRepository
         return $total;
     }
 
-    public function getCategoriesTotals(int $teamId): DataCollection
+    public function getCategoriesTotals(int $teamId, int $currencyId): DataCollection
     {
-        $key = "monthlyTotal-getCategoriesTotals-$teamId";
+        $key = "monthlyTotal-getCategoriesTotals-{$teamId}-{$currencyId}";
         $tags = $this->getCacheTags($teamId);
 
         if (Cache::tags($tags)->has($key)) {
             $categoryTotals = Cache::tags($tags)->get($key);
         } else {
             $categoryTotalsRaw = CategoryMonthlyTotal::query()
-                ->groupBy('category_id')
-                ->selectRaw('category_id, SUM(amount) as total')
-                ->where('team_id', $teamId)
-                ->whereNull('is_regular')
+                ->join('currency_exchange_rates', 'category_monthly_totals.currency_id', '=', 'currency_exchange_rates.from_currency_id')
+                ->where('currency_exchange_rates.to_currency_id', '=', $currencyId) // Ensure the rates are for the correct base currency
+                ->groupBy('category_monthly_totals.category_id')
+                ->selectRaw('category_monthly_totals.category_id, SUM(category_monthly_totals.amount * currency_exchange_rates.rate) as total')
+                ->where('category_monthly_totals.team_id', $teamId)
+                ->whereNull('category_monthly_totals.is_regular')
                 ->get();
 
             $categoryTotals = CategoryTotalData::collection($categoryTotalsRaw->toArray());

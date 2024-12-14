@@ -154,7 +154,7 @@ onMounted(() => {
                     <!-- Amount -->
                     <div class="order-2">
                         <div class="flex items-center">
-                            <div class="relative flex-1 rounded-md shadow-sm">
+                            <div class="relative flex-1">
                                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <span class="text-gray-500 sm:text-sm">
                                         {{ selectedCurrency.symbol }}
@@ -162,7 +162,7 @@ onMounted(() => {
                                 </div>
                                 <CurrencyInput
                                     id="amount"
-                                    class="block h-10 w-full rounded-md border-0 py-1.5 pl-8 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    class="block h-10 w-full rounded-l-md border-0 py-1.5 pl-8 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     name="amount"
                                     v-model="form.amount"
                                     placeholder="0.00"
@@ -176,7 +176,7 @@ onMounted(() => {
                                     :disabled="!canUpdate">
                                     <div class="relative">
                                         <ListboxButton
-                                            class="relative w-full cursor-default rounded-md border bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                            class="relative w-full cursor-default rounded-r-md border border-gray-300 border-l-0 bg-white h-10 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                                                 <span class="block truncate">{{
                                                         selectedCurrency ? selectedCurrency.code : "Pick a currency"
                                                     }}</span>
@@ -225,7 +225,7 @@ onMounted(() => {
                             <button
                                 type="button"
                                 @click.prevent="showCategoryList = !showCategoryList"
-                                class="flex h-10 w-10 items-center justify-center rounded p-1.5 text-white"
+                                class="flex h-10 w-10 ml-2 items-center justify-center rounded p-1.5 text-white"
                                 :style="'background-color:' + categoryById.hex"
                                 data-cy="open-category-list-button">
                                 <CategoryIcon :category="categoryById" />

@@ -5,7 +5,7 @@ namespace App\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static void generateByCategory(int $categoryId, int $teamId, int $yearMonth)
+ * @method static generateByCategory(int $categoryId, int $teamId, int $currencyId, int $yearMonth): void
  *
  * @see \App\Helpers\Totals
  */
