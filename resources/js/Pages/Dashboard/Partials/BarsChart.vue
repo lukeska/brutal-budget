@@ -13,7 +13,7 @@ const bars = ref();
 
 const page = usePage();
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const initBars = () => {
     const monthlyTotals = props.monthlyTotals;
@@ -31,7 +31,7 @@ const initBars = () => {
     const labels = monthlyTotals.map((entry) => moment(entry.yearMonth, "YYYYMM").format("MM/YY"));
     const datasets = monthlyTotals.map((entry) =>
         entry.categoryMonthlyTotals.reduce((acc, category) => {
-            acc[category.category.name] = category.amount;
+            acc[category.category.name] = category.converted_amount;
             return acc;
         }, {}),
     );

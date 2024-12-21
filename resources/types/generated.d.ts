@@ -8,6 +8,8 @@ hex: string;
 export type CategoryMonthlyTotalData = {
 id: number;
 amount: number;
+currency: App.Data.CurrencyData;
+converted_amount: number;
 year_month: number;
 category: App.Data.CategoryData;
 previous_month_delta_amount: number | null;
@@ -22,10 +24,18 @@ export type CategoryTotalData = {
 category_id: number;
 total: number;
 };
+export type CurrencyData = {
+id: number;
+name: string;
+code: string;
+symbol: string;
+};
 export type ExpenseData = {
 id?: number;
 date: string;
 amount: number;
+currency: App.Data.CurrencyData;
+converted_amount: number;
 notes: string | null;
 is_regular: boolean;
 category: App.Data.CategoryData;
@@ -37,6 +47,7 @@ export type ExpenseRequest = {
 id?: number;
 date: string;
 amount: number;
+currency_id: number;
 notes: string | null;
 is_regular: boolean;
 category_id: number;
@@ -72,9 +83,10 @@ total: number;
 };
 export type UserData = {
 name: string;
+currency: App.Data.CurrencyData | null;
 };
 export type UserSettingsRequest = {
-currency: string;
+currency_id: number;
 };
 }
 declare namespace App.Enums {

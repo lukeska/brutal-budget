@@ -12,12 +12,12 @@ const donut = ref();
 
 const page = usePage();
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const initDonut = () => {
     const currentMonthlyTotals = props.monthlyTotals.find((item) => item.isCurrent === true);
     const labels = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.category.name);
-    const dataValues = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.amount);
+    const dataValues = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.converted_amount);
     const backgroundColors = currentMonthlyTotals.categoryMonthlyTotals.map((entry) => entry.category.hex);
 
     new Chart(donut.value, {

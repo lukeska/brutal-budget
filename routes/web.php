@@ -20,7 +20,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('temp', function () {
+    $rates = \App\Models\CurrencyExchangeRate::all();
+    foreach ($rates as $rate) {
+        echo "['id' => {$rate->id}, 'from_currency_id' => {$rate->from_currency_id}, 'to_currency_id' => {$rate->to_currency_id}, 'rate' => '{$rate->rate}'],<br>";
+    }
+});
 Route::get('/', function () {
     return redirect()->to(route('dashboard'));
 });

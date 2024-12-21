@@ -14,7 +14,7 @@ const expenseStore = useExpenseStore();
 
 const page = usePage();
 
-const currencyFormatter = createCurrencyFormatter(page.props.auth.user.currency);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const startX = ref(0);
 const currentX = ref(0);
@@ -71,7 +71,7 @@ const deleteExpense = () => {
                 <div class="text-gray-500">{{ expense.notes ? expense.notes : "&nbsp;" }}</div>
             </div>
 
-            <div class="w-1/3 text-right font-mono text-lg">{{ currencyFormatter.format(expense.amount) }}</div>
+            <div class="w-1/3 text-right font-mono text-lg">{{ currencyFormatter.format(expense.converted_amount) }}</div>
         </div>
         <div
             class="absolute inset-0 h-full w-full"

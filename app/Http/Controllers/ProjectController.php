@@ -23,24 +23,16 @@ class ProjectController extends Controller
     {
         return Inertia::render('Projects/Index', [
             'projects' => ProjectData::collection($this->projectsRepository->getAll(Auth::user()->currentTeam->id)),
-            'totals' => $this->expensesRepository->getProjectsTotals(Auth::user()->currentTeam->id),
+            'totals' => $this->expensesRepository->getProjectsTotals(Auth::user()->currentTeam->id, Auth::user()->currency_id),
             'canCreate' => Request::user()->can('create', Project::class),
         ]);
     }
 
     public function show(Project $project)
     {
-        $expenses = Auth::user()
-            ->currentTeam
-            ->expenses()
-            ->where('project_id', $project->id)
-            ->with('category')
-            ->with('project')
-            ->with('user')
-            ->orderByDesc('date')
-            ->get();
+        $expenses = $this->expensesRepository->getByProject(Auth::user()->currentTeam->id, $project->id, Auth::user()->currency_id);
 
-        $total = $expenses->sum('amount');
+        $total = $expenses->sum('converted_amount');
 
         return Inertia::render('Projects/Show', [
             'project' => ProjectData::from($project),

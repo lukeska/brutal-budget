@@ -20,8 +20,11 @@ class ExpenseFactory extends Factory
     {
         return [
             'date' => now(),
-            'amount' => $this->faker->numberBetween(0, 100) * 100,
             'user_id' => User::factory()->withPersonalTeam(),
+            'amount' => $this->faker->numberBetween(0, 100) * 100,
+            'currency_id' => function (array $attributes) {
+                return User::find($attributes['user_id'])->currency->id;
+            },
             'team_id' => function (array $attributes) {
                 return User::find($attributes['user_id'])->currentTeam->id;
             },

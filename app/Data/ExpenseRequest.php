@@ -21,6 +21,8 @@ class ExpenseRequest extends Data
         public Carbon $date,
         #[WithCast(CurrencyToIntCast::class)]
         public int $amount,
+        #[MapName('currency_id')]
+        public int $currencyId,
         public ?string $notes,
         #[MapName('is_regular')]
         public bool $isRegular,
@@ -39,6 +41,7 @@ class ExpenseRequest extends Data
                 'required',
                 'gt:0',
             ],
+            'currency_id' => ['required', 'exists:App\Models\Currency,id'],
             'date' => ['required', 'date', 'after:last year', 'before:+2 year', new MaxExpensePerMonth(Auth::user()->currentTeam->id)],
             'notes' => ['nullable'],
             'category_id' => ['required', 'exists:App\Models\Category,id'], // TODO: scope to categories for the current group

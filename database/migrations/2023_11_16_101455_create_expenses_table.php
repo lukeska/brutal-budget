@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('project_id')->index()->nullable()->constrained()->nullOnDelete();
             $table->dateTime('date');
             $table->integer('amount');
+            $table->foreignId('currency_id')->default(1)->constrained('currencies');
             $table->string('notes')->nullable();
             $table->boolean('is_regular')->default(true);
             $table->timestamps();

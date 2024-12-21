@@ -41,9 +41,24 @@ class Expense extends Model
         return $this->belongsTo(Project::class);
     }
 
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
     public function team(): BelongsTo
     {
         return $this->belongsTo(Jetstream::teamModel());
+    }
+
+    public function convertAmountTo(int $currencyId): float
+    {
+        $exchangeRate = CurrencyExchangeRate::query()
+            ->where('from_currency_id', $this->currency_id)
+            ->where('to_currency_id', $currencyId)
+            ->first()->rate;
+
+        return $this->amount * $exchangeRate;
     }
 
     /*

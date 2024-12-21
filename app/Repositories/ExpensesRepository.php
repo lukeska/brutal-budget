@@ -9,24 +9,61 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Spatie\LaravelData\DataCollection;
 
 class ExpensesRepository
 {
-    public function getByMonth(int $teamId, Carbon $date, ?bool $regular = null): Collection
+    public function getByMonth(int $teamId, Carbon $date, int $currencyId, ?bool $regular = null): Collection
     {
-        $key = "expenses-getByMonth-$teamId-{$date->format('Ym')}-$regular";
+        $key = "expenses-getByMonth-$teamId-{$date->format('Ym')}-$currencyId-$regular";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {
             $expenses = Cache::tags($tags)->get($key);
         } else {
             $expenses = Expense::query()
+                ->select('expenses.*', DB::raw('amount * rate AS converted_amount'))
+                ->leftJoin('currency_exchange_rates', function ($join) use ($currencyId) {
+                    $join->on('expenses.currency_id', '=', 'currency_exchange_rates.from_currency_id')
+                        ->where('currency_exchange_rates.to_currency_id', '=', $currencyId);
+                })
                 ->where('team_id', $teamId)
                 ->when($regular !== null, function ($query) use ($regular) {
                     return $query->where('is_regular', $regular);
                 })
                 ->month($date)
+                ->with('currency')
+                ->with('category')
+                ->with('project')
+                ->with('user')
+                ->orderByDesc('date')
+                ->orderByDesc('id')
+                ->get();
+
+            Cache::tags($tags)->put($key, $expenses);
+        }
+
+        return $expenses;
+    }
+
+    public function getByProject(int $teamId, int $projectId, int $currencyId): Collection
+    {
+        $key = "expenses-getByProject-{$teamId}-{$projectId}-{$currencyId}";
+        $tags = $this->getCacheTags($teamId);
+
+        if (Cache::tags($tags)->has($key)) {
+            $expenses = Cache::tags($tags)->get($key);
+        } else {
+            $expenses = Expense::query()
+                ->select('expenses.*', DB::raw('amount * rate AS converted_amount'))
+                ->leftJoin('currency_exchange_rates', function ($join) use ($currencyId) {
+                    $join->on('expenses.currency_id', '=', 'currency_exchange_rates.from_currency_id')
+                        ->where('currency_exchange_rates.to_currency_id', '=', $currencyId);
+                })
+                ->where('team_id', $teamId)
+                ->where('project_id', $projectId)
+                ->with('currency')
                 ->with('category')
                 ->with('project')
                 ->with('user')
@@ -59,19 +96,23 @@ class ExpensesRepository
         return $expenses;
     }
 
-    public function getProjectsTotals(int $teamId): DataCollection
+    public function getProjectsTotals(int $teamId, int $currencyId): DataCollection
     {
-        $key = "expenses-getProjectsTotals-$teamId";
+        $key = "expenses-getProjectsTotals-{$teamId}-{$currencyId}";
         $tags = $this->getCacheTags($teamId);
 
         if (Cache::tags($tags)->has($key)) {
             $projectTotals = Cache::tags($tags)->get($key);
         } else {
             $projectTotalsRaw = Expense::query()
-                ->groupBy('project_id')
-                ->selectRaw('project_id, SUM(amount) as total')
+                ->selectRaw('project_id, SUM(amount * rate) as total')
+                ->leftJoin('currency_exchange_rates', function ($join) use ($currencyId) {
+                    $join->on('expenses.currency_id', '=', 'currency_exchange_rates.from_currency_id')
+                        ->where('currency_exchange_rates.to_currency_id', '=', $currencyId);
+                })
                 ->where('team_id', $teamId)
                 ->whereNotNull('project_id')
+                ->groupBy('project_id')
                 ->get();
 
             $projectTotals = ProjectTotalData::collection($projectTotalsRaw->toArray());

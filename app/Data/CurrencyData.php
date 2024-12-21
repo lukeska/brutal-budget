@@ -4,11 +4,14 @@ namespace App\Data;
 
 use Spatie\LaravelData\Data;
 
-class UserData extends Data
+class CurrencyData extends Data
 {
     public function __construct(
+        public int $id,
         public string $name,
-        public ?CurrencyData $currency
-    ) {
+        public string $code,
+        public string $symbol,
+    )
+    {
     }
 }

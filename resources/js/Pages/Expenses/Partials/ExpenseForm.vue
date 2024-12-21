@@ -44,6 +44,7 @@ const projects = computed(() => {
 
     return [defaultProject, ...originalProjects];
 });
+const currencies = computed(() => page.props.currencies);
 
 const showCategoryList = ref(false);
 
@@ -53,6 +54,7 @@ const formatDate = (date: string): string => {
 
 let form = useForm({
     amount: expenseStore.expense.amount ? expenseStore.expense.amount : null,
+    currency_id: expenseStore.expense.currency.id,
     date: formatDate(expenseStore.expense.date), //: new Date().toISOString().split("T")[0],
     notes: expenseStore.expense.notes,
     category_id: expenseStore.expense.category?.id,
@@ -131,6 +133,12 @@ watchEffect(() => {
     form.project_id = selectedProject.value?.id || null;
 });
 
+const selectedCurrency = ref(currencies.value.find((item) => item.id === form.currency_id));
+
+watchEffect(() => {
+    form.currency_id = selectedCurrency.value?.id || null;
+});
+
 onMounted(() => {
     categoryStore.hideInnerPanel();
 });
@@ -145,34 +153,79 @@ onMounted(() => {
                 <div class="flex flex-col gap-y-6">
                     <!-- Amount -->
                     <div class="order-2">
-                        <div class="flex items-center space-x-2">
-                            <div class="relative flex-1 rounded-md shadow-sm">
+                        <div class="flex items-center">
+                            <div class="relative flex-1">
                                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                                     <span class="text-gray-500 sm:text-sm">
-                                        {{ getCurrencySymbol(page.props.auth.user.currency) }}
+                                        {{ selectedCurrency.symbol }}
                                     </span>
                                 </div>
                                 <CurrencyInput
                                     id="amount"
-                                    class="block h-10 w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    class="block h-10 w-full rounded-l-md border-0 py-1.5 pl-8 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                     name="amount"
                                     v-model="form.amount"
                                     placeholder="0.00"
                                     :disabled="!canUpdate"
-                                    :options="{ currency: page.props.auth.user.currency, currencyDisplay: 'hidden' }" />
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <span
-                                        id="amount-currency"
-                                        class="text-gray-500 sm:text-sm"
-                                        >{{ page.props.auth.user.currency }}</span
-                                    >
-                                </div>
+                                    :options="{ currency: selectedCurrency.code, currencyDisplay: 'hidden' }" />
+                            </div>
+
+                            <div>
+                                <Listbox
+                                    v-model="selectedCurrency"
+                                    :disabled="!canUpdate">
+                                    <div class="relative">
+                                        <ListboxButton
+                                            class="relative w-full cursor-default rounded-r-md border border-gray-300 border-l-0 bg-white h-10 py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                                                <span class="block truncate">{{
+                                                        selectedCurrency ? selectedCurrency.code : "Pick a currency"
+                                                    }}</span>
+                                            <span
+                                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                                    <ChevronUpDownIcon
+                                                        class="h-5 w-5 text-gray-400"
+                                                        aria-hidden="true" />
+                                                </span>
+                                        </ListboxButton>
+
+                                        <transition
+                                            leave-active-class="transition duration-100 ease-in"
+                                            leave-from-class="opacity-100"
+                                            leave-to-class="opacity-0">
+                                            <ListboxOptions
+                                                class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                                                <ListboxOption
+                                                    v-slot="{ active, selected }"
+                                                    v-for="currency in currencies"
+                                                    :key="currency.code"
+                                                    :value="currency"
+                                                    as="template">
+                                                    <li
+                                                        :class="[
+                                                                active
+                                                                    ? 'bg-amber-100 text-amber-900'
+                                                                    : 'text-gray-900',
+                                                                'relative cursor-default select-none py-2 px-4',
+                                                            ]">
+                                                            <span
+                                                                :class="[
+                                                                    selected ? 'font-medium' : 'font-normal',
+                                                                    'block truncate',
+                                                                ]"
+                                                            >{{ currency.code }}</span
+                                                            >
+                                                    </li>
+                                                </ListboxOption>
+                                            </ListboxOptions>
+                                        </transition>
+                                    </div>
+                                </Listbox>
                             </div>
 
                             <button
                                 type="button"
                                 @click.prevent="showCategoryList = !showCategoryList"
-                                class="flex h-10 w-10 items-center justify-center rounded p-1.5 text-white"
+                                class="flex h-10 w-10 ml-2 items-center justify-center rounded p-1.5 text-white"
                                 :style="'background-color:' + categoryById.hex"
                                 data-cy="open-category-list-button">
                                 <CategoryIcon :category="categoryById" />
