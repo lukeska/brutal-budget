@@ -2,7 +2,7 @@
 
 An expense tracking web app built with Laravel, Inertia.js and Vue.js.
 
-This is still a work in progress. Estimated launch roughly January 2024.
+You can run it on your own server or sign up for an account on the hosted version at [brutalbudget.com](https://www.brutalbudget.com/)
 
 ---
 
