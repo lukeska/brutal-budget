@@ -152,11 +152,11 @@ const selectedMonthYear = ref(monthYears.find((item) => item.month === props.mon
                                 v-if="expensesAvailable"
                                 class="px-3 py-3 md:px-6">
                                 <div class="mb-1 text-xs text-gray-500">Top categories</div>
-                                <div class="flex w-full">
+                                <div class="grid grid-cols-2 gap-4">
                                     <template
-                                        v-for="monthlyTotal in currentMonthlyTotal.categoryMonthlyTotals.slice(0, 3)"
+                                        v-for="monthlyTotal in currentMonthlyTotal.categoryMonthlyTotals.slice(0, 4)"
                                         :key="monthlyTotal.id">
-                                        <div class="w-1/3">
+                                        <div class="">
                                             <div class="text-xl">
                                                 {{ currencyFormatter.format(monthlyTotal.converted_amount) }}
                                             </div>

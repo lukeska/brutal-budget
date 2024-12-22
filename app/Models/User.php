@@ -34,7 +34,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 'email', 'password', 'currency_id',
+        'name', 'email', 'password', 'currency_id', 'secondary_currency_id',
     ];
 
     /**
@@ -70,6 +70,11 @@ class User extends Authenticatable
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function secondaryCurrency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class, 'secondary_currency_id');
     }
 
     public function onboardingStatuses(): HasMany

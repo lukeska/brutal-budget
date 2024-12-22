@@ -68,6 +68,7 @@ Route::middleware([
 
     Route::get('/user/settings', [UserSettingsController::class, 'show'])->name('user-settings.show');
     Route::patch('/user/settings', [UserSettingsController::class, 'update'])->name('user-settings.update');
+    Route::patch('/user/settings/toggle-currency', [UserSettingsController::class, 'toggleCurrency'])->name('user-settings.toggle-currency');
 
     Route::post('user/settings/push-subscribed', [UserPushSettingsController::class, 'subscribed'])->name('user-push-settings.subscribed');
     Route::post('user/settings/push-subscribe', [UserPushSettingsController::class, 'subscribe'])->name('user-push-settings.subscribe');

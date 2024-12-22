@@ -17,7 +17,25 @@ class UserSettingsController extends Controller
 
     public function update(UserSettingsRequest $data)
     {
+        if($data->currencyId == $data->secondaryCurrencyId) {
+            $data->secondaryCurrencyId = null;
+        }
+
         Auth::user()->update($data->toArray());
+
+        return back();
+    }
+
+    public function toggleCurrency()
+    {
+        $user = Auth::user();
+
+        if($user->secondary_currency_id) {
+            $user->update([
+                'currency_id' => $user->secondary_currency_id,
+                'secondary_currency_id' => $user->currency_id
+            ]);
+        }
 
         return back();
     }
