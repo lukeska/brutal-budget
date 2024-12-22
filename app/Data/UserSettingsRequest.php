@@ -10,7 +10,9 @@ class UserSettingsRequest extends Data
 {
     public function __construct(
         #[MapName('currency_id')]
-        public int $currencyId
+        public int $currencyId,
+        #[MapName('secondary_currency_id')]
+        public ?int $secondaryCurrencyId
     ) {
     }
 }

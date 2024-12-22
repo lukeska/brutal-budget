@@ -47,6 +47,7 @@ class HandleInertiaRequests extends Middleware
             'projects' => fn () => $user ? $projectsRepository->getAll($user->current_team_id) : null,
             'currencies' => fn () => Currency::all(),
             'currency' => fn () => $user ? $user->currency : null,
+            'secondary_currency' => fn () => $user ? $user->secondaryCurrency : null,
             'flash' => [
                 'expense' => fn () => $request->session()->get('expense'),
                 'category' => fn () => $request->session()->get('category'),

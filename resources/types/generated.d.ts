@@ -12,7 +12,7 @@ currency: App.Data.CurrencyData;
 converted_amount: number;
 year_month: number;
 category: App.Data.CategoryData;
-previous_month_delta_amount: number | null;
+previous_month_delta_amount: number;
 };
 export type CategoryRequest = {
 id?: number;
@@ -36,10 +36,10 @@ date: string;
 amount: number;
 currency: App.Data.CurrencyData;
 converted_amount: number;
-notes: string | null;
+notes: string;
 is_regular: boolean;
 category: App.Data.CategoryData;
-project: App.Data.ProjectData | null;
+project: App.Data.ProjectData;
 created_at: string;
 user: App.Data.UserData;
 permissions: { viewAny: boolean;view: boolean;create: boolean;update: boolean;delete: boolean;restore: boolean;forceDelete: boolean } };
@@ -48,10 +48,10 @@ id?: number;
 date: string;
 amount: number;
 currency_id: number;
-notes: string | null;
+notes: string;
 is_regular: boolean;
 category_id: number;
-project_id: number | null;
+project_id: number;
 months: number;
 };
 export type ExpensesIndexPage = {
@@ -69,8 +69,8 @@ id: number;
 user_id: number;
 onboarding_step: App.Enums.OnboardingSteps;
 order: number;
-skipped_at: any | null;
-completed_at: any | null;
+skipped_at: any;
+completed_at: any;
 };
 export type ProjectData = {
 id?: number;
@@ -83,10 +83,11 @@ total: number;
 };
 export type UserData = {
 name: string;
-currency: App.Data.CurrencyData | null;
+currency: App.Data.CurrencyData;
 };
 export type UserSettingsRequest = {
 currency_id: number;
+secondary_currency_id: number;
 };
 }
 declare namespace App.Enums {

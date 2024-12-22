@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Banner from "@/Components/Banner.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -15,7 +15,8 @@ defineProps<{
 }>();
 
 const showingNavigationDropdown = ref(false);
-let sidebarOpen = ref(false);
+let sidebarOpen = ref(false)
+const page = usePage();
 
 const switchToTeam = (team) => {
     router.put(
@@ -27,6 +28,12 @@ const switchToTeam = (team) => {
             preserveState: false,
         },
     );
+};
+
+const toggleCurrency = () => {
+    router.patch(route('user-settings.toggle-currency'), {}, {
+        preserveState: false,
+    });
 };
 
 const logout = () => {
@@ -245,6 +252,18 @@ const logout = () => {
                             <div class="fixed bottom-5 right-5 z-50">
                                 <ExpenseAddButton shape="circular" />
                             </div>
+
+                            <div v-if="page.props.secondary_currency">
+                                <form @submit.prevent="toggleCurrency" class="relative flex rounded-full bg-gray-100 p-1 text-xs shadow-inner">
+                                    <span class="relative inline-flex h-6 items-center justify-center py-1 px-2 transition text-black bg-white shadow rounded-full">
+                                        {{ page.props.currency.code}}
+                                    </span>
+                                    <button type="submit" class="relative inline-flex h-6 items-center justify-center py-1 px-2 transition text-gray-400">
+                                        {{ page.props.secondary_currency.code}}
+                                    </button>
+                                </form>
+                            </div>
+
                             <button
                                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                                 @click="showingNavigationDropdown = !showingNavigationDropdown">
