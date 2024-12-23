@@ -85,7 +85,7 @@ class MonthlyTotalsRepository
                 ->where('is_regular', $regular)
                 ->with('category')
                 ->with('currency')
-                ->orderByDesc('amount')
+                ->orderByDesc('converted_amount')
                 ->orderByDesc('id')
                 ->get();
 
