@@ -1,10 +1,10 @@
-export const createCurrencyFormatter = (currency) => {
+export const createCurrencyFormatter = (currency, minimumFractionDigits = 2, maximumFractionDigits = 2) => {
     const locale = navigator.language || "en-US";
     const formatter = new Intl.NumberFormat(locale, {
         style: "currency",
         currency,
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
+        minimumFractionDigits,
+        maximumFractionDigits,
     });
 
     const parseLocaleNumber = (value) => {

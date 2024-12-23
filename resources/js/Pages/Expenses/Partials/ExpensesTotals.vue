@@ -10,7 +10,7 @@ let props = defineProps<{
 
 const page = usePage();
 
-const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
+const currencyFormatter = createCurrencyFormatter(page.props.currency.code, 0, 0);
 </script>
 
 <template>

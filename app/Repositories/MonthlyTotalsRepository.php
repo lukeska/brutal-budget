@@ -65,14 +65,17 @@ class MonthlyTotalsRepository
             $total = CategoryMonthlyTotal::query()
                 ->select(
                     'category_monthly_totals.*',
-                    DB::raw('((amount - (
-                        SELECT amount
+                    DB::raw('((amount * rate) - ((
+                        SELECT amount  * cer.rate
                         FROM category_monthly_totals AS t2
-                        WHERE t2.category_id = category_monthly_totals.category_id
+                        LEFT JOIN currency_exchange_rates AS cer
+                        ON t2.currency_id = cer.from_currency_id
+                        WHERE cer.to_currency_id = '.$currencyId.'
+                          AND t2.category_id = category_monthly_totals.category_id
                           AND t2.year_month = '.$date->clone()->subMonth()->format('Ym').
                         ' ORDER BY t2.year_month DESC
                         LIMIT 1
-                    )) * rate) as previous_month_delta_amount'),
+                    ))) as previous_month_delta_amount'),
                     DB::raw('amount * rate AS converted_amount')
                 )
                 ->leftJoin('currency_exchange_rates', function ($join) use ($currencyId) {
