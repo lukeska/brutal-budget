@@ -7,6 +7,7 @@ import { usePage } from "@inertiajs/vue3";
 
 let props = defineProps<{
     monthlyTotals: App.Data.MonthlyTotalData[];
+    indexAxis?: string;
 }>();
 
 const bars = ref();
@@ -46,23 +47,34 @@ const initBars = () => {
         })),
     };
 
+    let ticksX = {};
+    let ticksY = {};
+    const callback = {
+        callback: function (value, index, values) {
+            return currencyFormatter.format(value);
+        },
+    };
+
+    if(props.indexAxis == 'y') {
+        ticksX = callback;
+    } else {
+        ticksY = callback;
+    }
+
     new Chart(bars.value, {
         type: "bar",
         data: data,
         options: {
             maintainAspectRatio: false,
-            //indexAxis: "y",
+            indexAxis: props.indexAxis == 'y' ? 'y' : 'x',
             scales: {
                 x: {
                     stacked: true,
+                    ticks: ticksX,
                 },
                 y: {
                     stacked: true,
-                    ticks: {
-                        callback: function (value, index, values) {
-                            return currencyFormatter.format(value);
-                        },
-                    },
+                    ticks: ticksY,
                 },
             },
             plugins: {
