@@ -79,6 +79,11 @@ const logout = () => {
                                     Expenses
                                 </NavLink>
                                 <NavLink
+                                    :active="route().current('statistics.*')"
+                                    :href="route('statistics.index')">
+                                    Statistics
+                                </NavLink>
+                                <NavLink
                                     :active="route().current('categories.index')"
                                     :href="route('categories.index')">
                                     Categories
@@ -313,6 +318,11 @@ const logout = () => {
                             :active="route().current('expenses.index')"
                             :href="route('expenses.index')">
                             Expenses
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :active="route().current('statistics.*')"
+                            :href="route('statistics.index')">
+                            Statistics
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             :active="route().current('categories.index')"

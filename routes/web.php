@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\OnboardingStatusController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\UserPushSettingsController;
 use App\Http\Controllers\UserSettingsController;
 use Illuminate\Foundation\Application;
@@ -76,4 +77,9 @@ Route::middleware([
     Route::post('user/settings/push-test', [UserPushSettingsController::class, 'pushTest'])->name('user-push-settings.push-test');
 
     Route::patch('user/onboarding/{onboardingStatus}/skip', [OnboardingStatusController::class, 'skip'])->name('onboarding-status.skip');
+
+    Route::get('/statistics/{year?}', [StatisticController::class, 'index'])
+        ->where([
+            'year' => '[0-9]{4}', // Year should be four digits
+        ])->name('statistics.index');
 });
