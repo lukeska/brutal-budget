@@ -14,7 +14,7 @@ use Spatie\LaravelData\DataCollection;
 
 class MonthlyTotalsRepository
 {
-    public function getAll(int $teamId, int $currencyId, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
+    public function getAll(int $teamId, int $currencyId, ?int $categoryId = null, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
     {
         $currentDate = Carbon::now()->firstOfMonth();
 
@@ -39,7 +39,13 @@ class MonthlyTotalsRepository
 
         $data = [];
         foreach ($dates as $date) {
-            $rawTotals = $this->get($teamId, $date, $currencyId, $regularExpenses);
+            $rawTotals = $this->get(
+                teamId: $teamId,
+                date: $date,
+                currencyId: $currencyId,
+                categoryId: $categoryId,
+                regular: $regularExpenses
+            );
 
             $totalExpenses = $rawTotals->sum('converted_amount');
 
@@ -54,9 +60,9 @@ class MonthlyTotalsRepository
         return MonthlyTotalData::collection(array_slice($data, 1));
     }
 
-    public function get(int $teamId, Carbon $date, int $currencyId, ?bool $regular = null): Collection
+    public function get(int $teamId, Carbon $date, int $currencyId, ?int $categoryId = null, ?bool $regular = null): Collection
     {
-        $key = "monthlyTotal-get-{$teamId}-{$currencyId}-{$date->format('Ym')}-{$regular}";
+        $key = "monthlyTotal-get-{$teamId}-{$currencyId}-{$categoryId}-{$date->format('Ym')}-{$regular}";
         $tags = $this->getCacheTags($teamId, $date);
 
         if (Cache::tags($tags)->has($key)) {
@@ -70,9 +76,9 @@ class MonthlyTotalsRepository
                         FROM category_monthly_totals AS t2
                         LEFT JOIN currency_exchange_rates AS cer
                         ON t2.currency_id = cer.from_currency_id
-                        WHERE cer.to_currency_id = '.$currencyId.'
+                        WHERE cer.to_currency_id = ' . $currencyId . '
                           AND t2.category_id = category_monthly_totals.category_id
-                          AND t2.year_month = '.$date->clone()->subMonth()->format('Ym').
+                          AND t2.year_month = ' . $date->clone()->subMonth()->format('Ym') .
                         ' ORDER BY t2.year_month DESC
                         LIMIT 1
                     ))) as previous_month_delta_amount'),
@@ -86,6 +92,9 @@ class MonthlyTotalsRepository
                 ->where('year_month', $date->format('Ym'))
                 ->whereNull('user_id')
                 ->where('is_regular', $regular)
+                ->when($categoryId != null, function ($query) use ($categoryId) {
+                    $query->where('category_monthly_totals.category_id', '=', $categoryId);
+                })
                 ->with('category')
                 ->with('currency')
                 ->orderByDesc('converted_amount')

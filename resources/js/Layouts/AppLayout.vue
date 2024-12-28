@@ -15,7 +15,7 @@ defineProps<{
 }>();
 
 const showingNavigationDropdown = ref(false);
-let sidebarOpen = ref(false)
+let sidebarOpen = ref(false);
 const page = usePage();
 
 const switchToTeam = (team) => {
@@ -31,9 +31,13 @@ const switchToTeam = (team) => {
 };
 
 const toggleCurrency = () => {
-    router.patch(route('user-settings.toggle-currency'), {}, {
-        preserveState: false,
-    });
+    router.patch(
+        route("user-settings.toggle-currency"),
+        {},
+        {
+            preserveState: false,
+        },
+    );
 };
 
 const logout = () => {
@@ -84,7 +88,7 @@ const logout = () => {
                                     Statistics
                                 </NavLink>
                                 <NavLink
-                                    :active="route().current('categories.index')"
+                                    :active="route().current('categories.*')"
                                     :href="route('categories.index')">
                                     Categories
                                 </NavLink>
@@ -229,7 +233,7 @@ const logout = () => {
 
                                         <DropdownLink :href="route('profile.show')"> Profile</DropdownLink>
 
-                                        <DropdownLink :href="route('user-settings.show')"> Settings </DropdownLink>
+                                        <DropdownLink :href="route('user-settings.show')"> Settings</DropdownLink>
 
                                         <DropdownLink
                                             v-if="$page.props.jetstream.hasApiFeatures"
@@ -259,12 +263,17 @@ const logout = () => {
                             </div>
 
                             <div v-if="page.props.secondary_currency">
-                                <form @submit.prevent="toggleCurrency" class="relative flex rounded-full bg-gray-100 p-1 text-xs shadow-inner">
-                                    <span class="relative inline-flex h-6 items-center justify-center py-1 px-2 transition text-black bg-white shadow rounded-full">
-                                        {{ page.props.currency.code}}
+                                <form
+                                    @submit.prevent="toggleCurrency"
+                                    class="relative flex rounded-full bg-gray-100 p-1 text-xs shadow-inner">
+                                    <span
+                                        class="relative inline-flex h-6 items-center justify-center rounded-full bg-white px-2 py-1 text-black shadow transition">
+                                        {{ page.props.currency.code }}
                                     </span>
-                                    <button type="submit" class="relative inline-flex h-6 items-center justify-center py-1 px-2 transition text-gray-400">
-                                        {{ page.props.secondary_currency.code}}
+                                    <button
+                                        type="submit"
+                                        class="relative inline-flex h-6 items-center justify-center px-2 py-1 text-gray-400 transition">
+                                        {{ page.props.secondary_currency.code }}
                                     </button>
                                 </form>
                             </div>

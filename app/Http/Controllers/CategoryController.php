@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\CategoryData;
 use App\Data\CategoryRequest;
 use App\Models\Category;
 use App\Repositories\CategoriesRepository;
 use App\Repositories\MonthlyTotalsRepository;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\ValidationException;
@@ -14,9 +16,10 @@ use Inertia\Inertia;
 class CategoryController extends Controller
 {
     public function __construct(
-        protected CategoriesRepository $categoriesRepository,
+        protected CategoriesRepository    $categoriesRepository,
         protected MonthlyTotalsRepository $monthlyTotalsRepository,
-    ) {
+    )
+    {
     }
 
     public function index()
@@ -25,6 +28,29 @@ class CategoryController extends Controller
             'categories' => CategoryRequest::collection($this->categoriesRepository->getAll(Auth::user()->currentTeam->id)),
             'totals' => $this->monthlyTotalsRepository->getCategoriesTotals(Auth::user()->currentTeam->id, Auth::user()->currency_id),
             'canCreate' => Request::user()->can('create', Category::class),
+        ]);
+    }
+
+    public function show(Category $category)
+    {
+        $currentDate = Carbon::now();
+
+        $monthlyTotals = $this->monthlyTotalsRepository->getAll(
+            teamId: Auth::user()->currentTeam->id,
+            currencyId: Auth::user()->currency_id,
+            categoryId: $category->id,
+            year: $currentDate->year,
+            month: $currentDate->month,
+            previousMonthsOffset: 11,
+            followingMonthsOffset: 0
+        );
+
+        return Inertia::render('Categories/Show', [
+            'category' => CategoryData::from($category),
+            'monthlyTotals' => $monthlyTotals,
+            'month' => $currentDate->month,
+            'year' => $currentDate->year,
+            'total' => collect($monthlyTotals)->sum('total'),
         ]);
     }
 

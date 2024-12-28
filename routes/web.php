@@ -43,6 +43,7 @@ Route::middleware([
         ])->name('dashboard');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
     Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'delete'])->name('categories.delete');
     Route::put('/categories/create', [CategoryController::class, 'create'])->name('categories.create');

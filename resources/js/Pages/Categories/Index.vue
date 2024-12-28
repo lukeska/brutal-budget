@@ -5,8 +5,9 @@ import { useCategoryStore } from "@/Stores/CategoryStore";
 import CategoryIcon from "@/Pages/Categories/Partials/CategoryIcon.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
-import { usePage } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import { computed } from "vue";
+import { IconEdit, IconEye } from "@tabler/icons-vue";
 
 const categoryStore = useCategoryStore();
 
@@ -46,8 +47,8 @@ const getTotalByCategory = (categoryId: number): number => {
                 <SecondaryButton
                     v-if="props.canCreate"
                     @click.prevent="categoryStore.showSidebar()"
-                    >Add category</SecondaryButton
-                >
+                    >Add category
+                </SecondaryButton>
             </div>
         </template>
 
@@ -56,18 +57,31 @@ const getTotalByCategory = (categoryId: number): number => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-5xl px-2 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <button
+                    <div
                         v-for="category in categories"
                         :key="category.id"
-                        class="divide-y rounded-md bg-white shadow"
-                        @click.prevent="categoryStore.showSidebar(category)">
-                        <div class="flex items-center space-x-4 p-4 text-lg">
-                            <div :style="'color:' + category.hex">
-                                <CategoryIcon :category="category" />
+                        class="divide-y rounded-md bg-white shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2 p-4 text-lg">
+                                <div :style="'color:' + category.hex">
+                                    <CategoryIcon :category="category" />
+                                </div>
+                                <div>{{ category.name }}</div>
                             </div>
-                            <div>{{ category.name }}</div>
+                            <div>
+                                <button
+                                    @click.prevent="categoryStore.showSidebar(category)"
+                                    class="inline-flex h-10 w-10 items-center justify-center text-gray-400 hover:text-gray-800">
+                                    <IconEdit />
+                                </button>
+                                <Link
+                                    :href="route('categories.show', { category: category })"
+                                    class="inline-flex h-10 w-10 items-center justify-center border-0 text-gray-400 hover:text-gray-800">
+                                    <IconEye />
+                                </Link>
+                            </div>
                         </div>
                         <div class="grid grid-cols-3 divide-x text-left">
                             <div class="col-span-2 px-4 py-2">
@@ -86,7 +100,7 @@ const getTotalByCategory = (categoryId: number): number => {
                                 </span>
                             </div>
                         </div>
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>
