@@ -18,8 +18,9 @@ class ExpenseController extends Controller
 {
     public function __construct(
         protected MonthlyTotalsRepository $monthlyTotalsRepository,
-        protected ExpensesRepository $expensesRepository,
-    ) {
+        protected ExpensesRepository      $expensesRepository,
+    )
+    {
     }
 
     public function index($year = null, $month = null)
@@ -27,10 +28,10 @@ class ExpenseController extends Controller
         $regularExpenses = null;
         if (Request::has('type')) {
             $regularExpenses = Request::get('type') == 'regular'
-                                ? true
-                                : ((Request::get('type') == 'non-regular')
-                                    ? false
-                                    : null);
+                ? true
+                : ((Request::get('type') == 'non-regular')
+                    ? false
+                    : null);
         }
 
         $currentDate = Carbon::now();
@@ -45,7 +46,13 @@ class ExpenseController extends Controller
 
         return Inertia::render('Expenses/Index', new ExpensesIndexPage(
             expenses: $expenses,
-            monthlyTotals: $this->monthlyTotalsRepository->getAll(Auth::user()->currentTeam->id, Auth::user()->currency_id, $year, $month, $regularExpenses),
+            monthlyTotals: $this->monthlyTotalsRepository->getAll(
+                teamId: Auth::user()->currentTeam->id,
+                currencyId: Auth::user()->currency_id,
+                year: $year,
+                month: $month,
+                regularExpenses: $regularExpenses
+            ),
         ));
     }
 
@@ -93,7 +100,7 @@ class ExpenseController extends Controller
 
     public function update(Expense $expense, ExpenseRequest $data)
     {
-        if (! Request::user()->can('update', $expense)) {
+        if (!Request::user()->can('update', $expense)) {
             abort(403);
         }
 
@@ -111,7 +118,7 @@ class ExpenseController extends Controller
 
     public function delete(Expense $expense)
     {
-        if (! Request::user()->can('delete', $expense)) {
+        if (!Request::user()->can('delete', $expense)) {
             abort(403);
         }
 

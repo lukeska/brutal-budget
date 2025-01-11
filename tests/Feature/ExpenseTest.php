@@ -31,7 +31,7 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->put(route('expenses.create'), $attributes)
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->component('Expenses/Index')
                 ->where('expenses.0.notes', 'My notes')
                 ->where('expenses.0.amount', 2050)
@@ -191,7 +191,7 @@ class ExpenseTest extends TestCase
 
         $this->get(route('expenses.index'))
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->component('Expenses/Index')
                 ->has('expenses', 0)
             );
@@ -204,7 +204,7 @@ class ExpenseTest extends TestCase
         $this
             ->get(route('expenses.index'))
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->component('Expenses/Index')
                 ->has('expenses', 1)
             );
@@ -231,7 +231,7 @@ class ExpenseTest extends TestCase
         $this
             ->get(route('expenses.index'))
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->component('Expenses/Index')
                 ->has('expenses', 1)
                 ->where('expenses.0.amount', 1111)
@@ -244,19 +244,28 @@ class ExpenseTest extends TestCase
         $user = $this->signIn();
 
         Expense::factory(10)->create([
+            'amount' => 500,
+            'user_id' => $user->id,
+            'team_id' => $user->currentTeam->id,
+            'date' => Carbon::create(2025, 1, 1),
+        ]);
+
+        Expense::factory(10)->create([
             'amount' => 1000,
             'user_id' => $user->id,
             'team_id' => $user->currentTeam->id,
+            'date' => Carbon::create(2025, 2, 1),
         ]);
 
         $this
-            ->get(route('expenses.index'))
+            ->get(route('expenses.index', ['year' => '2025', 'month' => '02']))
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->component('Expenses/Index')
                 ->has('expenses', 10)
                 ->has('monthlyTotals', 5)
                 ->where('monthlyTotals.2.total', 100)
+                ->where('monthlyTotals.1.total', 50)
             );
     }
 
@@ -277,7 +286,7 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->put(route('expenses.create'), $attributes)
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->has('errors')
                 ->where('errors.date', 'Too many expenses logged on this team this month.')
             );
@@ -298,7 +307,7 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->put(route('expenses.create'), $attributes)
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->has('errors')
                 ->where('errors.date', 'The date cannot be more than 2 years in the future.')
             );
@@ -310,7 +319,7 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->put(route('expenses.create'), $attributes)
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->has('errors')
                 ->where('errors.date', 'The date cannot be more than 1 year in the past.')
             );
@@ -327,7 +336,7 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->patch(route('expenses.update', $expense), $expense->toArray())
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->has('errors')
                 ->where('errors.date', 'The date cannot be more than 2 years in the future.')
             );
@@ -338,7 +347,7 @@ class ExpenseTest extends TestCase
         $this->followingRedirects()
             ->patch(route('expenses.update', $expense), $expense->toArray())
             ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
+            ->assertInertia(fn(AssertableInertia $page) => $page
                 ->has('errors')
                 ->where('errors.date', 'The date cannot be more than 1 year in the past.')
             );
