@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
-use NumberFormatter;
 
 /**
  * @property Team $team
@@ -18,13 +17,10 @@ use NumberFormatter;
  */
 class Expense extends Model
 {
+    /** @use HasFactory<\Database\Factories\ExpenseFactory> */
     use HasFactory;
 
     protected $guarded = [];
-
-    /*protected $casts = [
-        'date' => 'datetime',
-    ];*/
 
     public function user(): BelongsTo
     {

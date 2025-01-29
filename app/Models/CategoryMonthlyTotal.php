@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CategoryMonthlyTotal extends Model
 {
+    /** @use HasFactory<\Database\Factories\CategoryMonthlyTotalFactory> */
     use HasFactory;
 
     protected $guarded = [];
