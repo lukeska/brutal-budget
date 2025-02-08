@@ -14,7 +14,8 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    public function __construct(protected ProjectsRepository $projectsRepository,
+    public function __construct(
+        protected ProjectsRepository $projectsRepository,
         protected ExpensesRepository $expensesRepository)
     {
     }
