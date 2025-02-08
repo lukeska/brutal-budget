@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Observers\TeamObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Jetstream\Events\TeamCreated;
@@ -12,6 +14,7 @@ use Laravel\Jetstream\Team as JetstreamTeam;
 /**
  * @method owner()
  */
+#[ObservedBy([TeamObserver::class])]
 class Team extends JetstreamTeam
 {
     /** @use HasFactory<\Database\Factories\TeamFactory> */
