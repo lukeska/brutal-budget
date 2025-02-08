@@ -17,7 +17,7 @@ class ProjectSeeder extends Seeder
         $luca = User::find(1);
 
         Project::factory()->create([
-            'name' => 'Summer vacation '.Carbon::now()->addYear()->year,
+            'name' => 'Summer vacation ' . Carbon::now()->addYear()->year,
             'team_id' => $luca->currentTeam->id,
             'hex' => '#ef4444',
         ]);
