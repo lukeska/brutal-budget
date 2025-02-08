@@ -8,25 +8,8 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\UserPushSettingsController;
 use App\Http\Controllers\UserSettingsController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-Route::get('temp', function () {
-    $rates = \App\Models\CurrencyExchangeRate::all();
-    foreach ($rates as $rate) {
-        echo "['id' => {$rate->id}, 'from_currency_id' => {$rate->from_currency_id}, 'to_currency_id' => {$rate->to_currency_id}, 'rate' => '{$rate->rate}'],<br>";
-    }
-});
 Route::get('/', function () {
     return redirect()->to(route('dashboard'));
 });
