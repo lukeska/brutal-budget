@@ -1,62 +1,40 @@
 <?php
 
-namespace Tests\Feature\Jetstream;
-
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Jetstream\Features;
 use Laravel\Jetstream\Mail\TeamInvitation;
-use Tests\TestCase;
 
-class InviteTeamMemberTest extends TestCase
-{
-    use RefreshDatabase;
+test('team members can be invited to team', function () {
+    Mail::fake();
 
-    public function test_team_members_can_be_invited_to_team(): void
-    {
-        if (! Features::sendsTeamInvitations()) {
-            $this->markTestSkipped('Team invitations not enabled.');
+    $this->actingAs($user = User::factory()->withPersonalTeam()->create());
 
-            /** @phpstan-ignore-next-line  */
-            return;
-        }
+    $this->post('/teams/'.$user->currentTeam->id.'/members', [
+        'email' => 'test@example.com',
+        'role' => 'admin',
+    ]);
 
-        Mail::fake();
+    Mail::assertSent(TeamInvitation::class);
 
-        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
+    expect($user->currentTeam->fresh()->teamInvitations)->toHaveCount(1);
+})->skip(function () {
+    return ! Features::sendsTeamInvitations();
+}, 'Team invitations not enabled.');
 
-        $response = $this->post('/teams/'.$user->currentTeam->id.'/members', [
-            'email' => 'test@example.com',
-            'role' => 'admin',
-        ]);
+test('team member invitations can be cancelled', function () {
+    Mail::fake();
 
-        Mail::assertSent(TeamInvitation::class);
+    $this->actingAs($user = User::factory()->withPersonalTeam()->create());
 
-        $this->assertCount(1, $user->currentTeam->fresh()->teamInvitations);
-    }
+    $invitation = $user->currentTeam->teamInvitations()->create([
+        'email' => 'test@example.com',
+        'role' => 'admin',
+    ]);
 
-    public function test_team_member_invitations_can_be_cancelled(): void
-    {
-        if (! Features::sendsTeamInvitations()) {
-            $this->markTestSkipped('Team invitations not enabled.');
+    $this->delete('/team-invitations/'.$invitation->id);
 
-            /** @phpstan-ignore-next-line  */
-            return;
-        }
-
-        Mail::fake();
-
-        $this->actingAs($user = User::factory()->withPersonalTeam()->create());
-
-        /** @var \App\Models\TeamInvitation $invitation */
-        $invitation = $user->currentTeam->teamInvitations()->create([
-            'email' => 'test@example.com',
-            'role' => 'admin',
-        ]);
-
-        $response = $this->delete('/team-invitations/'.$invitation->id);
-
-        $this->assertCount(0, $user->currentTeam->fresh()->teamInvitations);
-    }
-}
+    expect($user->currentTeam->fresh()->teamInvitations)->toHaveCount(0);
+})->skip(function () {
+    return ! Features::sendsTeamInvitations();
+}, 'Team invitations not enabled.');
