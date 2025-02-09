@@ -24,7 +24,7 @@ class MaxExpensePerMonth implements DataAwareRule, ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -44,7 +44,7 @@ class MaxExpensePerMonth implements DataAwareRule, ValidationRule
     /**
      * Set the data under validation.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function setData(array $data): static
     {
