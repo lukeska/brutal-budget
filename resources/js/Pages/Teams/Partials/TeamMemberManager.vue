@@ -107,7 +107,7 @@ const displayableRole = (role) => {
 
                 <template #form>
                     <div class="col-span-6">
-                        <div class="max-w-xl text-sm text-gray-600">
+                        <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
                             Please provide the email address of the person you would like to add to this team.
                         </div>
                     </div>
@@ -120,8 +120,8 @@ const displayableRole = (role) => {
                         <TextInput
                             id="email"
                             v-model="addTeamMemberForm.email"
-                            class="mt-1 block w-full"
-                            type="email" />
+                            type="email"
+                            class="mt-1 block w-full" />
                         <InputError
                             :message="addTeamMemberForm.errors.email"
                             class="mt-2" />
@@ -138,16 +138,18 @@ const displayableRole = (role) => {
                             :message="addTeamMemberForm.errors.role"
                             class="mt-2" />
 
-                        <div class="relative z-0 mt-1 cursor-pointer rounded-lg border border-gray-200">
+                        <div
+                            class="relative z-0 mt-1 cursor-pointer rounded-lg border border-gray-200 dark:border-gray-700">
                             <button
                                 v-for="(role, i) in availableRoles"
                                 :key="role.key"
+                                type="button"
+                                class="relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:border-indigo-600 dark:focus:ring-indigo-600"
                                 :class="{
-                                    'rounded-t-none border-t border-gray-200 focus:border-none': i > 0,
+                                    'rounded-t-none border-t border-gray-200 focus:border-none dark:border-gray-700':
+                                        i > 0,
                                     'rounded-b-none': i != Object.keys(availableRoles).length - 1,
                                 }"
-                                class="relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                type="button"
                                 @click="addTeamMemberForm.role = role.key">
                                 <div
                                     :class="{
@@ -156,30 +158,28 @@ const displayableRole = (role) => {
                                     <!-- Role Name -->
                                     <div class="flex items-center">
                                         <div
-                                            :class="{
-                                                'font-semibold': addTeamMemberForm.role == role.key,
-                                            }"
-                                            class="text-sm text-gray-600">
+                                            class="text-sm text-gray-600 dark:text-gray-400"
+                                            :class="{ 'font-semibold': addTeamMemberForm.role == role.key }">
                                             {{ role.name }}
                                         </div>
 
                                         <svg
                                             v-if="addTeamMemberForm.role == role.key"
-                                            class="ms-2 h-5 w-5 text-green-400"
+                                            class="ms-2 size-5 text-green-400"
+                                            xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="1.5"
                                             viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
+                                            stroke-width="1.5"
+                                            stroke="currentColor">
                                             <path
-                                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                                 stroke-linecap="round"
-                                                stroke-linejoin="round" />
+                                                stroke-linejoin="round"
+                                                d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
 
                                     <!-- Role Description -->
-                                    <div class="mt-2 text-start text-xs text-gray-600">
+                                    <div class="mt-2 text-start text-xs text-gray-600 dark:text-gray-400">
                                         {{ role.description }}
                                     </div>
                                 </div>
@@ -223,7 +223,7 @@ const displayableRole = (role) => {
                             v-for="invitation in team.team_invitations"
                             :key="invitation.id"
                             class="flex items-center justify-between">
-                            <div class="text-gray-600">
+                            <div class="text-gray-600 dark:text-gray-400">
                                 {{ invitation.email }}
                             </div>
 
@@ -260,10 +260,10 @@ const displayableRole = (role) => {
                             class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <img
-                                    :alt="user.name"
+                                    class="size-8 rounded-full object-cover"
                                     :src="user.profile_photo_url"
-                                    class="h-8 w-8 rounded-full object-cover" />
-                                <div class="ms-4">
+                                    :alt="user.name" />
+                                <div class="ms-4 dark:text-white">
                                     {{ user.name }}
                                 </div>
                             </div>
@@ -313,48 +313,44 @@ const displayableRole = (role) => {
 
             <template #content>
                 <div v-if="managingRoleFor">
-                    <div class="relative z-0 mt-1 cursor-pointer rounded-lg border border-gray-200">
+                    <div
+                        class="relative z-0 mt-1 cursor-pointer rounded-lg border border-gray-200 dark:border-gray-700">
                         <button
                             v-for="(role, i) in availableRoles"
                             :key="role.key"
+                            type="button"
+                            class="relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:border-indigo-600 dark:focus:ring-indigo-600"
                             :class="{
-                                'rounded-t-none border-t border-gray-200 focus:border-none': i > 0,
+                                'rounded-t-none border-t border-gray-200 focus:border-none dark:border-gray-700': i > 0,
                                 'rounded-b-none': i !== Object.keys(availableRoles).length - 1,
                             }"
-                            class="relative inline-flex w-full rounded-lg px-4 py-3 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            type="button"
                             @click="updateRoleForm.role = role.key">
-                            <div
-                                :class="{
-                                    'opacity-50': updateRoleForm.role && updateRoleForm.role !== role.key,
-                                }">
+                            <div :class="{ 'opacity-50': updateRoleForm.role && updateRoleForm.role !== role.key }">
                                 <!-- Role Name -->
                                 <div class="flex items-center">
                                     <div
-                                        :class="{
-                                            'font-semibold': updateRoleForm.role === role.key,
-                                        }"
-                                        class="text-sm text-gray-600">
+                                        class="text-sm text-gray-600 dark:text-gray-400"
+                                        :class="{ 'font-semibold': updateRoleForm.role === role.key }">
                                         {{ role.name }}
                                     </div>
 
                                     <svg
                                         v-if="updateRoleForm.role == role.key"
-                                        class="ms-2 h-5 w-5 text-green-400"
+                                        class="ms-2 size-5 text-green-400"
+                                        xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="1.5"
                                         viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
+                                        stroke-width="1.5"
+                                        stroke="currentColor">
                                         <path
-                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                             stroke-linecap="round"
-                                            stroke-linejoin="round" />
+                                            stroke-linejoin="round"
+                                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
 
                                 <!-- Role Description -->
-                                <div class="mt-2 text-xs text-gray-600">
+                                <div class="mt-2 text-xs text-gray-600 dark:text-gray-400">
                                     {{ role.description }}
                                 </div>
                             </div>
@@ -367,9 +363,9 @@ const displayableRole = (role) => {
                 <SecondaryButton @click="currentlyManagingRole = false"> Cancel</SecondaryButton>
 
                 <PrimaryButton
+                    class="ms-3"
                     :class="{ 'opacity-25': updateRoleForm.processing }"
                     :disabled="updateRoleForm.processing"
-                    class="ms-3"
                     @click="updateRole">
                     Save
                 </PrimaryButton>
@@ -388,9 +384,9 @@ const displayableRole = (role) => {
                 <SecondaryButton @click="confirmingLeavingTeam = false"> Cancel</SecondaryButton>
 
                 <DangerButton
+                    class="ms-3"
                     :class="{ 'opacity-25': leaveTeamForm.processing }"
                     :disabled="leaveTeamForm.processing"
-                    class="ms-3"
                     @click="leaveTeam">
                     Leave
                 </DangerButton>
@@ -409,9 +405,9 @@ const displayableRole = (role) => {
                 <SecondaryButton @click="teamMemberBeingRemoved = null"> Cancel</SecondaryButton>
 
                 <DangerButton
+                    class="ms-3"
                     :class="{ 'opacity-25': removeTeamMemberForm.processing }"
                     :disabled="removeTeamMemberForm.processing"
-                    class="ms-3"
                     @click="removeTeamMember">
                     Remove
                 </DangerButton>

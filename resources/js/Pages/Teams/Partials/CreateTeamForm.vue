@@ -20,9 +20,9 @@ const createTeam = () => {
 
 <template>
     <FormSection @submitted="createTeam">
-        <template #title> Team Details</template>
+        <template #title> Team Details </template>
 
-        <template #description> Create a new team to collaborate with others on projects.</template>
+        <template #description> Create a new team to collaborate with others on projects. </template>
 
         <template #form>
             <div class="col-span-6">
@@ -30,15 +30,13 @@ const createTeam = () => {
 
                 <div class="mt-2 flex items-center">
                     <img
-                        :alt="$page.props.auth.user.name"
+                        class="size-12 rounded-full object-cover"
                         :src="$page.props.auth.user.profile_photo_url"
-                        class="h-12 w-12 rounded-full object-cover" />
+                        :alt="$page.props.auth.user.name" />
 
                     <div class="ms-4 leading-tight">
-                        <div class="text-gray-900">
-                            {{ $page.props.auth.user.name }}
-                        </div>
-                        <div class="text-sm text-gray-700">
+                        <div class="text-gray-900 dark:text-white">{{ $page.props.auth.user.name }}</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">
                             {{ $page.props.auth.user.email }}
                         </div>
                     </div>
@@ -52,9 +50,9 @@ const createTeam = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    autofocus
+                    type="text"
                     class="mt-1 block w-full"
-                    type="text" />
+                    autofocus />
                 <InputError
                     :message="form.errors.name"
                     class="mt-2" />

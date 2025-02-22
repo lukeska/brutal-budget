@@ -39,7 +39,7 @@ const submit = () => {
 
         <div
             v-if="status"
-            class="mb-4 text-sm font-medium text-green-600">
+            class="mb-4 text-sm font-medium text-green-600 dark:text-green-400">
             {{ status }}
         </div>
 
@@ -51,14 +51,14 @@ const submit = () => {
                 <TextInput
                     id="email"
                     v-model="form.email"
-                    autocomplete="username"
-                    autofocus
+                    type="email"
                     class="mt-1 block w-full"
                     required
-                    type="email" />
+                    autofocus
+                    autocomplete="username" />
                 <InputError
-                    :message="form.errors.email"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
@@ -68,13 +68,13 @@ const submit = () => {
                 <TextInput
                     id="password"
                     v-model="form.password"
-                    autocomplete="current-password"
+                    type="password"
                     class="mt-1 block w-full"
                     required
-                    type="password" />
+                    autocomplete="current-password" />
                 <InputError
-                    :message="form.errors.password"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.password" />
             </div>
 
             <div class="mt-4 block">
@@ -82,7 +82,7 @@ const submit = () => {
                     <Checkbox
                         v-model:checked="form.remember"
                         name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
+                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
                 </label>
             </div>
 
@@ -90,14 +90,14 @@ const submit = () => {
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800">
                     Forgot your password?
                 </Link>
 
                 <PrimaryButton
+                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    class="ms-4">
+                    :disabled="form.processing">
                     Log in
                 </PrimaryButton>
             </div>

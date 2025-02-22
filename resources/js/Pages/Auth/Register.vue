@@ -39,14 +39,14 @@ const submit = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    autocomplete="name"
-                    autofocus
+                    type="text"
                     class="mt-1 block w-full"
                     required
-                    type="text" />
+                    autofocus
+                    autocomplete="name" />
                 <InputError
-                    :message="form.errors.name"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.name" />
             </div>
 
             <div class="mt-4">
@@ -56,13 +56,13 @@ const submit = () => {
                 <TextInput
                     id="email"
                     v-model="form.email"
-                    autocomplete="username"
+                    type="email"
                     class="mt-1 block w-full"
                     required
-                    type="email" />
+                    autocomplete="username" />
                 <InputError
-                    :message="form.errors.email"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
@@ -72,13 +72,13 @@ const submit = () => {
                 <TextInput
                     id="password"
                     v-model="form.password"
-                    autocomplete="new-password"
+                    type="password"
                     class="mt-1 block w-full"
                     required
-                    type="password" />
+                    autocomplete="new-password" />
                 <InputError
-                    :message="form.errors.password"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
@@ -88,13 +88,13 @@ const submit = () => {
                 <TextInput
                     id="password_confirmation"
                     v-model="form.password_confirmation"
-                    autocomplete="new-password"
+                    type="password"
                     class="mt-1 block w-full"
                     required
-                    type="password" />
+                    autocomplete="new-password" />
                 <InputError
-                    :message="form.errors.password_confirmation"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.password_confirmation" />
             </div>
 
             <div
@@ -111,37 +111,37 @@ const submit = () => {
                         <div class="ms-2">
                             I agree to the
                             <a
-                                :href="route('terms.show')"
-                                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 target="_blank"
+                                :href="route('terms.show')"
+                                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                                 >Terms of Service</a
                             >
                             and
                             <a
-                                :href="route('policy.show')"
-                                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                 target="_blank"
+                                :href="route('policy.show')"
+                                class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                                 >Privacy Policy</a
                             >
                         </div>
                     </div>
                     <InputError
-                        :message="form.errors.terms"
-                        class="mt-2" />
+                        class="mt-2"
+                        :message="form.errors.terms" />
                 </InputLabel>
             </div>
 
             <div class="mt-4 flex items-center justify-end">
                 <Link
                     :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800">
                     Already registered?
                 </Link>
 
                 <PrimaryButton
+                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    class="ms-4">
+                    :disabled="form.processing">
                     Register
                 </PrimaryButton>
             </div>

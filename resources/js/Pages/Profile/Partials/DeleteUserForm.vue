@@ -39,25 +39,25 @@ const closeModal = () => {
 
 <template>
     <ActionSection>
-        <template #title> Delete Account</template>
+        <template #title> Delete Account </template>
 
-        <template #description> Permanently delete your account.</template>
+        <template #description> Permanently delete your account. </template>
 
         <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
+            <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
                 Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting
                 your account, please download any data or information that you wish to retain.
             </div>
 
             <div class="mt-5">
-                <DangerButton @click="confirmUserDeletion"> Delete Account</DangerButton>
+                <DangerButton @click="confirmUserDeletion"> Delete Account </DangerButton>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
             <DialogModal
                 :show="confirmingUserDeletion"
                 @close="closeModal">
-                <template #title> Delete Account</template>
+                <template #title> Delete Account </template>
 
                 <template #content>
                     Are you sure you want to delete your account? Once your account is deleted, all of its resources and
@@ -68,10 +68,10 @@ const closeModal = () => {
                         <TextInput
                             ref="passwordInput"
                             v-model="form.password"
-                            autocomplete="current-password"
+                            type="password"
                             class="mt-1 block w-3/4"
                             placeholder="Password"
-                            type="password"
+                            autocomplete="current-password"
                             @keyup.enter="deleteUser" />
 
                         <InputError
@@ -81,12 +81,12 @@ const closeModal = () => {
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="closeModal"> Cancel</SecondaryButton>
+                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
 
                     <DangerButton
+                        class="ms-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        class="ms-3"
                         @click="deleteUser">
                         Delete Account
                     </DangerButton>
