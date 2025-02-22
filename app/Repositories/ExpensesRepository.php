@@ -96,7 +96,7 @@ class ExpensesRepository
         return $expenses;
     }
 
-    public function getProjectsTotals(int $teamId, int $currencyId): DataCollection
+    public function getProjectsTotals(int $teamId, int $currencyId): array|DataCollection
     {
         $key = "expenses-getProjectsTotals-{$teamId}-{$currencyId}";
         $tags = $this->getCacheTags($teamId);

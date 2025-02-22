@@ -1,25 +1,16 @@
 <?php
 
-namespace Tests\Feature;
-
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Config;
-use Tests\TestCase;
+use function Pest\Laravel\post;
 
-/** @group brutal */
-class TeamTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->group('brutal');
 
-    /** @test */
-    public function a_user_cannot_own_more_than_x_teams()
-    {
-        Config::set('global.limits.owned_teams_per_user', 1);
+test('a user cannot own more than x teams', function () {
+    Config::set('global.limits.owned_teams_per_user', 1);
 
-        $this->signIn();
+    $this->signIn();
 
-        $this->post('/teams', [
-            'name' => 'Test Team',
-        ])->assertStatus(403);
-    }
-}
+    $this->post('/teams', [
+        'name' => 'Test Team',
+    ])->assertStatus(403);
+});

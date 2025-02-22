@@ -14,7 +14,7 @@ use Spatie\LaravelData\DataCollection;
 
 class MonthlyTotalsRepository
 {
-    public function getAll(int $teamId, int $currencyId, ?int $categoryId = null, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
+    public function getAll(int $teamId, int $currencyId, ?int $categoryId = null, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): array|DataCollection
     {
         $currentDate = Carbon::now()->firstOfMonth();
 
