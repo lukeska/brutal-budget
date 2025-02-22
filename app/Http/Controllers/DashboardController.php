@@ -33,7 +33,7 @@ class DashboardController extends Controller
             ),
             'month' => $currentDate->month,
             'year' => $currentDate->year,
-            'onboardingStatuses' => OnboardingStatusData::collection(Auth::user()->onboardingStatuses),
+            'onboardingStatuses' => OnboardingStatusData::collect(Auth::user()->onboardingStatuses),
         ]);
     }
 }

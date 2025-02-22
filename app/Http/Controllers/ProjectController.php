@@ -23,7 +23,7 @@ class ProjectController extends Controller
     public function index()
     {
         return Inertia::render('Projects/Index', [
-            'projects' => ProjectData::collection($this->projectsRepository->getAll(Auth::user()->currentTeam->id)),
+            'projects' => ProjectData::collect($this->projectsRepository->getAll(Auth::user()->currentTeam->id)),
             'totals' => $this->expensesRepository->getProjectsTotals(Auth::user()->currentTeam->id, Auth::user()->currency_id),
             'canCreate' => Request::user()->can('create', Project::class),
         ]);
@@ -37,7 +37,7 @@ class ProjectController extends Controller
 
         return Inertia::render('Projects/Show', [
             'project' => ProjectData::from($project),
-            'expenses' => ExpenseData::collection($expenses),
+            'expenses' => ExpenseData::collect($expenses),
             'total' => $total,
         ]);
     }

@@ -40,7 +40,7 @@ class ExpenseController extends Controller
             $currentDate = Carbon::create($year, $month, 1);
         }
 
-        $expenses = ExpenseData::collection(
+        $expenses = ExpenseData::collect(
             $this->expensesRepository->getByMonth(Auth::user()->currentTeam->id, $currentDate, Auth::user()->currency->id, $regularExpenses)
         );
 

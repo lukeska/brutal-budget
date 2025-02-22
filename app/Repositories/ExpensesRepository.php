@@ -115,7 +115,7 @@ class ExpensesRepository
                 ->groupBy('project_id')
                 ->get();
 
-            $projectTotals = ProjectTotalData::collection($projectTotalsRaw->toArray());
+            $projectTotals = ProjectTotalData::collect($projectTotalsRaw->toArray());
         }
 
         return $projectTotals;
