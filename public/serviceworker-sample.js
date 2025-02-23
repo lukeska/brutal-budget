@@ -1,5 +1,5 @@
 const buildFiles = [
-    "/app.js",
+    "/app.ts",
     "/index.html",
     "/manifest.json",
     "/src/amplifyconfiguration.json",
