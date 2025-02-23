@@ -18,34 +18,34 @@
 
 <link href="{{ $config['splash']['640x1136'] }}"
       media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['750x1334'] }}"
       media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['1242x2208'] }}"
       media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['1125x2436'] }}"
       media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['828x1792'] }}"
       media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['1242x2688'] }}"
       media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['1536x2048'] }}"
       media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['1668x2224'] }}"
       media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['1668x2388'] }}"
       media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 <link href="{{ $config['splash']['2048x2732'] }}"
       media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
-      rel="apple-touch-startup-image"/>
+      rel="apple-touch-startup-image" />
 
 <!-- Tile for Win8 -->
 <meta name="msapplication-TileColor" content="{{ $config['background_color'] }}">
@@ -69,53 +69,53 @@
     }
 </script>-->
 <script>
-    if ('serviceWorker' in navigator) {
-        const registerServiceWorker = async () => {
-            await navigator.serviceWorker.register('/serviceworker.js');
-            const registration = await navigator.serviceWorker.ready;
+  if ("serviceWorker" in navigator) {
+    const registerServiceWorker = async () => {
+      await navigator.serviceWorker.register("/serviceworker.js");
+      const registration = await navigator.serviceWorker.ready;
 
-            if (registration.waiting && registration.active) {
-                console.log('new sw waiting');
-                window.swNeedUpdate = true;
+      if (registration.waiting && registration.active) {
+        console.log("new sw waiting");
+        window.swNeedUpdate = true;
+      }
+
+      registration.onupdatefound = () => {
+        const installingWorker = registration.installing;
+
+        if (installingWorker) {
+          console.log("installing sw found");
+          installingWorker.onstatechange = async () => {
+            if (installingWorker.state === "installed" && navigator.serviceWorker.controller) {
+              console.log("new sw installed");
+              window.swNeedUpdate = true;
+
+              await SWHelper.skipWaiting();
             }
+          };
+        }
 
-            registration.onupdatefound = () => {
-                const installingWorker = registration.installing;
+      };
+    };
 
-                if (installingWorker) {
-                    console.log('installing sw found');
-                    installingWorker.onstatechange = async () => {
-                        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                            console.log('new sw installed');
-                            window.swNeedUpdate = true;
-                            
-                            await SWHelper.skipWaiting();
-                        }
-                    };
-                }
+    registerServiceWorker();
 
-            };
-        };
+    const SWHelper = {
+      async getWaitingWorker() {
+        const registrations = await navigator?.serviceWorker?.getRegistrations() || [];
+        const registrationWithWaiting = registrations.find(reg => reg.waiting);
+        return registrationWithWaiting?.waiting;
+      },
 
-        registerServiceWorker();
+      async skipWaiting() {
+        return (await SWHelper.getWaitingWorker())?.postMessage({ type: "SKIP_WAITING" });
+      }
+    };
 
-        const SWHelper = {
-            async getWaitingWorker() {
-                const registrations = await navigator?.serviceWorker?.getRegistrations() || [];
-                const registrationWithWaiting = registrations.find(reg => reg.waiting);
-                return registrationWithWaiting?.waiting;
-            },
-
-            async skipWaiting() {
-                return (await SWHelper.getWaitingWorker())?.postMessage({type: 'SKIP_WAITING'});
-            },
-        };
-
-        window.addEventListener('beforeunload', async () => {
-            if (window.swNeedUpdate) {
-                console.log('send skipWaiting');
-                await SWHelper.skipWaiting();
-            }
-        });
-    }
+    window.addEventListener("beforeunload", async () => {
+      if (window.swNeedUpdate) {
+        console.log("send skipWaiting");
+        await SWHelper.skipWaiting();
+      }
+    });
+  }
 </script>
