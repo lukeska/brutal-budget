@@ -18,7 +18,7 @@ export default defineConfig({
         setupNodeEvents(on, config) {
             return plugins(on, config);
         },
-        baseUrl: "https://brutal-budget.test",
+        baseUrl: "https://brutal-budget-v11.test",
         specPattern: "tests/cypress/integration/**/*.cy.{js,jsx,ts,tsx}",
         supportFile: "tests/cypress/support/index.js",
     },
