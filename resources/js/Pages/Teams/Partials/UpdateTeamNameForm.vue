@@ -37,13 +37,13 @@ const updateTeamName = () => {
 
                 <div class="mt-2 flex items-center">
                     <img
-                        :alt="team.owner.name"
+                        class="size-12 rounded-full object-cover"
                         :src="team.owner.profile_photo_url"
-                        class="h-12 w-12 rounded-full object-cover" />
+                        :alt="team.owner.name" />
 
                     <div class="ms-4 leading-tight">
-                        <div class="text-gray-900">{{ team.owner.name }}</div>
-                        <div class="text-sm text-gray-700">
+                        <div class="text-gray-900 dark:text-white">{{ team.owner.name }}</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">
                             {{ team.owner.email }}
                         </div>
                     </div>
@@ -59,9 +59,9 @@ const updateTeamName = () => {
                 <TextInput
                     id="name"
                     v-model="form.name"
-                    :disabled="!permissions.canUpdateTeam"
+                    type="text"
                     class="mt-1 block w-full"
-                    type="text" />
+                    :disabled="!permissions.canUpdateTeam" />
 
                 <InputError
                     :message="form.errors.name"

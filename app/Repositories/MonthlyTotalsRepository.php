@@ -14,7 +14,7 @@ use Spatie\LaravelData\DataCollection;
 
 class MonthlyTotalsRepository
 {
-    public function getAll(int $teamId, int $currencyId, ?int $categoryId = null, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): DataCollection
+    public function getAll(int $teamId, int $currencyId, ?int $categoryId = null, ?int $year = null, ?int $month = null, ?bool $regularExpenses = null, int $previousMonthsOffset = 2, int $followingMonthsOffset = 2): array|DataCollection
     {
         $currentDate = Carbon::now()->firstOfMonth();
 
@@ -52,12 +52,12 @@ class MonthlyTotalsRepository
             $data[] = MonthlyTotalData::from([
                 'total' => $totalExpenses,
                 'yearMonth' => $date->format('Ym'),
-                'categoryMonthlyTotals' => CategoryMonthlyTotalData::collection($rawTotals),
+                'categoryMonthlyTotals' => CategoryMonthlyTotalData::collect($rawTotals),
                 'isCurrent' => $currentDate->eq($date),
             ]);
         }
 
-        return MonthlyTotalData::collection(array_slice($data, 1));
+        return MonthlyTotalData::collect(array_slice($data, 1));
     }
 
     public function get(int $teamId, Carbon $date, int $currencyId, ?int $categoryId = null, ?bool $regular = null): Collection
@@ -107,7 +107,7 @@ class MonthlyTotalsRepository
         return $total;
     }
 
-    public function getCategoriesTotals(int $teamId, int $currencyId): DataCollection
+    public function getCategoriesTotals(int $teamId, int $currencyId): array|DataCollection
     {
         $key = "monthlyTotal-getCategoriesTotals-{$teamId}-{$currencyId}";
         $tags = $this->getCacheTags($teamId);
@@ -124,7 +124,7 @@ class MonthlyTotalsRepository
                 ->whereNull('category_monthly_totals.is_regular')
                 ->get();
 
-            $categoryTotals = CategoryTotalData::collection($categoryTotalsRaw->toArray());
+            $categoryTotals = CategoryTotalData::collect($categoryTotalsRaw->toArray());
         }
 
         return $categoryTotals;

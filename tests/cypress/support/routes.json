@@ -1,53 +1,4 @@
 {
-  "debugbar.openhandler": {
-    "name": "debugbar.openhandler",
-    "domain": null,
-    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@handle",
-    "uri": "_debugbar/open",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "debugbar.clockwork": {
-    "name": "debugbar.clockwork",
-    "domain": null,
-    "action": "Barryvdh\\Debugbar\\Controllers\\OpenHandlerController@clockwork",
-    "uri": "_debugbar/clockwork/{id}",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "debugbar.assets.css": {
-    "name": "debugbar.assets.css",
-    "domain": null,
-    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@css",
-    "uri": "_debugbar/assets/stylesheets",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "debugbar.assets.js": {
-    "name": "debugbar.assets.js",
-    "domain": null,
-    "action": "Barryvdh\\Debugbar\\Controllers\\AssetController@js",
-    "uri": "_debugbar/assets/javascript",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "debugbar.cache.delete": {
-    "name": "debugbar.cache.delete",
-    "domain": null,
-    "action": "Barryvdh\\Debugbar\\Controllers\\CacheController@delete",
-    "uri": "_debugbar/cache/{key}/{tags?}",
-    "method": [
-      "DELETE"
-    ]
-  },
   "cypress.factory": {
     "name": "cypress.factory",
     "domain": null,
@@ -131,14 +82,13 @@
       "HEAD"
     ]
   },
-  "": {
-    "name": null,
+  "login.store": {
+    "name": "login.store",
     "domain": null,
-    "action": "Closure",
-    "uri": "/",
+    "action": "Laravel\\Fortify\\Http\\Controllers\\AuthenticatedSessionController@store",
+    "uri": "login",
     "method": [
-      "GET",
-      "HEAD"
+      "POST"
     ]
   },
   "logout": {
@@ -198,6 +148,44 @@
       "HEAD"
     ]
   },
+  "register.store": {
+    "name": "register.store",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\RegisteredUserController@store",
+    "uri": "register",
+    "method": [
+      "POST"
+    ]
+  },
+  "verification.notice": {
+    "name": "verification.notice",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\EmailVerificationPromptController@__invoke",
+    "uri": "email/verify",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "verification.verify": {
+    "name": "verification.verify",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\VerifyEmailController@__invoke",
+    "uri": "email/verify/{id}/{hash}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "verification.send": {
+    "name": "verification.send",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\EmailVerificationNotificationController@store",
+    "uri": "email/verification-notification",
+    "method": [
+      "POST"
+    ]
+  },
   "user-profile-information.update": {
     "name": "user-profile-information.update",
     "domain": null,
@@ -216,6 +204,16 @@
       "PUT"
     ]
   },
+  "password.confirm": {
+    "name": "password.confirm",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmablePasswordController@show",
+    "uri": "user/confirm-password",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
   "password.confirmation": {
     "name": "password.confirmation",
     "domain": null,
@@ -226,8 +224,8 @@
       "HEAD"
     ]
   },
-  "password.confirm": {
-    "name": "password.confirm",
+  "password.confirm.store": {
+    "name": "password.confirm.store",
     "domain": null,
     "action": "Laravel\\Fortify\\Http\\Controllers\\ConfirmablePasswordController@store",
     "uri": "user/confirm-password",
@@ -243,6 +241,15 @@
     "method": [
       "GET",
       "HEAD"
+    ]
+  },
+  "two-factor.login.store": {
+    "name": "two-factor.login.store",
+    "domain": null,
+    "action": "Laravel\\Fortify\\Http\\Controllers\\TwoFactorAuthenticatedSessionController@store",
+    "uri": "two-factor-challenge",
+    "method": [
+      "POST"
     ]
   },
   "two-factor.enable": {
@@ -299,6 +306,17 @@
     "uri": "user/two-factor-recovery-codes",
     "method": [
       "GET",
+      "HEAD"
+    ]
+  },
+  "": {
+    "name": null,
+    "domain": null,
+    "action": "\\Illuminate\\Broadcasting\\BroadcastController@authenticate",
+    "uri": "broadcasting/auth",
+    "method": [
+      "GET",
+      "POST",
       "HEAD"
     ]
   },
@@ -489,54 +507,6 @@
       "HEAD"
     ]
   },
-  "laravelpwa.manifest": {
-    "name": "laravelpwa.manifest",
-    "domain": null,
-    "action": "LaravelPWA\\Http\\Controllers\\LaravelPWAController@manifestJson",
-    "uri": "manifest.json",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "laravelpwa.": {
-    "name": "laravelpwa.",
-    "domain": null,
-    "action": "LaravelPWA\\Http\\Controllers\\LaravelPWAController@offline",
-    "uri": "offline",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "ignition.healthCheck": {
-    "name": "ignition.healthCheck",
-    "domain": null,
-    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\HealthCheckController",
-    "uri": "_ignition/health-check",
-    "method": [
-      "GET",
-      "HEAD"
-    ]
-  },
-  "ignition.executeSolution": {
-    "name": "ignition.executeSolution",
-    "domain": null,
-    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\ExecuteSolutionController",
-    "uri": "_ignition/execute-solution",
-    "method": [
-      "POST"
-    ]
-  },
-  "ignition.updateConfig": {
-    "name": "ignition.updateConfig",
-    "domain": null,
-    "action": "Spatie\\LaravelIgnition\\Http\\Controllers\\UpdateConfigController",
-    "uri": "_ignition/update-config",
-    "method": [
-      "POST"
-    ]
-  },
   "dashboard": {
     "name": "dashboard",
     "domain": null,
@@ -552,6 +522,16 @@
     "domain": null,
     "action": "App\\Http\\Controllers\\CategoryController@index",
     "uri": "categories",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "categories.show": {
+    "name": "categories.show",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\CategoryController@show",
+    "uri": "categories/{category}",
     "method": [
       "GET",
       "HEAD"
@@ -715,6 +695,15 @@
       "PATCH"
     ]
   },
+  "user-settings.toggle-currency": {
+    "name": "user-settings.toggle-currency",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\UserSettingsController@toggleCurrency",
+    "uri": "user/settings/toggle-currency",
+    "method": [
+      "PATCH"
+    ]
+  },
   "user-push-settings.subscribed": {
     "name": "user-push-settings.subscribed",
     "domain": null,
@@ -749,6 +738,55 @@
     "uri": "user/settings/push-test",
     "method": [
       "POST"
+    ]
+  },
+  "onboarding-status.skip": {
+    "name": "onboarding-status.skip",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\OnboardingStatusController@skip",
+    "uri": "user/onboarding/{onboardingStatus}/skip",
+    "method": [
+      "PATCH"
+    ]
+  },
+  "statistics.index": {
+    "name": "statistics.index",
+    "domain": null,
+    "action": "App\\Http\\Controllers\\StatisticController@index",
+    "uri": "statistics/{year?}",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "laravelpwa.manifest": {
+    "name": "laravelpwa.manifest",
+    "domain": null,
+    "action": "LaravelPWA\\Http\\Controllers\\LaravelPWAController@manifestJson",
+    "uri": "manifest.json",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "laravelpwa.": {
+    "name": "laravelpwa.",
+    "domain": null,
+    "action": "LaravelPWA\\Http\\Controllers\\LaravelPWAController@offline",
+    "uri": "offline",
+    "method": [
+      "GET",
+      "HEAD"
+    ]
+  },
+  "storage.local": {
+    "name": "storage.local",
+    "domain": null,
+    "action": "Closure",
+    "uri": "storage/{path}",
+    "method": [
+      "GET",
+      "HEAD"
     ]
   }
 }

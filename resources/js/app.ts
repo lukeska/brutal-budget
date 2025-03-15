@@ -5,11 +5,11 @@ import { createApp, h } from "vue";
 import { createPinia } from "pinia";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import { ZiggyVue } from "../../vendor/tightenco/ziggy/dist/vue.m";
+import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import * as Sentry from "@sentry/vue";
 import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 
-const appName = import.meta.env.VITE_APP_NAME || "Laravel";
+const appName = import.meta.env.VITE_APP_NAME || "Brutal Budget";
 const pinia = createPinia();
 
 createInertiaApp({

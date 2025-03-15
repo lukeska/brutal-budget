@@ -1,7 +1,7 @@
 const buildFiles = [
     "/offline",
     "/css/app.css",
-    "/js/app.js",
+    "/js/app.ts",
     "/images/icons/icon-72x72.png",
     "/images/icons/icon-96x96.png",
     "/images/icons/icon-128x128.png",
@@ -36,8 +36,8 @@ const installHandler = (e) => {
             .then((clients) => {
                 caches.open(cacheName);
                 /*.then((cache) =>
-                    cache.addAll(filesToCache.map((file) => new Request(file, { cache: "no-cache" }))),
-                )*/
+            cache.addAll(filesToCache.map((file) => new Request(file, { cache: "no-cache" }))),
+        )*/
             }),
     );
 };
@@ -95,14 +95,14 @@ const pushHandler = async (e) => {
             .then((activeClients) => {
                 // TODO: not setting active badges for now as the app doesn't include ways to clear them
                 /*if (!activeClients) {
-                    console.log("set badge");
-                    self.numBadges += 1;
-                    navigator.setAppBadge(self.numBadges);
+            console.log("set badge");
+            self.numBadges += 1;
+            navigator.setAppBadge(self.numBadges);
 
-                    sendMessage(`badges: ${self.numBadges}`);
-                } else {
-                    sendMessage("no badge");
-                }*/
+            sendMessage(`badges: ${self.numBadges}`);
+        } else {
+            sendMessage("no badge");
+        }*/
             })
             .catch((err) => sendMessage(err)),
     );

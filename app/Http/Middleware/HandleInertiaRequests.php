@@ -7,7 +7,6 @@ use App\Repositories\CategoriesRepository;
 use App\Repositories\ProjectsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -32,9 +31,11 @@ class HandleInertiaRequests extends Middleware
     }
 
     /**
-     * Defines the props that are shared by default.
+     * Define the props that are shared by default.
      *
      * @see https://inertiajs.com/shared-data
+     *
+     * @return array<string, mixed>
      */
     public function share(Request $request): array
     {
@@ -43,15 +44,15 @@ class HandleInertiaRequests extends Middleware
         $user = Auth::user();
 
         return array_merge(parent::share($request), [
-            'categories' => fn () => $user ? $categoriesRepository->getAll($user->current_team_id) : null,
-            'projects' => fn () => $user ? $projectsRepository->getAll($user->current_team_id) : null,
-            'currencies' => fn () => Currency::all(),
-            'currency' => fn () => $user ? $user->currency : null,
-            'secondary_currency' => fn () => $user ? $user->secondaryCurrency : null,
+            'categories' => fn() => $user ? $categoriesRepository->getAll($user->current_team_id) : null,
+            'projects' => fn() => $user ? $projectsRepository->getAll($user->current_team_id) : null,
+            'currencies' => fn() => Currency::all(),
+            'currency' => fn() => $user ? $user->currency : null,
+            'secondary_currency' => fn() => $user ? $user->secondaryCurrency : null,
             'flash' => [
-                'expense' => fn () => $request->session()->get('expense'),
-                'category' => fn () => $request->session()->get('category'),
-                'project' => fn () => $request->session()->get('project'),
+                'expense' => fn() => $request->session()->get('expense'),
+                'category' => fn() => $request->session()->get('category'),
+                'project' => fn() => $request->session()->get('project'),
             ],
         ]);
     }

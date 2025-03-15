@@ -45,7 +45,7 @@ const submit = () => {
             <AuthenticationCardLogo />
         </template>
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
             <template v-if="!recovery">
                 Please confirm access to your account by entering the authentication code provided by your authenticator
                 application.
@@ -65,14 +65,14 @@ const submit = () => {
                     id="code"
                     ref="codeInput"
                     v-model="form.code"
-                    autocomplete="one-time-code"
-                    autofocus
-                    class="mt-1 block w-full"
+                    type="text"
                     inputmode="numeric"
-                    type="text" />
+                    class="mt-1 block w-full"
+                    autofocus
+                    autocomplete="one-time-code" />
                 <InputError
-                    :message="form.errors.code"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.code" />
             </div>
 
             <div v-else>
@@ -83,28 +83,28 @@ const submit = () => {
                     id="recovery_code"
                     ref="recoveryCodeInput"
                     v-model="form.recovery_code"
-                    autocomplete="one-time-code"
+                    type="text"
                     class="mt-1 block w-full"
-                    type="text" />
+                    autocomplete="one-time-code" />
                 <InputError
-                    :message="form.errors.recovery_code"
-                    class="mt-2" />
+                    class="mt-2"
+                    :message="form.errors.recovery_code" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">
                 <button
-                    class="cursor-pointer text-sm text-gray-600 underline hover:text-gray-900"
                     type="button"
+                    class="cursor-pointer text-sm text-gray-600 underline hover:text-gray-900 dark:text-gray-400"
                     @click.prevent="toggleRecovery">
-                    <template v-if="!recovery"> Use a recovery code</template>
+                    <template v-if="!recovery"> Use a recovery code </template>
 
-                    <template v-else> Use an authentication code</template>
+                    <template v-else> Use an authentication code </template>
                 </button>
 
                 <PrimaryButton
+                    class="ms-4"
                     :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                    class="ms-4">
+                    :disabled="form.processing">
                     Log in
                 </PrimaryButton>
             </div>

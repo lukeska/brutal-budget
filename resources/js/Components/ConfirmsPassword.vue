@@ -6,6 +6,8 @@ import PrimaryButton from "./PrimaryButton.vue";
 import SecondaryButton from "./SecondaryButton.vue";
 import TextInput from "./TextInput.vue";
 
+const emit = defineEmits(["confirmed"]);
+
 defineProps({
     title: {
         type: String,
@@ -20,8 +22,6 @@ defineProps({
         default: "Confirm",
     },
 });
-
-const emit = defineEmits(["confirmed"]);
 
 const confirmingPassword = ref(false);
 
@@ -92,10 +92,10 @@ const closeModal = () => {
                     <TextInput
                         ref="passwordInput"
                         v-model="form.password"
-                        autocomplete="current-password"
+                        type="password"
                         class="mt-1 block w-3/4"
                         placeholder="Password"
-                        type="password"
+                        autocomplete="current-password"
                         @keyup.enter="confirmPassword" />
 
                     <InputError
@@ -108,9 +108,9 @@ const closeModal = () => {
                 <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
 
                 <PrimaryButton
+                    class="ms-3"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
-                    class="ms-3"
                     @click="confirmPassword">
                     {{ button }}
                 </PrimaryButton>

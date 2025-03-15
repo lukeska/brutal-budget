@@ -32,7 +32,8 @@ class ExpenseFactory extends Factory
                 return User::find($attributes['user_id'])->currentTeam->categories->random()->id;
             },
             'notes' => function (array $attributes) {
-                return $this->faker->expenseNote(Category::find($attributes['category_id'])->name); /** @phpstan-ignore-line */
+                /** @phpstan-ignore-next-line */
+                return $this->faker->expenseNote(Category::find($attributes['category_id'])->name);
             },
             'is_regular' => $this->faker->boolean(80),
             'project_id' => null,

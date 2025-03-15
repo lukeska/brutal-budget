@@ -15,11 +15,11 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(ProjectSeeder::class);
         $this->call(ExpenseSeeder::class);
-        // \App\Models\User::factory(10)->create();
+        // User::factory(10)->withPersonalTeam()->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        /*User::factory()->withPersonalTeam()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);*/
     }
 }

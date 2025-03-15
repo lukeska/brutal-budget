@@ -1,60 +1,46 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Models\Expense;
 use App\Models\Project;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
-use Tests\TestCase;
 
-/** @group brutal */
-class OnboardingStatusTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->group('brutal');
 
-    /** @test */
-    public function it_updates_the_status_when_first_expense_is_created()
-    {
-        $user = $this->signIn();
+test('it updates the status when first expense is created', function () {
+    $user = $this->signIn();
 
-        $this->assertFalse($user->onboardingStatusExpenseCreated->done());
+    expect($user->onboardingStatusExpenseCreated->done())->toBeFalse();
 
-        $attributes = Expense::factory()->recycle($user)->raw();
+    $attributes = Expense::factory()->recycle($user)->raw();
 
-        $this->put(route('expenses.create'), $attributes);
+    $this->put(route('expenses.create'), $attributes);
 
-        $this->assertTrue($user->onboardingStatusExpenseCreated->fresh()->done());
-    }
+    expect($user->onboardingStatusExpenseCreated->fresh()->done())->toBeTrue();
+});
 
-    /** @test */
-    public function it_updates_the_status_when_first_project_is_created()
-    {
-        $user = $this->signIn();
+test('it updates the status when first project is created', function () {
+    $user = $this->signIn();
 
-        $this->assertFalse($user->onboardingStatusProjectCreated->done());
+    expect($user->onboardingStatusProjectCreated->done())->toBeFalse();
 
-        $attributes = Project::factory()->recycle($user->currentTeam)->raw();
+    $attributes = Project::factory()->recycle($user->currentTeam)->raw();
 
-        $this->put(route('projects.create'), $attributes);
+    $this->put(route('projects.create'), $attributes);
 
-        $this->assertTrue($user->onboardingStatusProjectCreated->fresh()->done());
-    }
+    expect($user->onboardingStatusProjectCreated->fresh()->done())->toBeTrue();
+});
 
-    /** @test */
-    public function it_updates_the_status_when_team_member_is_invited()
-    {
-        Mail::fake();
+test('it updates the status when team member is invited', function () {
+    Mail::fake();
 
-        $user = $this->signIn();
+    $user = $this->signIn();
 
-        $this->assertFalse($user->onboardingStatusTeamMemberInvited->done());
+    expect($user->onboardingStatusTeamMemberInvited->done())->toBeFalse();
 
-        $this->post('/teams/'.$user->currentTeam->id.'/members', [
-            'email' => 'test@example.com',
-            'role' => 'admin',
-        ]);
+    $this->post('/teams/' . $user->currentTeam->id . '/members', [
+        'email' => 'test@example.com',
+        'role' => 'admin',
+    ]);
 
-        $this->assertTrue($user->onboardingStatusTeamMemberInvited->fresh()->done());
-    }
-}
+    expect($user->onboardingStatusTeamMemberInvited->fresh()->done())->toBeTrue();
+});

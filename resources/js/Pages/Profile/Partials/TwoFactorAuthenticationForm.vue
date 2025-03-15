@@ -102,30 +102,30 @@ const disableTwoFactorAuthentication = () => {
 
 <template>
     <ActionSection>
-        <template #title> Two Factor Authentication</template>
+        <template #title> Two Factor Authentication </template>
 
-        <template #description> Add additional security to your account using two factor authentication.</template>
+        <template #description> Add additional security to your account using two factor authentication. </template>
 
         <template #content>
             <h3
                 v-if="twoFactorEnabled && !confirming"
-                class="text-lg font-medium text-gray-900">
+                class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 You have enabled two factor authentication.
             </h3>
 
             <h3
                 v-else-if="twoFactorEnabled && confirming"
-                class="text-lg font-medium text-gray-900">
+                class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 Finish enabling two factor authentication.
             </h3>
 
             <h3
                 v-else
-                class="text-lg font-medium text-gray-900">
+                class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 You have not enabled two factor authentication.
             </h3>
 
-            <div class="mt-3 max-w-xl text-sm text-gray-600">
+            <div class="mt-3 max-w-xl text-sm text-gray-600 dark:text-gray-400">
                 <p>
                     When two factor authentication is enabled, you will be prompted for a secure, random token during
                     authentication. You may retrieve this token from your phone's Google Authenticator application.
@@ -134,7 +134,7 @@ const disableTwoFactorAuthentication = () => {
 
             <div v-if="twoFactorEnabled">
                 <div v-if="qrCode">
-                    <div class="mt-4 max-w-xl text-sm text-gray-600">
+                    <div class="mt-4 max-w-xl text-sm text-gray-600 dark:text-gray-400">
                         <p
                             v-if="confirming"
                             class="font-semibold">
@@ -154,7 +154,7 @@ const disableTwoFactorAuthentication = () => {
 
                     <div
                         v-if="setupKey"
-                        class="mt-4 max-w-xl text-sm text-gray-600">
+                        class="mt-4 max-w-xl text-sm text-gray-600 dark:text-gray-400">
                         <p class="font-semibold">Setup Key: <span v-html="setupKey"></span></p>
                     </div>
 
@@ -168,12 +168,12 @@ const disableTwoFactorAuthentication = () => {
                         <TextInput
                             id="code"
                             v-model="confirmationForm.code"
-                            autocomplete="one-time-code"
-                            autofocus
+                            type="text"
+                            name="code"
                             class="mt-1 block w-1/2"
                             inputmode="numeric"
-                            name="code"
-                            type="text"
+                            autofocus
+                            autocomplete="one-time-code"
                             @keyup.enter="confirmTwoFactorAuthentication" />
 
                         <InputError
@@ -183,14 +183,15 @@ const disableTwoFactorAuthentication = () => {
                 </div>
 
                 <div v-if="recoveryCodes.length > 0 && !confirming">
-                    <div class="mt-4 max-w-xl text-sm text-gray-600">
+                    <div class="mt-4 max-w-xl text-sm text-gray-600 dark:text-gray-400">
                         <p class="font-semibold">
                             Store these recovery codes in a secure password manager. They can be used to recover access
                             to your account if your two factor authentication device is lost.
                         </p>
                     </div>
 
-                    <div class="mt-4 grid max-w-xl gap-1 rounded-lg bg-gray-100 px-4 py-4 font-mono text-sm">
+                    <div
+                        class="mt-4 grid max-w-xl gap-1 rounded-lg bg-gray-100 px-4 py-4 font-mono text-sm dark:bg-gray-900 dark:text-gray-100">
                         <div
                             v-for="code in recoveryCodes"
                             :key="code">
@@ -204,9 +205,9 @@ const disableTwoFactorAuthentication = () => {
                 <div v-if="!twoFactorEnabled">
                     <ConfirmsPassword @confirmed="enableTwoFactorAuthentication">
                         <PrimaryButton
+                            type="button"
                             :class="{ 'opacity-25': enabling }"
-                            :disabled="enabling"
-                            type="button">
+                            :disabled="enabling">
                             Enable
                         </PrimaryButton>
                     </ConfirmsPassword>
@@ -216,10 +217,10 @@ const disableTwoFactorAuthentication = () => {
                     <ConfirmsPassword @confirmed="confirmTwoFactorAuthentication">
                         <PrimaryButton
                             v-if="confirming"
-                            :class="{ 'opacity-25': enabling }"
-                            :disabled="enabling"
+                            type="button"
                             class="me-3"
-                            type="button">
+                            :class="{ 'opacity-25': enabling }"
+                            :disabled="enabling">
                             Confirm
                         </PrimaryButton>
                     </ConfirmsPassword>

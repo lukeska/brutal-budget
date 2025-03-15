@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OnboardingStatus extends Model
 {
+    /** @use HasFactory<\Database\Factories\OnboardingStatusFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -18,14 +19,12 @@ class OnboardingStatus extends Model
         'onboarding_step',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'onboarding_step' => OnboardingSteps::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'onboarding_step' => OnboardingSteps::class,
+        ];
+    }
 
     public function user(): BelongsTo
     {

@@ -11,10 +11,10 @@ describe("Expenses", () => {
     });
 
     it("can create an expense", () => {
-        cy.visit("/expenses/2024/01");
+        cy.visit("/expenses/2025/01");
 
         cy.get('[data-cy="expense-add-button"]').first().click();
-        cy.get("#date").type("2024-01-01");
+        cy.get("#date").type("2025-01-01");
         cy.get("#amount").type("10.50");
         cy.get("#notes").type("Weekly groceries");
 
@@ -29,7 +29,7 @@ describe("Expenses", () => {
     });
 
     it("can create a category from an expense creation form", () => {
-        cy.visit("/expenses/2024/01");
+        cy.visit("/expenses/2025/01");
 
         cy.get('[data-cy="expense-add-button"]').first().click();
 

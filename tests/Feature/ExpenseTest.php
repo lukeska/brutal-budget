@@ -1,355 +1,315 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Models\Expense;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Inertia\Testing\AssertableInertia;
-use Tests\TestCase;
 
-/** @group brutal */
-class ExpenseTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->group('brutal');
 
-    /** @test */
-    public function a_user_can_create_an_expense()
-    {
-        $user = $this->signIn();
+test('a user can create an expense', function () {
+    $user = $this->signIn();
 
-        $this->get('/expenses')->assertStatus(200);
+    $this->get('/expenses')->assertStatus(200);
 
-        $attributes = Expense::factory()->recycle($user)->raw([
-            'notes' => 'My notes',
-            'amount' => 2050,
-        ]);
+    $attributes = Expense::factory()->recycle($user)->raw([
+        'notes' => 'My notes',
+        'amount' => 2050,
+    ]);
 
-        $this->followingRedirects()
-            ->put(route('expenses.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
+    $this->followingRedirects()
+        ->put(route('expenses.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->component('Expenses/Index')
+            ->where('expenses.0.notes', 'My notes')
+            ->where('expenses.0.amount', 2050)
+        );
+});
+
+test('a user can create monthly expenses from a single amount', function () {
+    $this->travelTo(Carbon::create(2024, 1, 31));
+
+    $user = $this->signIn();
+
+    $this->get('/expenses')->assertStatus(200);
+
+    $attributes = Expense::factory()->raw([
+        'user_id' => $user->id,
+        'notes' => 'My notes',
+        'amount' => 10000,
+        'months' => 12,
+        'date' => Carbon::create(2024, 1, 31),
+    ]);
+
+    $this->followingRedirects()
+        ->put(route('expenses.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(function (AssertableInertia $page) {
+            return $page
                 ->component('Expenses/Index')
-                ->where('expenses.0.notes', 'My notes')
-                ->where('expenses.0.amount', 2050)
-            );
-    }
-
-    /** @test */
-    public function a_user_can_create_monthly_expenses_from_a_single_amount()
-    {
-        $this->travelTo(Carbon::create(2024, 1, 31));
-
-        $user = $this->signIn();
-
-        $this->get('/expenses')->assertStatus(200);
-
-        $attributes = Expense::factory()->raw([
-            'user_id' => $user->id,
-            'notes' => 'My notes',
-            'amount' => 10000,
-            'months' => 12,
-            'date' => Carbon::create(2024, 1, 31),
-        ]);
-
-        $this->followingRedirects()
-            ->put(route('expenses.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->where('expenses', function (Collection $expenses) {
-                        // TODO: this page will only have a single expense. No need to loop
-                        $expenses->each(function ($expense, $index) {
-                            $this->assertEquals(
-                                Carbon::create(2024, 1, 31)->addMonthsWithoutOverflow($index)->format('d-m-Y'),
-                                $expense['date']);
-                        });
-
-                        return true;
+                ->where('expenses', function (Collection $expenses) {
+                    // Loop through each generated expense and check the date.
+                    $expenses->each(function ($expense, $index) {
+                        $this->assertEquals(
+                            Carbon::create(2024, 1, 31)->addMonthsWithoutOverflow($index)->format('d-m-Y'),
+                            $expense['date']
+                        );
                     });
-            }
-            );
+                    return true;
+                });
+        });
 
-        $this->assertEquals(1000000, Expense::sum('amount'));
-    }
+    $this->assertEquals(1000000, Expense::sum('amount'));
+});
 
-    /** @test */
-    public function a_user_can_edit_an_expense()
-    {
-        $user = $this->signIn();
+test('a user can edit an expense', function () {
+    $user = $this->signIn();
 
-        // the expense creation doesn't go through Laravel Data casts,
-        // so the amount stored is 1000, which is displayed as 10 on the frontend
-        /** @var Expense $expense */
-        $expense = Expense::factory()->recycle($user)->create([
-            'amount' => 1000,
-        ]);
+    // The expense creation doesn't go through Laravel Data casts,
+    // so the amount stored is 1000, which is displayed as 10 on the frontend.
+    $expense = Expense::factory()->recycle($user)->create([
+        'amount' => 1000,
+    ]);
 
-        $this->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->where('expenses.0.amount', 10);
-            }
-            );
-
-        // This amount will go through Laravel data casts.
-        // Will be stored as 2000 in the database, and displayed as 20 on the frontend
-        $expense->amount = 20;
-
-        $this->followingRedirects()
-            ->patch(route('expenses.update', $expense), $expense->toArray())
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->where('expenses.0.amount', 20);
-            }
-            );
-
-        $this->assertEquals(2000, $expense->fresh()->amount);
-    }
-
-    /** @test */
-    public function a_user_can_see_expenses_for_a_single_team_at_the_time()
-    {
-        $user = $this->signIn();
-
-        $team1 = $user->currentTeam;
-
-        $team2 = $user->ownedTeams()->create([
-            'name' => 'Team 2',
-            'personal_team' => false,
-        ]);
-
-        $expenseGroup1 = Expense::factory()->create([
-            'amount' => 111100,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-        ]);
-
-        $this->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->has('expenses', 1)
-                    ->where('expenses.0.amount', 1111);
-            }
-            );
-
-        $user->switchTeam($team2);
-
-        $this->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->has('expenses', 0);
-                //->where('expenses.0.amount', '1111.00')
-            }
-            );
-
-        $expenseGroup2 = Expense::factory()->create([
-            'amount' => 222200,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-        ]);
-
-        $this->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page
-                    ->component('Expenses/Index')
-                    ->has('expenses', 1)
-                    ->where('expenses.0.amount', 2222);
-            }
-            );
-    }
-
-    /** @test */
-    public function a_user_can_see_expenses_created_by_another_user_within_the_same_team()
-    {
-        /** @var User $luca */
-        $luca = $this->signIn();
-
-        $viola = User::factory()->withPersonalTeam()->create();
-
-        /** @var \Laravel\Jetstream\Team $team */
-        $team = $viola->currentTeam;
-
-        Expense::factory()->create([
-            'amount' => 1111,
-            'user_id' => $viola->id,
-            'team_id' => $viola->currentTeam->id,
-        ]);
-
-        $this->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(function (AssertableInertia $page) {
+            return $page
                 ->component('Expenses/Index')
-                ->has('expenses', 0)
-            );
+                ->where('expenses.0.amount', 10);
+        });
 
-        $team->users()->attach($luca, ['role' => 'admin']);
+    // This amount will go through Laravel data casts.
+    // Will be stored as 2000 in the database and displayed as 20 on the frontend.
+    $expense->amount = 20;
 
-        $luca->refresh();
-        $luca->switchTeam($team);
+    $this->followingRedirects()
+        ->patch(route('expenses.update', $expense), $expense->toArray())
+        ->assertOk()
+        ->assertInertia(function (AssertableInertia $page) {
+            return $page
+                ->component('Expenses/Index')
+                ->where('expenses.0.amount', 20);
+        });
 
-        $this
-            ->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
+    $this->assertEquals(2000, $expense->fresh()->amount);
+});
+
+test('a user can see expenses for a single team at the time', function () {
+    $user = $this->signIn();
+
+    $team1 = $user->currentTeam;
+
+    $team2 = $user->ownedTeams()->create([
+        'name' => 'Team 2',
+        'personal_team' => false,
+    ]);
+
+    Expense::factory()->create([
+        'amount' => 111100,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+    ]);
+
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(function (AssertableInertia $page) {
+            return $page
                 ->component('Expenses/Index')
                 ->has('expenses', 1)
-            );
-    }
+                ->where('expenses.0.amount', 1111);
+        });
 
-    /** @test */
-    public function the_main_expenses_page_shows_expenses_for_the_current_month_only()
-    {
-        $user = $this->signIn();
+    $user->switchTeam($team2);
 
-        $expensePastMonth = Expense::factory()->create([
-            'amount' => 222200,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-            'date' => Carbon::now()->addMonths(-1),
-        ]);
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(function (AssertableInertia $page) {
+            return $page
+                ->component('Expenses/Index')
+                ->has('expenses', 0);
+        });
 
-        $expenseCurrentMonth = Expense::factory()->create([
-            'amount' => 111100,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-        ]);
+    Expense::factory()->create([
+        'amount' => 222200,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+    ]);
 
-        $this
-            ->get(route('expenses.index'))
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(function (AssertableInertia $page) {
+            return $page
                 ->component('Expenses/Index')
                 ->has('expenses', 1)
-                ->where('expenses.0.amount', 1111)
-            );
-    }
+                ->where('expenses.0.amount', 2222);
+        });
+});
 
-    /** @test */
-    public function the_main_expenses_page_shows_monthly_total()
-    {
-        $user = $this->signIn();
+test('a user can see expenses created by another user within the same team', function () {
+    $luca = $this->signIn();
 
-        Expense::factory(10)->create([
-            'amount' => 500,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-            'date' => Carbon::create(2025, 1, 1),
-        ]);
+    $viola = User::factory()->withPersonalTeam()->create();
 
-        Expense::factory(10)->create([
-            'amount' => 1000,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-            'date' => Carbon::create(2025, 2, 1),
-        ]);
+    $team = $viola->currentTeam;
 
-        $this
-            ->get(route('expenses.index', ['year' => '2025', 'month' => '02']))
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
-                ->component('Expenses/Index')
-                ->has('expenses', 10)
-                ->has('monthlyTotals', 5)
-                ->where('monthlyTotals.2.total', 100)
-                ->where('monthlyTotals.1.total', 50)
-            );
-    }
+    Expense::factory()->create([
+        'amount' => 1111,
+        'user_id' => $viola->id,
+        'team_id' => $viola->currentTeam->id,
+    ]);
 
-    /** @test */
-    public function a_team_cannot_have_more_than_x_expenses_per_month()
-    {
-        Config::set('global.limits.expenses_per_month', 1);
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->component('Expenses/Index')
+            ->has('expenses', 0)
+        );
 
-        $user = $this->signIn();
+    $team->users()->attach($luca, ['role' => 'admin']);
 
-        Expense::factory()
-            ->recycle($user)
-            ->count(config('global.limits.expenses_per_month') + 1)
-            ->create();
+    $luca->refresh();
+    $luca->switchTeam($team);
 
-        $attributes = Expense::factory()->raw();
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->component('Expenses/Index')
+            ->has('expenses', 1)
+        );
+});
 
-        $this->followingRedirects()
-            ->put(route('expenses.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.date', 'Too many expenses logged on this team this month.')
-            );
-    }
+test('the main expenses page shows expenses for the current month only', function () {
+    $user = $this->signIn();
 
-    /** @test */
-    public function expense_date_must_be_within_a_valid_date_range()
-    {
-        $this->travelTo('2024-01-01');
+    Expense::factory()->create([
+        'amount' => 222200,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+        'date' => Carbon::now()->addMonths(-1),
+    ]);
 
-        $user = $this->signIn();
+    Expense::factory()->create([
+        'amount' => 111100,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+    ]);
 
-        // test error messages on create
-        $attributes = Expense::factory()->recycle($user)->raw([
-            'date' => now()->addYears(2),
-        ]);
+    $this->get(route('expenses.index'))
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->component('Expenses/Index')
+            ->has('expenses', 1)
+            ->where('expenses.0.amount', 1111)
+        );
+});
 
-        $this->followingRedirects()
-            ->put(route('expenses.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.date', 'The date cannot be more than 2 years in the future.')
-            );
+test('the main expenses page shows monthly total', function () {
+    $user = $this->signIn();
 
-        $attributes = Expense::factory()->recycle($user)->raw([
-            'date' => now()->subYear(),
-        ]);
+    Expense::factory(10)->create([
+        'amount' => 500,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+        'date' => Carbon::create(2025, 1, 1),
+    ]);
 
-        $this->followingRedirects()
-            ->put(route('expenses.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.date', 'The date cannot be more than 1 year in the past.')
-            );
+    Expense::factory(10)->create([
+        'amount' => 1000,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+        'date' => Carbon::create(2025, 2, 1),
+    ]);
 
-        // test error messages on update
-        /** @var Expense $expense */
-        $expense = Expense::factory()->recycle($user)->create([
-            'amount' => 1000,
-        ]);
+    $this->get(route('expenses.index', ['year' => '2025', 'month' => '02']))
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->component('Expenses/Index')
+            ->has('expenses', 10)
+            ->has('monthlyTotals', 5)
+            ->where('monthlyTotals.2.total', 100)
+            ->where('monthlyTotals.1.total', 50)
+        );
+});
 
-        $expense->amount = 2000;
-        $expense->date = now()->addYears(2);
+test('a team cannot have more than x expenses per month', function () {
+    Config::set('global.limits.expenses_per_month', 1);
 
-        $this->followingRedirects()
-            ->patch(route('expenses.update', $expense), $expense->toArray())
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.date', 'The date cannot be more than 2 years in the future.')
-            );
+    $user = $this->signIn();
 
-        $expense->amount = 2000;
-        $expense->date = now()->subYear();
+    Expense::factory()
+        ->recycle($user)
+        ->count(config('global.limits.expenses_per_month') + 1)
+        ->create();
 
-        $this->followingRedirects()
-            ->patch(route('expenses.update', $expense), $expense->toArray())
-            ->assertOk()
-            ->assertInertia(fn(AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.date', 'The date cannot be more than 1 year in the past.')
-            );
-    }
-}
+    $attributes = Expense::factory()->raw();
+
+    $this->followingRedirects()
+        ->put(route('expenses.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.date', 'Too many expenses logged on this team this month.')
+        );
+});
+
+test('expense date must be within a valid date range', function () {
+    $this->travelTo('2024-01-01');
+
+    $user = $this->signIn();
+
+    // Test error messages on create
+    $attributes = Expense::factory()->recycle($user)->raw([
+        'date' => now()->addYears(2),
+    ]);
+
+    $this->followingRedirects()
+        ->put(route('expenses.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.date', 'The date cannot be more than 2 years in the future.')
+        );
+
+    $attributes = Expense::factory()->recycle($user)->raw([
+        'date' => now()->subYear(),
+    ]);
+
+    $this->followingRedirects()
+        ->put(route('expenses.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.date', 'The date cannot be more than 1 year in the past.')
+        );
+
+    // Test error messages on update
+    $expense = Expense::factory()->recycle($user)->create([
+        'amount' => 1000,
+    ]);
+
+    $expense->amount = 2000;
+    $expense->date = now()->addYears(2);
+
+    $this->followingRedirects()
+        ->patch(route('expenses.update', $expense), $expense->toArray())
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.date', 'The date cannot be more than 2 years in the future.')
+        );
+
+    $expense->amount = 2000;
+    $expense->date = now()->subYear();
+
+    $this->followingRedirects()
+        ->patch(route('expenses.update', $expense), $expense->toArray())
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.date', 'The date cannot be more than 1 year in the past.')
+        );
+});

@@ -1,167 +1,149 @@
 <?php
 
-namespace Tests\Feature;
-
 use App\Models\Category;
 use App\Models\Expense;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Config;
 use Inertia\Testing\AssertableInertia;
-use Tests\TestCase;
 
-/** @group brutal */
-class CategoryTest extends TestCase
-{
-    use RefreshDatabase;
+pest()->group('brutal');
 
-    /** @test */
-    public function a_user_can_create_a_category(): void
-    {
-        $this->signIn();
+test('a user can create a category', function () {
+    $this->signIn();
 
-        $attributes = Category::factory([
-            'name' => 'AAA My test category',
-        ])->raw();
+    $attributes = Category::factory([
+        'name' => 'AAA My test category',
+    ])->raw();
 
-        $this->get(route('categories.index'))
-            ->assertOk();
+    $this->get(route('categories.index'))->assertOk();
 
-        $this->followingRedirects()
-            ->put(route('categories.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->component('Categories/Index')
-                ->where('categories.0.name', 'AAA My test category')
-            );
-    }
+    $this->followingRedirects()
+        ->put(route('categories.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->component('Categories/Index')
+            ->where('categories.0.name', 'AAA My test category')
+        );
+});
 
-    /** @test */
-    public function a_user_cannot_edit_categories_for_a_group_he_is_not_part_of(): void
-    {
-        $user = $this->signIn();
+test('a user cannot edit categories for a group he is not part of', function () {
+    $user = $this->signIn();
 
-        $user2 = User::factory()->withPersonalTeam()->create();
+    $user2 = User::factory()->withPersonalTeam()->create();
+    $category = $user2->currentTeam->categories()->first();
 
-        $category = $user2->currentTeam->categories()->first();
-
-        $this->followingRedirects()
-            ->patch(route('categories.update', ['category' => $category->id]), ['name' => 'My test category', 'icon' => $category->icon, 'hex' => $category->hex])
-            ->assertStatus(403);
-    }
-
-    /** @test */
-    public function a_category_name_must_be_unique_within_a_team(): void
-    {
-        $user = $this->signIn();
-
-        $category1 = Category::factory([
+    $this->followingRedirects()
+        ->patch(route('categories.update', ['category' => $category->id]), [
             'name' => 'My test category',
-            'team_id' => $user->currentTeam->id,
-        ])->create();
+            'icon' => $category->icon,
+            'hex' => $category->hex,
+        ])
+        ->assertStatus(403);
+});
 
-        $category2 = Category::factory([
+test('a category name must be unique within a team', function () {
+    $user = $this->signIn();
+
+    $category1 = Category::factory([
+        'name' => 'My test category',
+        'team_id' => $user->currentTeam->id,
+    ])->create();
+
+    $category2 = Category::factory([
+        'name' => 'My test category 2',
+        'team_id' => $user->currentTeam->id,
+    ])->create();
+
+    $team = $user->ownedTeams()->create([
+        'name' => 'Second Team',
+        'personal_team' => false,
+    ]);
+
+    $attributes = Category::factory([
+        'name' => 'My test category',
+    ])->raw();
+
+    // Creating a duplicate category name within the same team should fail.
+    $this->get(route('categories.index'));
+    $this->followingRedirects()
+        ->put(route('categories.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.name', 'The name has already been taken.')
+        );
+
+    // Updating an existing category with a duplicate name should fail.
+    $this->followingRedirects()
+        ->patch(route('categories.update', ['category' => $category1->id]), [
             'name' => 'My test category 2',
-            'team_id' => $user->currentTeam->id,
-        ])->create();
+        ])
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.name', 'The name has already been taken.')
+        );
 
-        $team = $user->ownedTeams()->create([
-            'name' => 'Second Team',
-            'personal_team' => false,
-        ]);
+    $user->switchTeam($team);
 
-        $attributes = Category::factory([
-            'name' => 'My test category',
-        ])->raw();
+    $category3 = Category::factory([
+        'name' => 'My test category 3',
+        'team_id' => $user->currentTeam->id,
+    ])->create();
 
-        // create a duplicate category name within the same team should fail
-        $this->get(route('categories.index'));
+    // Creating a duplicate category name in a different team should succeed.
+    $this->followingRedirects()
+        ->put(route('categories.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page->has('errors', 0));
 
-        $this->followingRedirects()
-            ->put(route('categories.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.name', 'The name has already been taken.')
-            );
+    // Updating a duplicate category name in a different team should succeed.
+    $this->followingRedirects()
+        ->patch(route('categories.update', ['category' => $category3->id]), [
+            'name' => 'My test category 2',
+            'icon' => $category3->icon,
+            'hex' => $category3->hex,
+        ])
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page->has('errors', 0));
+});
 
-        // update an existing category with a duplicate name should fail
-        $this->followingRedirects()
-            ->patch(route('categories.update', ['category' => $category1->id]), ['name' => 'My test category 2'])
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('errors')->where('errors.name', 'The name has already been taken.')
-            );
+test('a category cannot be deleted if there are expenses associated to it', function () {
+    $user = $this->signIn();
+    $category = $user->currentTeam->categories->first();
 
-        $user->switchTeam($team);
+    Expense::factory()->create([
+        'amount' => 1000,
+        'user_id' => $user->id,
+        'team_id' => $user->currentTeam->id,
+        'category_id' => $category->id,
+    ]);
 
-        $category3 = Category::factory([
-            'name' => 'My test category 3',
-            'team_id' => $user->currentTeam->id,
-        ])->create();
+    $this->followingRedirects()
+        ->delete(route('categories.delete', ['category' => $category->id]))
+        ->assertStatus(403);
+});
 
-        // create a duplicate category name in a different team should succeed
-        $this->followingRedirects()
-            ->put(route('categories.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page->has('errors', 0);
-            }
-            );
+test('a team cannot have more than x categories', function () {
+    Config::set('global.limits.categories_per_team', 1);
 
-        // update a duplicate category name in a different team should succeed
-        $this->followingRedirects()
-            ->patch(route('categories.update', ['category' => $category3->id]), ['name' => 'My test category 2', 'icon' => $category3->icon, 'hex' => $category3->hex])
-            ->assertOk()
-            ->assertInertia(function (AssertableInertia $page) {
-                return $page->has('errors', 0);
-            }
-            );
-    }
+    $user = $this->signIn();
 
-    /** @test */
-    public function a_category_cannot_be_deleted_if_there_are_expenses_associated_to_it(): void
-    {
-        /** @var User $user */
-        $user = $this->signIn();
-        $category = $user->currentTeam->categories->first();
+    Category::factory()
+        ->recycle($user->currentTeam)
+        ->count(config('global.limits.categories_per_team'))
+        ->create();
 
-        Expense::factory()->create([
-            'amount' => 1000,
-            'user_id' => $user->id,
-            'team_id' => $user->currentTeam->id,
-            'category_id' => $category->id,
-        ]);
+    $attributes = Category::factory([
+        'name' => 'My test category',
+    ])->raw();
 
-        $this->followingRedirects()
-            ->delete(route('categories.delete', ['category' => $category->id]))
-            ->assertStatus(403);
-    }
+    $this->get(route('categories.index'));
 
-    /** @test */
-    public function a_team_cannot_have_more_than_x_categories()
-    {
-        Config::set('global.limits.categories_per_team', 1);
-
-        $user = $this->signIn();
-
-        Category::factory()
-            ->recycle($user->currentTeam)
-            ->count(config('global.limits.categories_per_team'))
-            ->create();
-
-        $attributes = Category::factory([
-            'name' => 'My test category',
-        ])->raw();
-
-        $this->get(route('categories.index'));
-
-        $this->followingRedirects()
-            ->put(route('categories.create'), $attributes)
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->has('errors')
-                ->where('errors.name', 'You reach the limit of categories this team can have.')
-            );
-    }
-}
+    $this->followingRedirects()
+        ->put(route('categories.create'), $attributes)
+        ->assertOk()
+        ->assertInertia(fn(AssertableInertia $page) => $page
+            ->has('errors')
+            ->where('errors.name', 'You reach the limit of categories this team can have.')
+        );
+});

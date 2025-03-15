@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\ExpenseObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,15 +18,13 @@ use NumberFormatter;
  * @property Team $team
  * @property string $formatted_amount
  */
+#[ObservedBy([ExpenseObserver::class])]
 class Expense extends Model
 {
+    /** @use HasFactory<\Database\Factories\ExpenseFactory> */
     use HasFactory;
 
     protected $guarded = [];
-
-    /*protected $casts = [
-        'date' => 'datetime',
-    ];*/
 
     public function user(): BelongsTo
     {
@@ -89,8 +89,8 @@ class Expense extends Model
     public function scopeMonthFromInt(Builder $query, ?int $year_month = null): void
     {
         $date = $year_month ? Carbon::create(
-            Str::of((string) $year_month)->substr(0, 4)->toInteger(),
-            Str::of((string) $year_month)->substr(4, 2)->toInteger(),
+            Str::of((string)$year_month)->substr(0, 4)->toInteger(),
+            Str::of((string)$year_month)->substr(4, 2)->toInteger(),
         ) : Carbon::now();
 
         $query->whereBetween('date', [$date->copy()->startOfMonth(), $date->copy()->endOfMonth()]);
