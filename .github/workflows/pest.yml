@@ -31,17 +31,5 @@ jobs:
       - name: Generate key
         run: php artisan key:generate --env=testing
 
-      - name: Create Database
-        run: |
-          mkdir -p database
-          touch database/database.sqlite
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-
       - name: Execute tests via Pest
         run: vendor/bin/pest
-        env:
-          APP_ENV: testing
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite 
