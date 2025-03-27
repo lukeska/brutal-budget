@@ -4,8 +4,8 @@ import BarsChart from "@/Pages/Dashboard/Partials/BarsChart.vue";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { createCurrencyFormatter } from "@/Helpers/CurrencyFormatter";
-import { Link, usePage } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { usePage } from "@inertiajs/vue3";
+import { computed, ref } from "vue";
 import moment from "moment";
 
 let props = defineProps<{
@@ -21,8 +21,7 @@ const currencyFormatter = createCurrencyFormatter(page.props.currency.code);
 
 const generateYears = () => {
     const currentDate = new Date();
-
-    const years = [];
+    const years = [null];
 
     for (let year = currentDate.getFullYear() - 10; year <= currentDate.getFullYear() + 2; year++) {
         years.push(year);
@@ -32,7 +31,14 @@ const generateYears = () => {
 };
 
 const years = generateYears();
-const selectedYear = ref(years.find((item) => item === props.year));
+const selectedYear = ref(years.find((item) => item == props.year));
+
+const yearLabel = (year: number | null) => {
+    if (year === null) {
+        return 'last 12 months';
+    }
+    return year;
+};
 </script>
 
 <template>
@@ -47,10 +53,10 @@ const selectedYear = ref(years.find((item) => item === props.year));
                     <div class="divide-y md:flex md:divide-x md:divide-y-0">
                         <div class="flex items-center justify-between px-3 py-3 md:px-6 w-full">
                             <div>
-                                <div class="mb-1 text-xs text-gray-500">Expenses for {{ props.year }}</div>
+                                <div class="mb-1 text-xs text-gray-500">Expenses for {{ yearLabel(props.year) }}</div>
 
                                 <div class="mb-1 text-2xl">
-                                    {{ currencyFormatter.format(total) }}
+                                    {{ currencyFormatter.format(total / 100) }}
                                 </div>
                             </div>
                             <div>
@@ -58,7 +64,7 @@ const selectedYear = ref(years.find((item) => item === props.year));
                                     <div class="relative mt-1">
                                         <ListboxButton
                                             class="relative w-full cursor-default rounded-lg border bg-white py-2 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                                            <span class="block truncate">{{ selectedYear }}</span>
+                                            <span class="block truncate capitalize">{{ yearLabel(selectedYear) }}</span>
                                             <span
                                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                                 <ChevronUpDownIcon
@@ -82,19 +88,17 @@ const selectedYear = ref(years.find((item) => item === props.year));
                                                     <li
                                                         :class="[
                                                             active ? 'bg-indigo-50' : 'text-gray-900',
-                                                            'relative cursor-default select-none py-2 pl-8 pr-4',
+                                                            'relative cursor-default select-none py-2 pl-8 pr-4 capitalize',
                                                         ]">
                                                         <a
                                                             :href="
-                                                                route('statistics.index', {
-                                                                    year: year
-                                                                })
+                                                                route('statistics.index', { year: year })
                                                             "
                                                             :class="[
                                                                 selected ? 'font-medium' : 'font-normal',
                                                                 'block truncate',
                                                             ]"
-                                                        >{{ year }}</a
+                                                        >{{ yearLabel(year) }}</a
                                                         >
                                                         <span
                                                             v-if="selected"
@@ -119,7 +123,7 @@ const selectedYear = ref(years.find((item) => item === props.year));
                                     {{ moment(monthlyTotal.yearMonth, "YYYYMM").format("MM/YY") }}
                                 </div>
                                 <div>
-                                    {{ parseInt((monthlyTotal.total * 100) / total) }}%
+                                    {{ Math.round((monthlyTotal.total * 100) / (total / 100)) }}%
                                 </div>
                             </div>
                             {{ currencyFormatter.format(monthlyTotal.total) }}

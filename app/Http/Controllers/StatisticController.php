@@ -34,7 +34,7 @@ class StatisticController extends Controller
         return Inertia::render('Statistics/Index', [
             'monthlyTotals' => $monthlyTotals,
             'month' => $currentDate->month,
-            'year' => $currentDate->year,
+            'year' => $year,
             'total' => collect($monthlyTotals)->sum('total'),
         ]);
     }
